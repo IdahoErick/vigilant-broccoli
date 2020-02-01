@@ -1,0 +1,36 @@
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIMonitor.exe.config
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIMonitor.exe.manifest
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIMonitor.application
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIMonitor.exe
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIMonitor.pdb
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIFramework.dll
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIFramework.pdb
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\obj\Debug\ResolveAssemblyReference.cache
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.Form1.resources
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.Properties.Resources.resources
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.csproj.GenerateResource.Cache
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.exe.manifest
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.application
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.exe
+C:\VSS\Custom Apps\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.pdb
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\bin\Debug\BIMonitor.exe.config
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\obj\Debug\BIMonitor.exe
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\obj\Debug\BIMonitor.pdb
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\bin\Debug\BIMonitor.exe.manifest
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\bin\Debug\BIMonitor.application
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\bin\Debug\BIMonitor.exe
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\bin\Debug\BIMonitor.pdb
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\bin\Debug\BIFramework.dll
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\bin\Debug\BIFramework.pdb
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\obj\Debug\ResolveAssemblyReference.cache
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\obj\Debug\BIMonitor.Form1.resources
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\obj\Debug\BIMonitor.Properties.Resources.resources
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\obj\Debug\BIMonitor.csproj.GenerateResource.Cache
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\obj\Debug\BIMonitor.exe.manifest
+C:\Applications\BIMonitor\trunk\BIMonitor\BIMonitor\obj\Debug\BIMonitor.application
+C:\Documents and Settings\ekorsten\My Documents\Visual Studio 2008\Projects\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIMonitor.exe.config
+C:\Documents and Settings\ekorsten\My Documents\Visual Studio 2008\Projects\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.exe
+C:\Documents and Settings\ekorsten\My Documents\Visual Studio 2008\Projects\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.pdb
+C:\Temp\Projects\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIMonitor.exe.config
+C:\Temp\Projects\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.exe
+C:\Temp\Projects\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.pdb

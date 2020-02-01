@@ -1,0 +1,10 @@
+C:\VSS\Custom Apps\BIMonitor\BIFramework\BIFramework\bin\Debug\BIFramework.dll
+C:\VSS\Custom Apps\BIMonitor\BIFramework\BIFramework\bin\Debug\BIFramework.pdb
+C:\VSS\Custom Apps\BIMonitor\BIFramework\BIFramework\obj\Debug\ResolveAssemblyReference.cache
+C:\VSS\Custom Apps\BIMonitor\BIFramework\BIFramework\obj\Debug\BIFramework.dll
+C:\VSS\Custom Apps\BIMonitor\BIFramework\BIFramework\obj\Debug\BIFramework.pdb
+C:\Applications\BIMonitor\trunk\BIFramework\BIFramework\bin\Debug\BIFramework.dll
+C:\Applications\BIMonitor\trunk\BIFramework\BIFramework\bin\Debug\BIFramework.pdb
+C:\Applications\BIMonitor\trunk\BIFramework\BIFramework\obj\Debug\ResolveAssemblyReference.cache
+C:\Applications\BIMonitor\trunk\BIFramework\BIFramework\obj\Debug\BIFramework.dll
+C:\Applications\BIMonitor\trunk\BIFramework\BIFramework\obj\Debug\BIFramework.pdb
