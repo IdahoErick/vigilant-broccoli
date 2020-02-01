@@ -1,14 +1,4 @@
-﻿/*
- * Backlog:
- * - Create form to get overview of all files available in IN map
- * - From Detail form, start local run
- * - From Detail form, generate script to update kalender with new settings
- * - From Dashboard form switch to clicked process
- * - Go to previous runs
- * - Add problem solving text (with link to wiki?)
- */ 
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
