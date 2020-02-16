@@ -219,6 +219,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Mainform.ico" />
     <Content Include="NN.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -70,6 +70,8 @@
             this.sSISLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dashboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.transferDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.filesWaitingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sourceFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label7 = new System.Windows.Forms.Label();
             this.ssStatusStrip = new System.Windows.Forms.StatusStrip();
             this.tssLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -83,8 +85,6 @@
             this.label11 = new System.Windows.Forms.Label();
             this.lblSSISRunID = new System.Windows.Forms.Label();
             this.btnSSISRefresh = new System.Windows.Forms.Button();
-            this.filesWaitingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sourceFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -474,6 +474,21 @@
             this.transferDataToolStripMenuItem.Text = "Transfer Data";
             this.transferDataToolStripMenuItem.Click += new System.EventHandler(this.transferDataToolStripMenuItem_Click);
             // 
+            // filesWaitingToolStripMenuItem
+            // 
+            this.filesWaitingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.sourceFilesToolStripMenuItem});
+            this.filesWaitingToolStripMenuItem.Name = "filesWaitingToolStripMenuItem";
+            this.filesWaitingToolStripMenuItem.Size = new System.Drawing.Size(50, 24);
+            this.filesWaitingToolStripMenuItem.Text = "Files";
+            // 
+            // sourceFilesToolStripMenuItem
+            // 
+            this.sourceFilesToolStripMenuItem.Name = "sourceFilesToolStripMenuItem";
+            this.sourceFilesToolStripMenuItem.Size = new System.Drawing.Size(156, 24);
+            this.sourceFilesToolStripMenuItem.Text = "Source Files";
+            this.sourceFilesToolStripMenuItem.Click += new System.EventHandler(this.sourceFilesToolStripMenuItem_Click);
+            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -611,21 +626,6 @@
             this.btnSSISRefresh.UseVisualStyleBackColor = true;
             this.btnSSISRefresh.Click += new System.EventHandler(this.btnSSISRefresh_Click);
             // 
-            // filesWaitingToolStripMenuItem
-            // 
-            this.filesWaitingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.sourceFilesToolStripMenuItem});
-            this.filesWaitingToolStripMenuItem.Name = "filesWaitingToolStripMenuItem";
-            this.filesWaitingToolStripMenuItem.Size = new System.Drawing.Size(50, 24);
-            this.filesWaitingToolStripMenuItem.Text = "Files";
-            // 
-            // sourceFilesToolStripMenuItem
-            // 
-            this.sourceFilesToolStripMenuItem.Name = "sourceFilesToolStripMenuItem";
-            this.sourceFilesToolStripMenuItem.Size = new System.Drawing.Size(156, 24);
-            this.sourceFilesToolStripMenuItem.Text = "Source Files";
-            this.sourceFilesToolStripMenuItem.Click += new System.EventHandler(this.sourceFilesToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -660,6 +660,7 @@
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.lblResult);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "MainForm";

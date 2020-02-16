@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DIMonitor.exe" size="143872">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DIMonitor.exe" size="223744">
       <assemblyIdentity name="DIMonitor" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>WjDBSMOkHQQsf2nlZ0vrRB8gMLKEKrpbbDQmH5Hh7Wc=</dsig:DigestValue>
+        <dsig:DigestValue>QalZAH+SbNhnuGEt2JrOOe56PTRq9YtzbDxkygHDhz8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -60,6 +60,15 @@
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
       <dsig:DigestValue>2b7WhCNHYZwOUlcBdjTksGbcy4DEtPhXBzs9pgfMc/k=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Mainform.ico" size="10134">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>z9HR9N+YnyFvyP3pC8p/j1zRK8mSL86uUd327753OKc=</dsig:DigestValue>
     </hash>
   </file>
   <file name="NN.ico" size="10134">

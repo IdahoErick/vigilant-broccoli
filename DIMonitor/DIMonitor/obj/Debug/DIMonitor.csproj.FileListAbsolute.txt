@@ -28,7 +28,6 @@ C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\bin\Debug\DIMonitor.exe.manifest
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\bin\Debug\DIMonitor.application
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\bin\Debug\DIMonitor.exe
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\bin\Debug\DIMonitor.pdb
-C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.csprojResolveAssemblyReference.cache
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.RunDetailLogForm.resources
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.DashboardForm.resources
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.LogBoekForm.resources
@@ -38,10 +37,11 @@ C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.QueryOutputFor
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.RunDetailsForm.resources
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.SetPasswordForm.resources
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.SettingsForm.resources
-C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.SourceFilesForm.resources
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.SSISLogForm.resources
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.TransferDataForm.resources
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.TroublehsootingForm.resources
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.csproj.GenerateResource.Cache
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.exe.manifest
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.application
+C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.SourceFilesForm.resources
+C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.csprojResolveAssemblyReference.cache
