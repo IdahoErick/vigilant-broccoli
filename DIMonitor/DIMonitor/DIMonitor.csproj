@@ -80,6 +80,19 @@
     </Compile>
     <Compile Include="clsILProcess.cs" />
     <Compile Include="clsRunDetail.cs" />
+    <Compile Include="MakeCSVForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MakeCSVForm.Designer.cs">
+      <DependentUpon>MakeCSVForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SolutionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SolutionForm.Designer.cs">
+      <DependentUpon>SolutionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Solutions.cs" />
     <Compile Include="SourceFilesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +172,12 @@
     </Compile>
     <Compile Include="SQLDBAccess.cs" />
     <Compile Include="SQLQueries.cs" />
+    <EmbeddedResource Include="MakeCSVForm.resx">
+      <DependentUpon>MakeCSVForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SolutionForm.resx">
+      <DependentUpon>SolutionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RunDetailLogForm.resx">
       <DependentUpon>RunDetailLogForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -219,7 +238,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Mainform.ico" />
     <Content Include="NN.ico" />
   </ItemGroup>
   <ItemGroup>

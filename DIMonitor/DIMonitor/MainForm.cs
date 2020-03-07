@@ -40,6 +40,7 @@ namespace DIMonitor
             cbEnvironment.SelectedIndex = (int)Utility.ENV.LOCAL;
             cbPeriod.SelectedIndex = (int)Utility.PERIOD.DAG;
             cbBU.SelectedIndex = (int)Utility.BU.ILVB;
+            cbHistoryVersion.SelectedIndex = 0;
             _initialized = true;
 
             this.Text = "DI Monitor (" + System.Security.Principal.WindowsIdentity.GetCurrent().Name + ")";
@@ -50,6 +51,12 @@ namespace DIMonitor
             _appSettings.SettingChanging += new SettingChangingEventHandler(appSettings_SettingChanging);
 
             RefreshData();
+
+#if DEBUG
+            this.BackColor = SystemColors.Control;
+#else
+            this.BackColor = SystemColors.ControlDark;
+#endif
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -93,7 +100,10 @@ namespace DIMonitor
                 string BUPart = cbBU.SelectedIndex == (int)Utility.BU.ILVB ? "ILH" : "ILSB";
                 //string periodPart = cbPeriod.SelectedIndex == (int)Utility.PERIOD.DAG ? "DAG" : "MAAND";
                 //string databasePart = "; Database=" + BUPart + "_LOGGING_" + periodPart;
-                string statusQuery = (BUPart == "ILH" ? SQLQueries.SQL_RUN_STATUS_ILH : SQLQueries.SQL_RUN_STATUS_ILSB);
+                string histOffset = cbHistoryVersion.Text;
+                if (histOffset == "")
+                    histOffset = "0";
+                string statusQuery = (BUPart == "ILH" ? SQLQueries.SQL_RUN_STATUS_ILH.Replace("<HistOffset>", histOffset) : SQLQueries.SQL_RUN_STATUS_ILSB);
 
                 Utility.ENV env = (Utility.ENV)cbEnvironment.SelectedIndex;
                 Utility.BU bu = (Utility.BU)cbBU.SelectedIndex;
@@ -234,16 +244,19 @@ namespace DIMonitor
 
         private void cbEnvironment_SelectedIndexChanged(object sender, EventArgs e)
         {
+            cbHistoryVersion.SelectedIndex = 0;
             RefreshData();
         }
 
         private void cbPeriod_SelectedIndexChanged(object sender, EventArgs e)
         {
+            cbHistoryVersion.SelectedIndex = 0;
             RefreshData();
         }
 
         private void cbBU_SelectedIndexChanged(object sender, EventArgs e)
         {
+            cbHistoryVersion.SelectedIndex = 0;
             Utility.BU bu = (Utility.BU)cbBU.SelectedIndex;
             btnRunDetails.Enabled = (bu == Utility.BU.ILVB);
             RefreshData();
@@ -271,7 +284,7 @@ namespace DIMonitor
             Utility.BU bu = (Utility.BU)cbBU.SelectedIndex;
             Utility.PERIOD period = (Utility.PERIOD)cbPeriod.SelectedIndex;
 
-            TroublehsootingForm tsForm = new TroublehsootingForm(env, bu, period, _kalenderDatum);
+            TroublehsootingForm tsForm = new TroublehsootingForm(env, bu, period, _kalenderDatum, _runID, _SSISRunID);
             tsForm.ShowDialog();
         }
 
@@ -396,16 +409,125 @@ namespace DIMonitor
 
         private void sSISLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _ssisLogForm = new SSISLogForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, _SSISRunID);
+            _ssisLogForm = new SSISLogForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, _runID, _SSISRunID, _kalenderDatum);
             _ssisLogForm.ShowDialog();
         }
 
         private void sourceFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _sourceFilesForm = new SourceFilesForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, _SSISRunID);
+            _sourceFilesForm = new SourceFilesForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, _runID, _SSISRunID, _kalenderDatum);
             _sourceFilesForm.ShowDialog();
         }
-                        
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.F))
+            {
+                MessageBox.Show("What the Ctrl+F?");
+                return true;
+            }
+            else if (keyData == (Keys.Control | Keys.M))
+            {
+                cbPeriod.SelectedIndex = (int)Utility.PERIOD.MAAND;
+            }
+            else if (keyData == (Keys.Control | Keys.D))
+            {
+                cbPeriod.SelectedIndex = (int)Utility.PERIOD.DAG;
+            }
+            else if (keyData == (Keys.Control | Keys.B))
+            {
+                cbBU.SelectedIndex = (int)Utility.BU.ILVB;
+            }
+            else if (keyData == (Keys.Control | Keys.V))
+            {
+                cbBU.SelectedIndex = (int)Utility.BU.ILVV;
+            }
+            else if (keyData == (Keys.Control | Keys.L))
+            {
+                cbEnvironment.SelectedIndex = (int)Utility.ENV.LOCAL;
+            }
+            else if (keyData == (Keys.Control | Keys.E))
+            {
+                cbEnvironment.SelectedIndex = (int)Utility.ENV.DEV;
+            }
+            else if (keyData == (Keys.Control | Keys.T))
+            {
+                cbEnvironment.SelectedIndex = (int)Utility.ENV.TEST;
+            }
+            else if (keyData == (Keys.Control | Keys.A))
+            {
+                cbEnvironment.SelectedIndex = (int)Utility.ENV.ACC;
+            }
+            else if (keyData == (Keys.Control | Keys.P))
+            {
+                cbEnvironment.SelectedIndex = (int)Utility.ENV.PROD;
+            }
+            else if (keyData == (Keys.Control | Keys.O))
+            {
+                btnTroubleshooting.PerformClick();
+            }
+            else if (keyData == (Keys.Control | Keys.U))
+            {
+                btnRunDetails.PerformClick();
+            }
+            else if (keyData == (Keys.Control | Keys.D1))
+            {
+                cbHistoryVersion.SelectedIndex = 1;
+            }
+            else if (keyData == (Keys.Control | Keys.D2))
+            {
+                cbHistoryVersion.SelectedIndex = 2;
+            }
+            else if (keyData == (Keys.Control | Keys.D3))
+            {
+                cbHistoryVersion.SelectedIndex = 3;
+            }
+            else if (keyData == (Keys.Control | Keys.D4))
+            {
+                cbHistoryVersion.SelectedIndex = 4;
+            }
+            else if (keyData == (Keys.Control | Keys.D5))
+            {
+                cbHistoryVersion.SelectedIndex = 5;
+            }
+            else if (keyData == (Keys.Control | Keys.D6))
+            {
+                cbHistoryVersion.SelectedIndex = 6;
+            }
+            else if (keyData == (Keys.Control | Keys.D7))
+            {
+                cbHistoryVersion.SelectedIndex = 7;
+            }
+            else if (keyData == (Keys.Control | Keys.D8))
+            {
+                cbHistoryVersion.SelectedIndex = 8;
+            }
+            else if (keyData == (Keys.Control | Keys.D9))
+            {
+                cbHistoryVersion.SelectedIndex = 9;
+            }
+            else if (keyData == (Keys.Control | Keys.D0))
+            {
+                cbHistoryVersion.SelectedIndex = 0;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void cbHistoryVersion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+         }
+
+        private void transferDataToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TransferDataForm transferDataForm = new TransferDataForm();
+            transferDataForm.Show();
+        }
+
+        private void makeCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MakeCSVForm makeCSVForm = new MakeCSVForm();
+            makeCSVForm.Show();
+        }
     }
 }

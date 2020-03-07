@@ -39,11 +39,11 @@ namespace DIMonitor
             new SourceFolderInfo("SAP_ICM", true,	2, @"_\d{8}_", Utility.PERIOD.MAAND),
             new SourceFolderInfo("SAPBW", true,	5, @"_\d{8}_", Utility.PERIOD.MAAND),
         };
-             
-        public SourceFilesForm(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period, Int64 ssisRunID)
+
+        public SourceFilesForm(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period, int ILRunID, Int64 ssisRunID, DateTime calenderDate)
         {
             InitializeComponent();
-            Init(eNV, bU, period, ssisRunID);
+            Init(eNV, bU, period, ILRunID, ssisRunID, calenderDate);
         }
         
         public SourceFilesForm()

@@ -10,19 +10,25 @@ namespace DIMonitor
 
 #region SQL Server
         public const string SQL_RUN_STATUS_ILH =
-        "with DetailCTE as" +
-        "( " +
-        "	select top 1 * " +
-        "	from [LOG].[RundetailLog] " +
-        "	order by RunDetailId desc " +
-        ") " +
-        "select top 1 RL.RunId, RunStatus, RL.Kalenderdatum, AKV.PeilDatum, AKV.Execution_ID, RL.StartDatumTijd, RL.EindDatumTijd, RSL.Stepomschrijving, LEGEN_STG, LAAD_STG, DetailCTE.Controletype, DetailCTE.InsertDatumTijd as DetailDTM, DetailCTE.Packagenaam, DetailCTE.Opmerkingen, DetailCTE.Bronsysteem, SSISExe.status as SSISStatus " +
-        "from Log.RunLog RL " +
-        "left join LOG.AUDIT_KALENDERVERWERKING AKV on RL.RunID=AKV.RunID " +
-        "left join Log.RunStepLog RSL on RL.RunId=RSL.RunId " +
-        "left join DetailCTE on DetailCTE.RunId=RL.RunId " +
-        "left join SSISDB.catalog.executions SSISExe on SSISExe.execution_id=AKV.Execution_ID " +
-        "order by RL.RunId desc, RSL.StartDatumTijd desc ";
+        @"
+        declare @RunId int
+        select @RunId = max(RunId)+(<HistOffset>) from Log.RunLog
+
+        ;with DetailCTE as
+        (
+        	select top 1 * 
+        	from [LOG].[RundetailLog] 
+            where RunId = @RunID
+        	order by RunDetailId desc 
+        ) 
+        select top 1 RL.RunId, RunStatus, RL.Kalenderdatum, AKV.PeilDatum, AKV.Execution_ID, RL.StartDatumTijd, RL.EindDatumTijd, RSL.Stepomschrijving, LEGEN_STG, LAAD_STG, DetailCTE.Controletype, DetailCTE.InsertDatumTijd as DetailDTM, DetailCTE.Packagenaam, DetailCTE.Opmerkingen, DetailCTE.Bronsysteem, SSISExe.status as SSISStatus
+        from Log.RunLog RL
+        left join LOG.AUDIT_KALENDERVERWERKING AKV on RL.RunID=AKV.RunID
+        left join Log.RunStepLog RSL on RL.RunId=RSL.RunId
+        left join DetailCTE on DetailCTE.RunId=RL.RunId
+        left join SSISDB.catalog.executions SSISExe on SSISExe.execution_id=AKV.Execution_ID
+        where RL.RunId = @RunID
+        order by RL.RunId desc, RSL.StartDatumTijd desc";
 
         //public const string SQL_RUN_STATUS_ILSB =
         //"select top 1 RunStatus, cast(RL.StartDatumTijd as date) as KalenderDatum, case db_name() when 'ILSB_LOGGING_DAG' then KD.PeilDatum else KD.PeilDatum end as PeilDatum, RL.StartDatumTijd,RL.EindDatumTijd, RSL.Stepomschrijving" +
@@ -223,13 +229,13 @@ namespace DIMonitor
             "order by Start_Time desc ";
 
         public const string SQL_RUN_FAILURES =
-            "select * from [LOG].[RundetailLog] where runid = (select max(RunId ) from  [LOG].[RunLog]) and RunDetailStatus='F' order by InsertDatumTijd desc";
+            "select * from [LOG].[RundetailLog] where runid = <RunID> and RunDetailStatus='F' order by InsertDatumTijd desc";
 
         public const string SQL_SSIS_ERRORS =
             "use ssisdb;\n" +
             "set transaction isolation level read uncommitted \n" +
-            " declare @runid int = 87374\n" +
-            " select @runid=max(execution_id) from catalog.executions with (nolock)\n" +
+            " declare @runid int = <RunID>\n" +
+            " --select @runid=max(execution_id) from catalog.executions with (nolock)\n" +
             " exec sp_executesql @stmt=N'USE [SSISDB];\n" +
             " WITH msgEx AS(\n" +
             "    SELECT\n" +

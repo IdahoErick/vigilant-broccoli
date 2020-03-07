@@ -44,4 +44,6 @@ C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.csproj.Generat
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.exe.manifest
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.application
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.SourceFilesForm.resources
+C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.SolutionForm.resources
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.csprojResolveAssemblyReference.cache
+C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Debug\DIMonitor.MakeCSVForm.resources

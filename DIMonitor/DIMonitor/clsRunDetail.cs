@@ -22,6 +22,7 @@ namespace DIMonitor
         private string _dbValue = "";
         private bool _usesP = true;
         private DetailType _runDetailType;
+        private CheckBox _cbPeilDatumNull;
         
 
         internal DetailType RunDetailType
@@ -87,18 +88,33 @@ namespace DIMonitor
                 return _dbValue != this.NewValue; 
             }
         }
-        public clsRunDetail(string name, DetailType detailType, Control control, bool usesP=false)
+        public clsRunDetail(string name, DetailType detailType, Control control, bool usesP=false, CheckBox cbPeilDatumNull=null)
         {
             this._name = name;
             this._runDetailType = detailType;
             this._control = control;
             this._usesP = usesP;
+            this._cbPeilDatumNull = cbPeilDatumNull;
         }
         public clsRunDetail(string name, string value, DetailType detailType)
         {
             this._name = name;
             this._dbValue = value;
             this._runDetailType = detailType;
+        }
+        public void SetValue(string value)
+        {
+            this._dbValue = value;
+            if ((value == "") && this._cbPeilDatumNull != null)
+            {
+                this._control.Enabled = false;
+                this._cbPeilDatumNull.Checked = true;
+            }
+            else if ((value != "null") && this._cbPeilDatumNull != null)
+            {
+                this._control.Enabled = true;
+                this._cbPeilDatumNull.Checked = false;
+            }
         }
     }
 }

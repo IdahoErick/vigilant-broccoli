@@ -48,7 +48,7 @@ namespace DIMonitor
                     _dashboardStatusButton.BackColor = Color.Yellow;
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 _dashboardStatusButton.BackColor = Color.Yellow;
                 throw;

@@ -38,6 +38,19 @@
             this.btnGenerateScript = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbLaadSAPICMPDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadSAPPolisPDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadSAPKlantPDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadSAPAchterstandPDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadQuionPDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadHousePDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadMidasCKPDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadMidasPDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadDaybreakPDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadCloseCMPDNull = new System.Windows.Forms.CheckBox();
+            this.cbLaadClosePDNull = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.cbLaadHomesPDNull = new System.Windows.Forms.CheckBox();
             this.dtpSAPICMPeilDatum = new System.Windows.Forms.DateTimePicker();
             this.dtpSAPPolisPeilDatum = new System.Windows.Forms.DateTimePicker();
             this.dtpSAPKlantPeilDatum = new System.Windows.Forms.DateTimePicker();
@@ -177,7 +190,6 @@
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Enabled = false;
             this.btnUpdate.Location = new System.Drawing.Point(320, 361);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnUpdate.Name = "btnUpdate";
@@ -185,9 +197,23 @@
             this.btnUpdate.TabIndex = 27;
             this.btnUpdate.Text = "Update";
             this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.cbLaadSAPICMPDNull);
+            this.groupBox2.Controls.Add(this.cbLaadSAPPolisPDNull);
+            this.groupBox2.Controls.Add(this.cbLaadSAPKlantPDNull);
+            this.groupBox2.Controls.Add(this.cbLaadSAPAchterstandPDNull);
+            this.groupBox2.Controls.Add(this.cbLaadQuionPDNull);
+            this.groupBox2.Controls.Add(this.cbLaadHousePDNull);
+            this.groupBox2.Controls.Add(this.cbLaadMidasCKPDNull);
+            this.groupBox2.Controls.Add(this.cbLaadMidasPDNull);
+            this.groupBox2.Controls.Add(this.cbLaadDaybreakPDNull);
+            this.groupBox2.Controls.Add(this.cbLaadCloseCMPDNull);
+            this.groupBox2.Controls.Add(this.cbLaadClosePDNull);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.cbLaadHomesPDNull);
             this.groupBox2.Controls.Add(this.dtpSAPICMPeilDatum);
             this.groupBox2.Controls.Add(this.dtpSAPPolisPeilDatum);
             this.groupBox2.Controls.Add(this.dtpSAPKlantPeilDatum);
@@ -225,6 +251,136 @@
             this.groupBox2.TabIndex = 28;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Staging";
+            // 
+            // cbLaadSAPICMPDNull
+            // 
+            this.cbLaadSAPICMPDNull.AutoSize = true;
+            this.cbLaadSAPICMPDNull.Location = new System.Drawing.Point(246, 433);
+            this.cbLaadSAPICMPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadSAPICMPDNull.Name = "cbLaadSAPICMPDNull";
+            this.cbLaadSAPICMPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadSAPICMPDNull.TabIndex = 68;
+            this.cbLaadSAPICMPDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadSAPPolisPDNull
+            // 
+            this.cbLaadSAPPolisPDNull.AutoSize = true;
+            this.cbLaadSAPPolisPDNull.Location = new System.Drawing.Point(246, 413);
+            this.cbLaadSAPPolisPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadSAPPolisPDNull.Name = "cbLaadSAPPolisPDNull";
+            this.cbLaadSAPPolisPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadSAPPolisPDNull.TabIndex = 67;
+            this.cbLaadSAPPolisPDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadSAPKlantPDNull
+            // 
+            this.cbLaadSAPKlantPDNull.AutoSize = true;
+            this.cbLaadSAPKlantPDNull.Location = new System.Drawing.Point(246, 389);
+            this.cbLaadSAPKlantPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadSAPKlantPDNull.Name = "cbLaadSAPKlantPDNull";
+            this.cbLaadSAPKlantPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadSAPKlantPDNull.TabIndex = 66;
+            this.cbLaadSAPKlantPDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadSAPAchterstandPDNull
+            // 
+            this.cbLaadSAPAchterstandPDNull.AutoSize = true;
+            this.cbLaadSAPAchterstandPDNull.Location = new System.Drawing.Point(246, 365);
+            this.cbLaadSAPAchterstandPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadSAPAchterstandPDNull.Name = "cbLaadSAPAchterstandPDNull";
+            this.cbLaadSAPAchterstandPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadSAPAchterstandPDNull.TabIndex = 65;
+            this.cbLaadSAPAchterstandPDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadQuionPDNull
+            // 
+            this.cbLaadQuionPDNull.AutoSize = true;
+            this.cbLaadQuionPDNull.Location = new System.Drawing.Point(246, 342);
+            this.cbLaadQuionPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadQuionPDNull.Name = "cbLaadQuionPDNull";
+            this.cbLaadQuionPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadQuionPDNull.TabIndex = 64;
+            this.cbLaadQuionPDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadHousePDNull
+            // 
+            this.cbLaadHousePDNull.AutoSize = true;
+            this.cbLaadHousePDNull.Location = new System.Drawing.Point(246, 285);
+            this.cbLaadHousePDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadHousePDNull.Name = "cbLaadHousePDNull";
+            this.cbLaadHousePDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadHousePDNull.TabIndex = 63;
+            this.cbLaadHousePDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadMidasCKPDNull
+            // 
+            this.cbLaadMidasCKPDNull.AutoSize = true;
+            this.cbLaadMidasCKPDNull.Location = new System.Drawing.Point(246, 263);
+            this.cbLaadMidasCKPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadMidasCKPDNull.Name = "cbLaadMidasCKPDNull";
+            this.cbLaadMidasCKPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadMidasCKPDNull.TabIndex = 62;
+            this.cbLaadMidasCKPDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadMidasPDNull
+            // 
+            this.cbLaadMidasPDNull.AutoSize = true;
+            this.cbLaadMidasPDNull.Location = new System.Drawing.Point(246, 240);
+            this.cbLaadMidasPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadMidasPDNull.Name = "cbLaadMidasPDNull";
+            this.cbLaadMidasPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadMidasPDNull.TabIndex = 61;
+            this.cbLaadMidasPDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadDaybreakPDNull
+            // 
+            this.cbLaadDaybreakPDNull.AutoSize = true;
+            this.cbLaadDaybreakPDNull.Location = new System.Drawing.Point(246, 163);
+            this.cbLaadDaybreakPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadDaybreakPDNull.Name = "cbLaadDaybreakPDNull";
+            this.cbLaadDaybreakPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadDaybreakPDNull.TabIndex = 60;
+            this.cbLaadDaybreakPDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadCloseCMPDNull
+            // 
+            this.cbLaadCloseCMPDNull.AutoSize = true;
+            this.cbLaadCloseCMPDNull.Location = new System.Drawing.Point(246, 128);
+            this.cbLaadCloseCMPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadCloseCMPDNull.Name = "cbLaadCloseCMPDNull";
+            this.cbLaadCloseCMPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadCloseCMPDNull.TabIndex = 59;
+            this.cbLaadCloseCMPDNull.UseVisualStyleBackColor = true;
+            // 
+            // cbLaadClosePDNull
+            // 
+            this.cbLaadClosePDNull.AutoSize = true;
+            this.cbLaadClosePDNull.Location = new System.Drawing.Point(246, 106);
+            this.cbLaadClosePDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadClosePDNull.Name = "cbLaadClosePDNull";
+            this.cbLaadClosePDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadClosePDNull.TabIndex = 58;
+            this.cbLaadClosePDNull.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(245, 62);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(23, 13);
+            this.label6.TabIndex = 57;
+            this.label6.Text = "null";
+            // 
+            // cbLaadHomesPDNull
+            // 
+            this.cbLaadHomesPDNull.AutoSize = true;
+            this.cbLaadHomesPDNull.Location = new System.Drawing.Point(246, 82);
+            this.cbLaadHomesPDNull.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbLaadHomesPDNull.Name = "cbLaadHomesPDNull";
+            this.cbLaadHomesPDNull.Size = new System.Drawing.Size(15, 14);
+            this.cbLaadHomesPDNull.TabIndex = 56;
+            this.cbLaadHomesPDNull.UseVisualStyleBackColor = true;
             // 
             // dtpSAPICMPeilDatum
             // 
@@ -653,7 +809,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 645);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 691);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
             this.statusStrip1.Size = new System.Drawing.Size(461, 22);
@@ -678,7 +834,7 @@
             // btnAbortRun
             // 
             this.btnAbortRun.Location = new System.Drawing.Point(320, 439);
-            this.btnAbortRun.Margin = new System.Windows.Forms.Padding(2);
+            this.btnAbortRun.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnAbortRun.Name = "btnAbortRun";
             this.btnAbortRun.Size = new System.Drawing.Size(93, 24);
             this.btnAbortRun.TabIndex = 61;
@@ -690,7 +846,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(461, 667);
+            this.ClientSize = new System.Drawing.Size(461, 713);
             this.Controls.Add(this.btnAbortRun);
             this.Controls.Add(this.cbCalendarDates);
             this.Controls.Add(this.statusStrip1);
@@ -783,5 +939,18 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ComboBox cbCalendarDates;
         private System.Windows.Forms.Button btnAbortRun;
+        private System.Windows.Forms.CheckBox cbLaadSAPICMPDNull;
+        private System.Windows.Forms.CheckBox cbLaadSAPPolisPDNull;
+        private System.Windows.Forms.CheckBox cbLaadSAPKlantPDNull;
+        private System.Windows.Forms.CheckBox cbLaadSAPAchterstandPDNull;
+        private System.Windows.Forms.CheckBox cbLaadQuionPDNull;
+        private System.Windows.Forms.CheckBox cbLaadHousePDNull;
+        private System.Windows.Forms.CheckBox cbLaadMidasCKPDNull;
+        private System.Windows.Forms.CheckBox cbLaadMidasPDNull;
+        private System.Windows.Forms.CheckBox cbLaadDaybreakPDNull;
+        private System.Windows.Forms.CheckBox cbLaadCloseCMPDNull;
+        private System.Windows.Forms.CheckBox cbLaadClosePDNull;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox cbLaadHomesPDNull;
     }
 }

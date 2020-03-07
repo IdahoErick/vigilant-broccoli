@@ -29,7 +29,7 @@ namespace DIMonitor
             Refresh();
 
         }
-        public void Refresh()
+        public override void Refresh()
         {
             string cs = Utility.GetConnectionString(_eNV, _bU, _period, false);
             string query = (_bU == Utility.BU.ILVB ? SQLQueries.SQL_LOGBOEK_ILH : SQLQueries.SQL_LOGBOEK_ILSB);

@@ -78,35 +78,35 @@ namespace DIMonitor
             _runDetailList.Add(new clsRunDetail("Peildatum", clsRunDetail.DetailType.DateTimeLabel, lblPeilDatum));
             //_runDetailList.Add(new clsRunDetail("Dag"));
             //_runDetailList.Add(new clsRunDetail("Special"));
-            _runDetailList.Add(new clsRunDetail("CLOSE_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpClosePeilDatum));
+            _runDetailList.Add(new clsRunDetail("CLOSE_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpClosePeilDatum, false, cbLaadClosePDNull ));
             //_runDetailList.Add(new clsRunDetail("CLOSE_Maand_Ultimo"));
-            _runDetailList.Add(new clsRunDetail("CLOSE_CM_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpCloseCMPeilDatum));
+            _runDetailList.Add(new clsRunDetail("CLOSE_CM_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpCloseCMPeilDatum, false, cbLaadCloseCMPDNull));
             //_runDetailList.Add(new clsRunDetail("CLOSE_CM_Maand_Ultimo"));
-            _runDetailList.Add(new clsRunDetail("DAYBREAK_Verwacht_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpDaybreakPeilDatum));
+            _runDetailList.Add(new clsRunDetail("DAYBREAK_Verwacht_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpDaybreakPeilDatum, false, cbLaadDaybreakPDNull));
             //_runDetailList.Add(new clsRunDetail("DAYBREAK_Vorige_Peildatum"));
             //_runDetailList.Add(new clsRunDetail("DAYBREAK_Maand_Ultimo"));
-            _runDetailList.Add(new clsRunDetail("HOMES_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpHomesPeilDatum));
+            _runDetailList.Add(new clsRunDetail("HOMES_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpHomesPeilDatum, false, cbLaadHomesPDNull));
             //_runDetailList.Add(new clsRunDetail("HOMES_Maand_Ultimo"));
             //_runDetailList.Add(new clsRunDetail("HIST_HOMES_Peildatum"));
             //_runDetailList.Add(new clsRunDetail("HIST_HOMES_Maand_Ultimo"));
-            _runDetailList.Add(new clsRunDetail("MIDAS_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpMidasPeilDatum));
+            _runDetailList.Add(new clsRunDetail("MIDAS_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpMidasPeilDatum, false, cbLaadMidasPDNull));
             //_runDetailList.Add(new clsRunDetail("MIDAS_Maand_Ultimo"));
-            _runDetailList.Add(new clsRunDetail("MIDAS_CK_Verwacht_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpMidasCKPeilDatum));
+            _runDetailList.Add(new clsRunDetail("MIDAS_CK_Verwacht_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpMidasCKPeilDatum, false, cbLaadMidasCKPDNull));
             //_runDetailList.Add(new clsRunDetail("MIDAS_CK_Vorige_Peildatum"));
             //_runDetailList.Add(new clsRunDetail("MIDAS_CK_Maand_Ultimo"));
-            _runDetailList.Add(new clsRunDetail("HOUSE_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpHousePeilDatum));
+            _runDetailList.Add(new clsRunDetail("HOUSE_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpHousePeilDatum, false, cbLaadHousePDNull));
             //_runDetailList.Add(new clsRunDetail("HOUSE_Maand_Ultimo"));
-            _runDetailList.Add(new clsRunDetail("QUION_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpQuionPeilDatum));
+            _runDetailList.Add(new clsRunDetail("QUION_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpQuionPeilDatum, false, cbLaadQuionPDNull));
             //_runDetailList.Add(new clsRunDetail("QUION_Maand_Ultimo"));
-            _runDetailList.Add(new clsRunDetail("SAPBW_Achterstand_PolisData_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpSAPAchterstandPeilDatum));
-            _runDetailList.Add(new clsRunDetail("SAPBW_KlantData_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpSAPKlantPeilDatum));
-            _runDetailList.Add(new clsRunDetail("SAPBW_PolisData_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpSAPPolisPeilDatum));
-            _runDetailList.Add(new clsRunDetail("SAP_ICM_Verwacht_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpSAPICMPeilDatum));
+            _runDetailList.Add(new clsRunDetail("SAPBW_Achterstand_PolisData_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpSAPAchterstandPeilDatum, false, cbLaadSAPAchterstandPDNull));
+            _runDetailList.Add(new clsRunDetail("SAPBW_KlantData_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpSAPKlantPeilDatum, false, cbLaadSAPKlantPDNull));
+            _runDetailList.Add(new clsRunDetail("SAPBW_PolisData_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpSAPPolisPeilDatum, false, cbLaadSAPPolisPDNull));
+            _runDetailList.Add(new clsRunDetail("SAP_ICM_Verwacht_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpSAPICMPeilDatum, false, cbLaadSAPICMPDNull));
             //_runDetailList.Add(new clsRunDetail("SAP_ICM_Vorige_Peildatum"));
             //_runDetailList.Add(new clsRunDetail("SAP_ICM_Maand_Ultimo"));
             _runDetailList.Add(new clsRunDetail("VOORBEREIDEN_RUN", clsRunDetail.DetailType.Checkbox, cbVoorbereidenRun));
             _runDetailList.Add(new clsRunDetail("ARCHIEFBESTANDEN_ZIPPEN", clsRunDetail.DetailType.Checkbox, cbArchiefbestandenZippen));
-            _runDetailList.Add(new clsRunDetail("LAAD_HOUSE_FP", clsRunDetail.DetailType.Checkbox, cbLaadHouseFP, true));
+            _runDetailList.Add(new clsRunDetail("LAAD_HOUSE_FP", clsRunDetail.DetailType.Checkbox, cbLaadHouseFP, false));
             _runDetailList.Add(new clsRunDetail("LEGEN_STG", clsRunDetail.DetailType.Checkbox, cbLegenStaging));
             _runDetailList.Add(new clsRunDetail("LAAD_STG", clsRunDetail.DetailType.Checkbox, cbLaadStaging));
             _runDetailList.Add(new clsRunDetail("LAAD_CBS", clsRunDetail.DetailType.Checkbox, cbLaadCBS, true));
@@ -214,7 +214,7 @@ namespace DIMonitor
             {
                 clsRunDetail rd = _runDetailList.Find(x => x.Name.Equals(dc.Caption));
                 if (rd != null)
-                    rd.DBValue = dtDetails.Rows[0][dc.Caption].ToString();
+                    rd.SetValue(dtDetails.Rows[0][dc.Caption].ToString());
                 else
                     MessageBox.Show("Detail not found in list for column:" + dc.Caption);
             }
@@ -343,11 +343,7 @@ namespace DIMonitor
                     }
                     catch (Exception ex)
                     {
-                        string message = ex.Message;
-                        if (message.Length > 100)
-                            message = message.Substring(0, 100);
-                        toolStripStatusLabel1.Text = DateTime.Now.ToString() + ": " + message;
-                        MessageBox.Show(ex.Message);
+                        ShowMessage(ex.Message);
                     }
                 }
                 else
@@ -356,6 +352,39 @@ namespace DIMonitor
             else
                 toolStripStatusLabel1.Text = DateTime.Now.ToString() + ": Function only available on local machine";
        
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            string query = GenerateUpdateQuery();
+            if (query.Length > 0)
+            {
+                string cs = Utility.GetConnectionString(_env, _bu, _period);
+                try
+                {
+                    int rc = _sqlDA.ExecuteSQLCommand(cs, query);
+                    if (rc == 1)
+                        MessageBox.Show("Calendar updated!");
+                    else
+                        MessageBox.Show("Failed to update calendar");
+
+                    RefreshData();  // Refresh form data
+                }
+                catch (Exception ex)
+                {
+                    ShowMessage(ex.Message);
+                }
+            }
+            else
+                MessageBox.Show("Nothing to update!");
+        }
+        private void ShowMessage(string exceptionMessage)
+        {
+            string message = exceptionMessage;
+            if (message.Length > 100)
+                message = message.Substring(0, 100);
+            toolStripStatusLabel1.Text = DateTime.Now.ToString() + ": " + message;
+            MessageBox.Show(exceptionMessage);
         }
     }
 }

@@ -60,6 +60,7 @@
             this.dgvFailureDetails.RowTemplate.Height = 24;
             this.dgvFailureDetails.Size = new System.Drawing.Size(933, 122);
             this.dgvFailureDetails.TabIndex = 1;
+            this.dgvFailureDetails.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvFailureDetails_CellContentDoubleClick);
             // 
             // dgvSSISErrors
             // 
@@ -76,7 +77,6 @@
             this.dgvSSISErrors.RowTemplate.Height = 24;
             this.dgvSSISErrors.Size = new System.Drawing.Size(933, 122);
             this.dgvSSISErrors.TabIndex = 3;
-            this.dgvSSISErrors.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
             // 
             // label2
             // 
@@ -87,7 +87,6 @@
             this.label2.Size = new System.Drawing.Size(60, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "SSIS errors";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // TroublehsootingForm
             // 

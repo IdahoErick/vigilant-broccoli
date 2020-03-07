@@ -12,26 +12,11 @@ namespace DIMonitor
 {
     public partial class SSISLogForm : BaseForm
     {
-        //private Utility.BU _bU;
-        //private Utility.ENV _eNV;
-        //private Utility.PERIOD _period;
-        //private SQLDBAccess _sqlDA = new SQLDBAccess();
-        //private Boolean _sortAsc = true;
-        //private Int64 _ssisRunID = 0;
-
-        public SSISLogForm(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period, Int64 ssisRunID)
+        public SSISLogForm(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period, int ILRunID, Int64 ssisRunID, DateTime calenderDate)
         {
             InitializeComponent();
-            Init(eNV, bU, period, ssisRunID);
+            Init(eNV, bU, period, ILRunID, ssisRunID, calenderDate);
         }
-
-//            _eNV = eNV;
-//            _period = period;
-//            _bU = bU;
-//            _ssisRunID = ssisRunID;
-
-//            Refresh();
-//        }
         public SSISLogForm()
         {
             InitializeComponent();

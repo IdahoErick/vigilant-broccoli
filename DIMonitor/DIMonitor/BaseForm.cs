@@ -56,17 +56,37 @@ namespace DIMonitor
             get { return _bU; }
             set { _bU = value; }
         }
+
+        DateTime _calendarDate;
+
+        public DateTime CalendarDate
+        {
+            get { return _calendarDate; }
+            set { _calendarDate = value; }
+        }
+
+        private int _ILRunID;
+
+        public int ILRunID
+        {
+            get { return _ILRunID; }
+            set { _ILRunID = value; }
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
         }
-
-        protected void Init(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period, Int64 ssisRunID)
+        
+        protected void Init(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period, int ILRunID, Int64 ssisRunID, DateTime calendarDate)
         {
             _eNV = eNV;
             _period = period;
             _bU = bU;
+            _ILRunID = ILRunID;
             _ssisRunID = ssisRunID;
+            _calendarDate = calendarDate;
 
             Refresh();
         }

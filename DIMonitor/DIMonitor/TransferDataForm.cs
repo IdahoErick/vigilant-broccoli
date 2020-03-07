@@ -29,7 +29,7 @@ namespace DIMonitor
 
         private void btnRunBcp_Click(object sender, EventArgs e)
         {
-            if ((this.cbTransferBatchFile.SelectedItem != "") && (MessageBox.Show("Execute batch file " + this.cbTransferBatchFile.SelectedItem + "?", "Data Transfer", MessageBoxButtons.OKCancel) == DialogResult.OK))
+            if ((this.cbTransferBatchFile.SelectedItem.ToString() != "") && (MessageBox.Show("Execute batch file " + this.cbTransferBatchFile.SelectedItem + "?", "Data Transfer", MessageBoxButtons.OKCancel) == DialogResult.OK))
             {
                 try
                 {
