@@ -23,3 +23,4 @@ C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Release\DIMonitor.application
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Release\DIMonitor.exe
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Release\DIMonitor.pdb
 C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Release\DIMonitor.MakeCSVForm.resources
+C:\Temp\vigilant-broccoli\DIMonitor\DIMonitor\obj\Release\DIMonitor.VVRunDetailsForm.resources

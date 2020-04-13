@@ -85,6 +85,29 @@ namespace DIMonitor
             byte[] b = System.Text.ASCIIEncoding.ASCII.GetBytes(strEncrypted);
             string encrypted = Convert.ToBase64String(b);
             return encrypted;
-        }  
+        }
+        public static DateTime ParseDateStringToDate(string dateString)
+        {
+            try
+            {
+                return Convert.ToDateTime(dateString);
+            }
+            catch
+            {
+                return Convert.ToDateTime("1900-01-01");
+            }
+        }
+
+        public static string ParseDateStringToLabel(string dateString)
+        {
+            try
+            {
+                return Convert.ToDateTime(dateString).ToString("dd-MM-yyyy");
+            }
+            catch
+            {
+                return "Unknown";
+            }
+        }
     }
 }

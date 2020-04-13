@@ -19,7 +19,7 @@ namespace DIMonitor
         {
             InitializeComponent();
 
-            Init(env, bu, period, ILRunID, ssisRunID, kalenderDatum);
+            Init(env, bu, period, ILRunID, ssisRunID, kalenderDatum, toolStripStatusLabel1);
 
             lblEnvironment.Text = env.ToString();
             lblBU.Text = bu.ToString();
@@ -53,7 +53,7 @@ namespace DIMonitor
             RunDetailList.Add(new clsRunDetail("CFDistributielijst", clsRunDetail.DetailType.TextBox,tbDistributieLijst));
         }
 
-        private int RefreshData()
+        public override int RefreshData()
         {
             string cs;
             int rc = 0;
@@ -77,26 +77,26 @@ namespace DIMonitor
                     // Load details list
                     LoadDetailsList(ds.Tables[0]);
 
-                    lblPeilDatum.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["PeilDatum"]).ToString("dd-MM-yyyy");
+                    //lblPeilDatum.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["PeilDatum"]).ToString("dd-MM-yyyy");
                     
-                    cbLegenStaging.Checked = (ds.Tables[0].Rows[0]["LEGEN_STG"].ToString() == "J");
-                    cbLaadStaging.Checked = (ds.Tables[0].Rows[0]["LAAD_STG"].ToString() == "J");
+                    //cbLegenStaging.Checked = (ds.Tables[0].Rows[0]["LEGEN_STG"].ToString() == "J");
+                    //cbLaadStaging.Checked = (ds.Tables[0].Rows[0]["LAAD_STG"].ToString() == "J");
                     
-                    cbLaadEPMidas.Checked = (ds.Tables[0].Rows[0]["BRON_EP_MIDAS"].ToString() == "J");
-                    cbLaadEPNN.Checked = (ds.Tables[0].Rows[0]["BRON_EP_NN"].ToString() == "J");
-                    cbLaadIKV.Checked = (ds.Tables[0].Rows[0]["BRON_IKV"].ToString() == "J");
-                    cbLaadOFS.Checked = (ds.Tables[0].Rows[0]["BRON_OFS"].ToString() == "J");
-                    cbLaadOFSMidas.Checked = (ds.Tables[0].Rows[0]["BRON_OFS_MIDAS"].ToString() == "J");
-                    cbDoelOFSKlantdata.Checked = (ds.Tables[0].Rows[0]["DOEL_OFS_KLANTDATA"].ToString() == "J");
-                    cbLaadDDS.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS"].ToString() == "J");
-                    cbLaadDDSDWH.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS_DWH"].ToString() == "J");
-                    cbMaakCF.Checked = (ds.Tables[0].Rows[0]["MAAK_CF"].ToString() == "J");
+                    //cbLaadEPMidas.Checked = (ds.Tables[0].Rows[0]["BRON_EP_MIDAS"].ToString() == "J");
+                    //cbLaadEPNN.Checked = (ds.Tables[0].Rows[0]["BRON_EP_NN"].ToString() == "J");
+                    //cbLaadIKV.Checked = (ds.Tables[0].Rows[0]["BRON_IKV"].ToString() == "J");
+                    //cbLaadOFS.Checked = (ds.Tables[0].Rows[0]["BRON_OFS"].ToString() == "J");
+                    //cbLaadOFSMidas.Checked = (ds.Tables[0].Rows[0]["BRON_OFS_MIDAS"].ToString() == "J");
+                    //cbDoelOFSKlantdata.Checked = (ds.Tables[0].Rows[0]["DOEL_OFS_KLANTDATA"].ToString() == "J");
+                    //cbLaadDDS.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS"].ToString() == "J");
+                    //cbLaadDDSDWH.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS_DWH"].ToString() == "J");
+                    //cbMaakCF.Checked = (ds.Tables[0].Rows[0]["MAAK_CF"].ToString() == "J");
 
-                    tbDistributieLijst.Text = ds.Tables[0].Rows[0]["CFDistributielijst"].ToString();
+                    //tbDistributieLijst.Text = ds.Tables[0].Rows[0]["CFDistributielijst"].ToString();
 
-                    cbLegenDDS.Checked = (ds.Tables[0].Rows[0]["LEGEN_DDS"].ToString() == "J");
-                    cbLaadDDS.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS"].ToString() == "J");
-                    cbLaadDDSDWH.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS_DWH"].ToString() == "J");
+                    //cbLegenDDS.Checked = (ds.Tables[0].Rows[0]["LEGEN_DDS"].ToString() == "J");
+                    //cbLaadDDS.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS"].ToString() == "J");
+                    //cbLaadDDSDWH.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS_DWH"].ToString() == "J");
                 }
             }
             else
@@ -113,38 +113,7 @@ namespace DIMonitor
 
         private void btnStartRun_Click(object sender, EventArgs e)
         {
-            if (ENV == Utility.ENV.LOCAL)
-            {
-                try
-                {
-                    string envMessage = BU.ToString() + " - " + ENV.ToString() + " - " + Period.ToString();
-
-                    if (MessageBox.Show("Start run " + envMessage + " ?", "Start Run", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        string cs = Utility.GetConnectionString(ENV, BU, Period);
-
-                        string startRunQuery = (BU == Utility.BU.ILVB ? SQLQueries.SQL_START_RUN_ILH : SQLQueries.SQL_START_RUN_ILH);
-                        startRunQuery = startRunQuery.Replace("<PERIOD>", Period == Utility.PERIOD.MAAND ? "MAAND" : "DAG");
-                        startRunQuery = startRunQuery.Replace("<Kalenderdatum>", FormatDate4DB(CalendarDate));
-
-                        int rc = this.SqlDA.ExecuteSQLCommand(cs, startRunQuery);
-                        string message = "Run Started, " + envMessage;
-                        toolStripStatusLabel1.Text = DateTime.Now.ToString() + ": " + message;
-                        MessageBox.Show(message);
-                        this.Close();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string message = ex.Message;
-                    if (message.Length > 100)
-                        message = message.Substring(0, 100);
-                    toolStripStatusLabel1.Text = DateTime.Now.ToString() +  ": " + message;
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else
-                toolStripStatusLabel1.Text = DateTime.Now.ToString() +  ": Function only available on local machine";
+            StartRun();
         }
 
         private void cbCalendarDates_SelectedIndexChanged(object sender, EventArgs e)
@@ -156,99 +125,19 @@ namespace DIMonitor
             }
         }
 
-         private string FormatDate4DB(DateTime date)
-        {
-            return String.Format("{0}-{1}-{2}", date.Year, date.Month, date.Day);
-        }
-
         private void btnGenerateScript_Click(object sender, EventArgs e)
         {
-            string query = GenerateUpdateQuery();
-            if (query.Length > 0)
-            {
-                QueryOutputForm queryForm = new QueryOutputForm(query.ToString());
-                queryForm.Show();
-            }
-            else
-                MessageBox.Show("Nothing to update!");
+            GenerateUpdateScript(false);
         }
 
         private void btnAbortRun_Click(object sender, EventArgs e)
         {
-            if (ENV == Utility.ENV.LOCAL)
-            {
-                if (SsisRunID > 0)
-                {
-                    try
-                    {
-                        string envMessage = BU.ToString() + " - " + ENV.ToString() + " - " + Period.ToString();
-
-                        if (MessageBox.Show("Abort run " + envMessage + " ?", "Abort Run", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            string cs = Utility.GetConnectionString(ENV, BU, Period);
-
-                            string abortRunQuery = SQLQueries.SQL_ABORT_RUN.Replace("<RunID>", this.SsisRunID.ToString());
-                            int rc = SqlDA.ExecuteSQLCommand(cs, abortRunQuery);
-                            string message = "Run Aborted, " + envMessage;
-                            toolStripStatusLabel1.Text = DateTime.Now.ToString() + ": " + message;
-                            MessageBox.Show(message);
-                            this.Close();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowMessage(ex.Message);
-                    }
-                }
-                else
-                    toolStripStatusLabel1.Text = DateTime.Now.ToString() + ": No valid SSIS Run ID available";
-            }
-            else
-                toolStripStatusLabel1.Text = DateTime.Now.ToString() + ": Function only available on local machine";
-       
+            AbortRun();
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
-            string query = GenerateUpdateQuery();
-            if (query.Length > 0)
-            {
-                string cs = Utility.GetConnectionString(ENV, BU, Period);
-                try
-                {
-                    int rc = SqlDA.ExecuteSQLCommand(cs, query);
-                    if (rc == 1)
-                        MessageBox.Show("Calendar updated!");
-                    else
-                        MessageBox.Show("Failed to update calendar");
-
-                    RefreshData();  // Refresh form data
-                }
-                catch (Exception ex)
-                {
-                    ShowMessage(ex.Message);
-                }
-            }
-            else
-                MessageBox.Show("Nothing to update!");
-        }
-        private void ShowMessage(string exceptionMessage)
-        {
-            string message = exceptionMessage;
-            if (message.Length > 100)
-                message = message.Substring(0, 100);
-            toolStripStatusLabel1.Text = DateTime.Now.ToString() + ": " + message;
-            MessageBox.Show(exceptionMessage);
-        }
-
-        private void groupBox2_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tbDistributieLijst_TextChanged(object sender, EventArgs e)
-        {
-
+            GenerateUpdateScript(true);
         }
     }
 }

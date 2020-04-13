@@ -111,6 +111,12 @@ namespace DIMonitor
             this._control = control;
             this._usesP = usesP;
             this._cbPeilDatumNull = cbPeilDatumNull;
+
+            // Register OnCheckedChanged event
+            if (cbPeilDatumNull != null)
+            {
+                cbPeilDatumNull.CheckedChanged += new System.EventHandler(this.cbCheckedChanged);
+            }
         }
         public clsRunDetail(string name, string value, DetailType detailType)
         {
@@ -121,15 +127,64 @@ namespace DIMonitor
         public void SetValue(string value)
         {
             this._dbValue = value;
-            if ((value == "") && this._cbPeilDatumNull != null)
+        }
+
+        // Update all controls on form
+        public void UpdateControls(string value=null, bool setCheckBox=true)
+        {
+            if (value == null)
+                value = this._dbValue;
+
+            if (this._runDetailType == DetailType.DateTimePicker)
             {
-                this._control.Enabled = false;
-                this._cbPeilDatumNull.Checked = true;
+                bool nullPeilDatumValue = ((value == "") && this._cbPeilDatumNull != null);
+
+                this._control.Enabled = !nullPeilDatumValue;
+                if ((this._cbPeilDatumNull != null) && setCheckBox == true)
+                    this._cbPeilDatumNull.Checked = nullPeilDatumValue;
+
+                if (this._control is DateTimePicker)
+                {
+                    DateTimePicker dtp = (DateTimePicker)this._control;
+                    dtp.Format = DateTimePickerFormat.Custom;
+
+                    if (nullPeilDatumValue)
+                    {   // null value peildatum: disable peildatum control and set null value checkbox
+                        // Empty peildatum picker
+                        dtp.CustomFormat = " ";
+                    }
+                    else if (this._cbPeilDatumNull != null)
+                    {
+                        dtp.CustomFormat = "yyyy-MM-dd";
+                        dtp.Value = DateTime.Parse(value);
+                    }
+                }
             }
-            else if ((value != "null") && this._cbPeilDatumNull != null)
+            else if (this._runDetailType == DetailType.DateTimeLabel)
             {
-                this._control.Enabled = true;
-                this._cbPeilDatumNull.Checked = false;
+                this._control.Text = Convert.ToDateTime(value).ToString("dd-MM-yyyy");
+            }
+            else if (this._runDetailType == DetailType.Checkbox)
+                ((CheckBox)this._control).Checked = (value.ToString() == (_usesP ? "P" : "J"));
+            else if (this._runDetailType == DetailType.DateTimePicker)
+                this._control.Text = value.ToString();
+            else if (this._runDetailType == DetailType.Label)
+                this._control.Text = value.ToString();
+            else if (this._runDetailType == DetailType.TextBox)
+                this._control.Text = value.ToString();
+        }
+
+        private void cbCheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox cb = (CheckBox)sender;
+            if (cb.CheckState == CheckState.Checked)
+                UpdateControls("", false);
+            else
+            {
+                string newValue = this._dbValue;
+                if (newValue == "")
+                    newValue = DateTime.Now.ToShortDateString();
+                UpdateControls(newValue, false);
             }
         }
     }

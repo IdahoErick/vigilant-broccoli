@@ -312,7 +312,7 @@ namespace DIMonitor
 
         public const string SQL_START_RUN_ILH =
             "delete from ILH_METADATA.[MDA].[KALENDERVERWERKING_<PERIOD>_CORRECTIE]\n" +
-            "INSERT INTO [ILH_METADATA].[MDA].[KALENDERVERWERKING_<PERIOD>_CORRECTIE] ([Kalenderdatum]) VALUES ('2013-01-01')\n" +
+            "INSERT INTO [ILH_METADATA].[MDA].[KALENDERVERWERKING_<PERIOD>_CORRECTIE] ([Kalenderdatum]) VALUES ('<Kalenderdatum>')\n" +
             "truncate table ILH_metadata.dcf.runstartstatus\n" +
             "declare @reference_id int = (select reference_id from SSISDB.catalog.environment_references where environment_name='ILH_DataIntegratie_<PERIOD>')\n" +
             "Declare @execution_id bigint\n" +
@@ -325,6 +325,15 @@ namespace DIMonitor
             "DECLARE @var2 smallint = 1\n" +
             "EXEC [SSISDB].[catalog].[set_execution_parameter_value] @execution_id,  @object_type=50, @parameter_name=N'LOGGING_LEVEL', @parameter_value=@var2\n" +
             "EXEC [SSISDB].[catalog].[start_execution] @execution_id\n";
+
+        public const string SQL_START_RUN_ILSB =
+            @"declare @reference_id int = (select reference_id from SSISDB.catalog.environment_references where environment_name='ILSB_DataIntegratie_<PERIOD>')
+            Declare @execution_id bigint
+            EXEC [SSISDB].[catalog].[create_execution] @package_name=N'SEQ_MAIN.dtsx', @execution_id=@execution_id OUTPUT, @folder_name=N'ILSB_DataIntegratie', @project_name=N'ILSB_DataIntegratie_SSIS', @use32bitruntime=False, @reference_id=@reference_id
+            DECLARE @var0 smallint = 1
+            EXEC [SSISDB].[catalog].[set_execution_parameter_value] @execution_id,  @object_type=50, @parameter_name=N'LOGGING_LEVEL', @parameter_value=@var0
+            EXEC [SSISDB].[catalog].[start_execution] @execution_id";
+
         /*
         public const string SQL_START_RUN_ILH =
             "delete from ILH_METADATA.[MDA].[KALENDERVERWERKING_<PERIOD>_CORRECTIE]\n" +

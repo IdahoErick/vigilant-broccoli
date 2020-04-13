@@ -10,9 +10,17 @@ namespace DIMonitor
 {
     public partial class RunDetailBaseForm : Form
     {
+        private ToolStripStatusLabel _toolStripStatusLabel;
+
+        public ToolStripStatusLabel ToolStripStatusLabel
+        {
+            get { return _toolStripStatusLabel; }
+            set { _toolStripStatusLabel = value; }
+        }
+
         private Utility.BU _bU;
         private Utility.ENV _eNV;
-
+        
         public Utility.ENV ENV
         {
             get { return _eNV; }
@@ -94,7 +102,7 @@ namespace DIMonitor
             base.Dispose(disposing);
         }
         
-        protected void Init(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period, int ILRunID, Int64 ssisRunID, DateTime calendarDate)
+        protected void Init(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period, int ILRunID, Int64 ssisRunID, DateTime calendarDate, ToolStripStatusLabel toolStripStatusLabel)
         {
             _eNV = eNV;
             _period = period;
@@ -102,6 +110,7 @@ namespace DIMonitor
             _ILRunID = ILRunID;
             _ssisRunID = ssisRunID;
             _calendarDate = calendarDate;
+            _toolStripStatusLabel = toolStripStatusLabel;
 
             Refresh();
         }
@@ -133,7 +142,10 @@ namespace DIMonitor
             {
                 clsRunDetail rd = _runDetailList.Find(x => x.Name.Equals(dc.Caption));
                 if (rd != null)
+                {
                     rd.SetValue(dtDetails.Rows[0][dc.Caption].ToString());
+                    rd.UpdateControls();
+                }
                 else
                     MessageBox.Show("Detail not found in list for column:" + dc.Caption);
             }
@@ -166,7 +178,127 @@ namespace DIMonitor
             return query.ToString();
         }
 
+        protected string FormatDate4DB(DateTime date)
+        {
+            return String.Format("{0}-{1}-{2}", date.Year, date.Month, date.Day);
+        }
+        
+        protected void GenerateUpdateScript(bool executeScript)
+        {
+            string query = GenerateUpdateQuery();
+            if (query.Length > 0)
+            {
+                if (executeScript)
+                {
+                    string cs = Utility.GetConnectionString(ENV, BU, Period);
+                    try
+                    {
+                        int rc = SqlDA.ExecuteSQLCommand(cs, query);
+                        if (rc >= 1)
+                            MessageBox.Show("Calendar updated!");
+                        else
+                            MessageBox.Show("Failed to update calendar");
 
+                        RefreshData();  // Refresh form data
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowMessage(ex.Message);
+                    }
+                 }
+                else
+                {
+                    QueryOutputForm queryForm = new QueryOutputForm(query.ToString());
+                    queryForm.Show();
+                }
+            }
+            else
+                MessageBox.Show("Nothing to update!");
+        }
+
+        protected void AbortRun()
+        {
+            if (ENV == Utility.ENV.LOCAL)
+            {
+                if (SsisRunID > 0)
+                {
+                    try
+                    {
+                        string envMessage = BU.ToString() + " - " + ENV.ToString() + " - " + Period.ToString();
+
+                        if (MessageBox.Show("Abort run " + envMessage + " ?", "Abort Run", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            string cs = Utility.GetConnectionString(ENV, BU, Period);
+
+                            string abortRunQuery = SQLQueries.SQL_ABORT_RUN.Replace("<RunID>", this.SsisRunID.ToString());
+                            int rc = SqlDA.ExecuteSQLCommand(cs, abortRunQuery);
+                            string message = "Run Aborted, " + envMessage;
+                            _toolStripStatusLabel.Text = DateTime.Now.ToString() + ": " + message;
+                            MessageBox.Show(message);
+                            this.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowMessage(ex.Message);
+                    }
+                }
+                else
+                    _toolStripStatusLabel.Text = DateTime.Now.ToString() + ": No valid SSIS Run ID available";
+            }
+            else
+                _toolStripStatusLabel.Text = DateTime.Now.ToString() + ": Function only available on local machine";
+        }
+
+        protected void ShowMessage(string exceptionMessage)
+        {
+            string message = exceptionMessage;
+            if (message.Length > 100)
+                message = message.Substring(0, 100);
+            _toolStripStatusLabel.Text = DateTime.Now.ToString() + ": " + message;
+            MessageBox.Show(exceptionMessage);
+        }
+
+        public virtual int RefreshData()
+        {
+            return -1;
+        }
+
+        protected void StartRun()
+        {
+            if (ENV == Utility.ENV.LOCAL)
+            {
+                try
+                {
+                    string envMessage = BU.ToString() + " - " + ENV.ToString() + " - " + Period.ToString();
+
+                    if (MessageBox.Show("Start run " + envMessage + " ?", "Start Run", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        string cs = Utility.GetConnectionString(ENV, BU, Period);
+
+                        string startRunQuery = (BU == Utility.BU.ILVB ? SQLQueries.SQL_START_RUN_ILH : SQLQueries.SQL_START_RUN_ILSB);
+                        startRunQuery = startRunQuery.Replace("<PERIOD>", Period == Utility.PERIOD.MAAND ? "MAAND" : "DAG");
+                        startRunQuery = startRunQuery.Replace("<Kalenderdatum>", FormatDate4DB(CalendarDate));
+
+                        int rc = this.SqlDA.ExecuteSQLCommand(cs, startRunQuery);
+                        string message = "Run Started, " + envMessage;
+                        _toolStripStatusLabel.Text = DateTime.Now.ToString() + ": " + message;
+                        MessageBox.Show(message);
+                        this.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string message = ex.Message;
+                    if (message.Length > 100)
+                        message = message.Substring(0, 100);
+                    _toolStripStatusLabel.Text = DateTime.Now.ToString() + ": " + message;
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else
+                _toolStripStatusLabel.Text = DateTime.Now.ToString() + ": Function only available on local machine";
+        }
     }
 }
 

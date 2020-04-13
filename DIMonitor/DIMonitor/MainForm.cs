@@ -127,8 +127,8 @@ namespace DIMonitor
                                 bNewInfo = true;
                             _status = runStatus;
 
-                            _kalenderDatum = Convert.ToDateTime(ds.Tables[0].Rows[0]["KalenderDatum"]);
-                            lblKalenderDatum.Text = _kalenderDatum.ToString("dd-MM-yyyy");
+                            _kalenderDatum = Utility.ParseDateStringToDate(ds.Tables[0].Rows[0]["KalenderDatum"].ToString());
+                            lblKalenderDatum.Text = Utility.ParseDateStringToLabel(ds.Tables[0].Rows[0]["KalenderDatum"].ToString());
                             lblBeginDTM.Text = ds.Tables[0].Rows[0]["StartDatumTijd"].ToString();
                             lblEndDTM.Text = ds.Tables[0].Rows[0]["EindDatumTijd"].ToString();
                             _SSISRunID = Convert.ToInt64(ds.Tables[0].Rows[0]["Execution_ID"]);
@@ -383,11 +383,7 @@ namespace DIMonitor
 
         private void btnSSISRefresh_Click(object sender, EventArgs e)
         {
-            //Utility.ENV env = (Utility.ENV)cbEnvironment.SelectedIndex;
-            //Utility.BU bu = (Utility.BU)cbBU.SelectedIndex;
-            //Utility.PERIOD period = (Utility.PERIOD)cbPeriod.SelectedIndex;
             string cs = Utility.GetConnectionString((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, false);
-
             lblLatestSSISMessage.Text = GetLatestSSISMessage(cs, _SSISRunID);
         }
 
@@ -533,6 +529,12 @@ namespace DIMonitor
         {
             MakeCSVForm makeCSVForm = new MakeCSVForm();
             makeCSVForm.Show();
+        }
+
+        private void btnLastSSISMsg_Click(object sender, EventArgs e)
+        {
+            string cs = Utility.GetConnectionString((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, false);
+            lblLatestSSISMessage.Text = GetLatestSSISMessage(cs, _SSISRunID);
         }
     }
 }

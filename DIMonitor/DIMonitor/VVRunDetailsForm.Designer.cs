@@ -128,7 +128,6 @@
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Enabled = false;
             this.btnUpdate.Location = new System.Drawing.Point(610, 164);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnUpdate.Name = "btnUpdate";
@@ -223,7 +222,6 @@
             // 
             // btnStartRun
             // 
-            this.btnStartRun.Enabled = false;
             this.btnStartRun.Location = new System.Drawing.Point(610, 212);
             this.btnStartRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnStartRun.Name = "btnStartRun";
@@ -261,7 +259,6 @@
             // 
             // btnAbortRun
             // 
-            this.btnAbortRun.Enabled = false;
             this.btnAbortRun.Location = new System.Drawing.Point(610, 260);
             this.btnAbortRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAbortRun.Name = "btnAbortRun";
@@ -378,7 +375,6 @@
             this.groupBox2.TabIndex = 28;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Bronnen";
-            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
             // cbLegenDDS
             // 
@@ -398,7 +394,6 @@
             this.tbDistributieLijst.Name = "tbDistributieLijst";
             this.tbDistributieLijst.Size = new System.Drawing.Size(252, 39);
             this.tbDistributieLijst.TabIndex = 63;
-            this.tbDistributieLijst.TextChanged += new System.EventHandler(this.tbDistributieLijst_TextChanged);
             // 
             // VVRunDetailsForm
             // 

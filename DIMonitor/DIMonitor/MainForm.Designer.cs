@@ -82,11 +82,10 @@
             this.lblOpmerkingen = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label14 = new System.Windows.Forms.Label();
             this.lblLatestSSISMessage = new System.Windows.Forms.Label();
+            this.btnLastSSISMsg = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.lblSSISRunID = new System.Windows.Forms.Label();
-            this.btnSSISRefresh = new System.Windows.Forms.Button();
             this.cbHistoryVersion = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -109,7 +108,7 @@
             // btnRefresh
             // 
             this.btnRefresh.Location = new System.Drawing.Point(360, 498);
-            this.btnRefresh.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRefresh.Margin = new System.Windows.Forms.Padding(2);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(86, 34);
             this.btnRefresh.TabIndex = 1;
@@ -127,7 +126,7 @@
             "ACC",
             "PROD"});
             this.cbEnvironment.Location = new System.Drawing.Point(46, 50);
-            this.cbEnvironment.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbEnvironment.Margin = new System.Windows.Forms.Padding(2);
             this.cbEnvironment.Name = "cbEnvironment";
             this.cbEnvironment.Size = new System.Drawing.Size(115, 26);
             this.cbEnvironment.TabIndex = 2;
@@ -156,7 +155,7 @@
             "DAG",
             "MAAND"});
             this.cbPeriod.Location = new System.Drawing.Point(168, 50);
-            this.cbPeriod.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbPeriod.Margin = new System.Windows.Forms.Padding(2);
             this.cbPeriod.Name = "cbPeriod";
             this.cbPeriod.Size = new System.Drawing.Size(115, 26);
             this.cbPeriod.TabIndex = 4;
@@ -169,7 +168,7 @@
             "ILVB",
             "ILVV"});
             this.cbBU.Location = new System.Drawing.Point(290, 50);
-            this.cbBU.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbBU.Margin = new System.Windows.Forms.Padding(2);
             this.cbBU.Name = "cbBU";
             this.cbBU.Size = new System.Drawing.Size(115, 26);
             this.cbBU.TabIndex = 5;
@@ -305,7 +304,7 @@
             // 
             this.cbOnTop.AutoSize = true;
             this.cbOnTop.Location = new System.Drawing.Point(454, 451);
-            this.cbOnTop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbOnTop.Margin = new System.Windows.Forms.Padding(2);
             this.cbOnTop.Name = "cbOnTop";
             this.cbOnTop.Size = new System.Drawing.Size(18, 17);
             this.cbOnTop.TabIndex = 18;
@@ -373,16 +372,16 @@
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(17, 20);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(286, 80);
+            this.pictureBox1.Size = new System.Drawing.Size(217, 61);
             this.pictureBox1.TabIndex = 28;
             this.pictureBox1.TabStop = false;
             // 
             // btnRunDetails
             // 
             this.btnRunDetails.Location = new System.Drawing.Point(39, 497);
-            this.btnRunDetails.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRunDetails.Margin = new System.Windows.Forms.Padding(2);
             this.btnRunDetails.Name = "btnRunDetails";
             this.btnRunDetails.Size = new System.Drawing.Size(145, 35);
             this.btnRunDetails.TabIndex = 29;
@@ -393,7 +392,7 @@
             // btnTroubleshooting
             // 
             this.btnTroubleshooting.Location = new System.Drawing.Point(216, 497);
-            this.btnTroubleshooting.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnTroubleshooting.Margin = new System.Windows.Forms.Padding(2);
             this.btnTroubleshooting.Name = "btnTroubleshooting";
             this.btnTroubleshooting.Size = new System.Drawing.Size(121, 35);
             this.btnTroubleshooting.TabIndex = 30;
@@ -407,10 +406,10 @@
             this.groupBox1.Controls.Add(this.pictureBox1);
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.groupBox1.Location = new System.Drawing.Point(17, 538);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox1.Size = new System.Drawing.Size(463, 112);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Size = new System.Drawing.Size(463, 91);
             this.groupBox1.TabIndex = 32;
             this.groupBox1.TabStop = false;
             // 
@@ -424,7 +423,7 @@
             this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(590, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(503, 28);
             this.menuStrip1.TabIndex = 33;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -541,10 +540,10 @@
             // 
             this.ssStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tssLabel});
-            this.ssStatusStrip.Location = new System.Drawing.Point(0, 725);
+            this.ssStatusStrip.Location = new System.Drawing.Point(0, 648);
             this.ssStatusStrip.Name = "ssStatusStrip";
             this.ssStatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 18, 0);
-            this.ssStatusStrip.Size = new System.Drawing.Size(590, 25);
+            this.ssStatusStrip.Size = new System.Drawing.Size(503, 25);
             this.ssStatusStrip.TabIndex = 35;
             this.ssStatusStrip.Text = "statusStrip1";
             // 
@@ -598,7 +597,6 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 27.6644F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 72.3356F));
-            this.tableLayoutPanel1.Controls.Add(this.label14, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.label9, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.lblBronsysteem, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.lblOpmerkingen, 1, 3);
@@ -610,8 +608,9 @@
             this.tableLayoutPanel1.Controls.Add(this.label12, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.lblDetailDTM, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.lblLatestSSISMessage, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.btnLastSSISMsg, 0, 5);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(39, 280);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 6;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
@@ -620,18 +619,8 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 22F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(441, 145);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(441, 150);
             this.tableLayoutPanel1.TabIndex = 40;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(3, 116);
-            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(94, 18);
-            this.label14.TabIndex = 40;
-            this.label14.Text = "SSIS Message:";
             // 
             // lblLatestSSISMessage
             // 
@@ -641,6 +630,16 @@
             this.lblLatestSSISMessage.Name = "lblLatestSSISMessage";
             this.lblLatestSSISMessage.Size = new System.Drawing.Size(0, 18);
             this.lblLatestSSISMessage.TabIndex = 41;
+            // 
+            // btnLastSSISMsg
+            // 
+            this.btnLastSSISMsg.Location = new System.Drawing.Point(4, 119);
+            this.btnLastSSISMsg.Name = "btnLastSSISMsg";
+            this.btnLastSSISMsg.Size = new System.Drawing.Size(115, 27);
+            this.btnLastSSISMsg.TabIndex = 42;
+            this.btnLastSSISMsg.Text = "Last SSIS msg";
+            this.btnLastSSISMsg.UseVisualStyleBackColor = true;
+            this.btnLastSSISMsg.Click += new System.EventHandler(this.btnLastSSISMsg_Click);
             // 
             // label11
             // 
@@ -663,17 +662,6 @@
             this.lblSSISRunID.Name = "lblSSISRunID";
             this.lblSSISRunID.Size = new System.Drawing.Size(2, 20);
             this.lblSSISRunID.TabIndex = 42;
-            // 
-            // btnSSISRefresh
-            // 
-            this.btnSSISRefresh.Location = new System.Drawing.Point(486, 398);
-            this.btnSSISRefresh.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.btnSSISRefresh.Name = "btnSSISRefresh";
-            this.btnSSISRefresh.Size = new System.Drawing.Size(30, 26);
-            this.btnSSISRefresh.TabIndex = 43;
-            this.btnSSISRefresh.Text = "R";
-            this.btnSSISRefresh.UseVisualStyleBackColor = true;
-            this.btnSSISRefresh.Click += new System.EventHandler(this.btnSSISRefresh_Click);
             // 
             // cbHistoryVersion
             // 
@@ -702,9 +690,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(590, 750);
+            this.ClientSize = new System.Drawing.Size(503, 673);
             this.Controls.Add(this.cbHistoryVersion);
-            this.Controls.Add(this.btnSSISRefresh);
             this.Controls.Add(this.lblSSISRunID);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.tableLayoutPanel1);
@@ -736,7 +723,7 @@
             this.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainForm";
             this.Text = "DI Monitor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -800,9 +787,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lblSSISRunID;
-        private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label lblLatestSSISMessage;
-        private System.Windows.Forms.Button btnSSISRefresh;
         private System.Windows.Forms.ToolStripMenuItem logsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem StagingLogboekMenuItem;
         private System.Windows.Forms.ToolStripMenuItem runDetailLogToolStripMenuItem1;
@@ -813,6 +798,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem transferDataToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem makeCSVToolStripMenuItem;
+        private System.Windows.Forms.Button btnLastSSISMsg;
     }
 }
 

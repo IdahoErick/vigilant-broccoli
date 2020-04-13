@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DIMonitor.exe" size="250880">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DIMonitor.exe" size="262144">
       <assemblyIdentity name="DIMonitor" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>BTbkOiKs3uwB5I7l2JKGKcRkuH/Chl4LoToIfTRE5fw=</dsig:DigestValue>
+        <dsig:DigestValue>3FpuGi2xWa0KqV1IgFCctAWw9ONWgTtr5W6+xhIMFjU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
