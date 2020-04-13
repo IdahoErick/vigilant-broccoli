@@ -14,8 +14,6 @@ namespace DIMonitor
     public partial class VVRunDetailsForm : RunDetailBaseForm
     {
         private bool _initialized = false;
-        private List<clsILProcess> _processList = new List<clsILProcess>();
-        private List<clsRunDetail> _runDetailList = new List<clsRunDetail>();
  
         public VVRunDetailsForm(Utility.ENV env, Utility.BU bu, Utility.PERIOD period, DateTime kalenderDatum, Int64 ssisRunID)
         {
@@ -36,28 +34,23 @@ namespace DIMonitor
 
             _initialized = true;
         }
-
  
-        private void cbLegenStaging_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
         private void SetupDetailsList()
         {
-            _runDetailList.Add(new clsRunDetail("Peildatum", clsRunDetail.DetailType.DateTimeLabel, lblPeilDatum));
-            _runDetailList.Add(new clsRunDetail("LEGEN_STG", clsRunDetail.DetailType.Checkbox, cbLegenStaging));
-            _runDetailList.Add(new clsRunDetail("LAAD_STG", clsRunDetail.DetailType.Checkbox, cbLaadStaging));
-            _runDetailList.Add(new clsRunDetail("DOEL_OFS_KLANTDATA", clsRunDetail.DetailType.Checkbox, cbDoelOFSKlantdata, true));
-            _runDetailList.Add(new clsRunDetail("BRON_OFS_MIDAS", clsRunDetail.DetailType.Checkbox, cbLaadOFSMidas, true));
-            _runDetailList.Add(new clsRunDetail("BRON_EP_NN", clsRunDetail.DetailType.Checkbox, cbLaadEPNN, true));
-            _runDetailList.Add(new clsRunDetail("BRON_OFS", clsRunDetail.DetailType.Checkbox, cbLaadOFS, true));
-            _runDetailList.Add(new clsRunDetail("BRON_EP_MIDAS", clsRunDetail.DetailType.Checkbox, cbLaadEPMidas));
-            _runDetailList.Add(new clsRunDetail("BRON_IKV", clsRunDetail.DetailType.Checkbox, cbLaadIKV, true));
-            _runDetailList.Add(new clsRunDetail("LEGEN_DDS", clsRunDetail.DetailType.Checkbox, cbLegenDDS));
-            _runDetailList.Add(new clsRunDetail("LAAD_DDS", clsRunDetail.DetailType.Checkbox, cbLaadDDS));
-            _runDetailList.Add(new clsRunDetail("LAAD_DDS_DWH", clsRunDetail.DetailType.Checkbox, cbLaadDDSDWH));
-            _runDetailList.Add(new clsRunDetail("MAAK_CF", clsRunDetail.DetailType.Checkbox, cbMaakCF));
-            _runDetailList.Add(new clsRunDetail("CFDistributielijst", clsRunDetail.DetailType.Label,lblCFDistributieLijst));
+            RunDetailList.Add(new clsRunDetail("Peildatum", clsRunDetail.DetailType.DateTimeLabel, lblPeilDatum));
+            RunDetailList.Add(new clsRunDetail("LEGEN_STG", clsRunDetail.DetailType.Checkbox, cbLegenStaging));
+            RunDetailList.Add(new clsRunDetail("LAAD_STG", clsRunDetail.DetailType.Checkbox, cbLaadStaging));
+            RunDetailList.Add(new clsRunDetail("DOEL_OFS_KLANTDATA", clsRunDetail.DetailType.Checkbox, cbDoelOFSKlantdata));
+            RunDetailList.Add(new clsRunDetail("BRON_OFS_MIDAS", clsRunDetail.DetailType.Checkbox, cbLaadOFSMidas));
+            RunDetailList.Add(new clsRunDetail("BRON_EP_NN", clsRunDetail.DetailType.Checkbox, cbLaadEPNN));
+            RunDetailList.Add(new clsRunDetail("BRON_OFS", clsRunDetail.DetailType.Checkbox, cbLaadOFS));
+            RunDetailList.Add(new clsRunDetail("BRON_EP_MIDAS", clsRunDetail.DetailType.Checkbox, cbLaadEPMidas));
+            RunDetailList.Add(new clsRunDetail("BRON_IKV", clsRunDetail.DetailType.Checkbox, cbLaadIKV));
+            RunDetailList.Add(new clsRunDetail("LEGEN_DDS", clsRunDetail.DetailType.Checkbox, cbLegenDDS));
+            RunDetailList.Add(new clsRunDetail("LAAD_DDS", clsRunDetail.DetailType.Checkbox, cbLaadDDS));
+            RunDetailList.Add(new clsRunDetail("LAAD_DDS_DWH", clsRunDetail.DetailType.Checkbox, cbLaadDDSDWH));
+            RunDetailList.Add(new clsRunDetail("MAAK_CF", clsRunDetail.DetailType.Checkbox, cbMaakCF));
+            RunDetailList.Add(new clsRunDetail("CFDistributielijst", clsRunDetail.DetailType.TextBox,tbDistributieLijst));
         }
 
         private int RefreshData()
@@ -95,11 +88,11 @@ namespace DIMonitor
                     cbLaadOFS.Checked = (ds.Tables[0].Rows[0]["BRON_OFS"].ToString() == "J");
                     cbLaadOFSMidas.Checked = (ds.Tables[0].Rows[0]["BRON_OFS_MIDAS"].ToString() == "J");
                     cbDoelOFSKlantdata.Checked = (ds.Tables[0].Rows[0]["DOEL_OFS_KLANTDATA"].ToString() == "J");
-                    cbLaadDDS.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS"].ToString() == "P");
-                    cbLaadDDSDWH.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS_DWH"].ToString() == "P");
+                    cbLaadDDS.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS"].ToString() == "J");
+                    cbLaadDDSDWH.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS_DWH"].ToString() == "J");
                     cbMaakCF.Checked = (ds.Tables[0].Rows[0]["MAAK_CF"].ToString() == "J");
 
-                    lblCFDistributieLijst.Text = ds.Tables[0].Rows[0]["CFDistributielijst"].ToString();
+                    tbDistributieLijst.Text = ds.Tables[0].Rows[0]["CFDistributielijst"].ToString();
 
                     cbLegenDDS.Checked = (ds.Tables[0].Rows[0]["LEGEN_DDS"].ToString() == "J");
                     cbLaadDDS.Checked = (ds.Tables[0].Rows[0]["LAAD_DDS"].ToString() == "J");
@@ -111,18 +104,6 @@ namespace DIMonitor
                 rc = -1;
             }
             return rc;
-        }
-
-        private void LoadDetailsList(DataTable dtDetails)
-        {
-            foreach (DataColumn dc in dtDetails.Columns)
-            {
-                clsRunDetail rd = _runDetailList.Find(x => x.Name.Equals(dc.Caption));
-                if (rd != null)
-                    rd.SetValue(dtDetails.Rows[0][dc.Caption].ToString());
-                else
-                    MessageBox.Show("Detail not found in list for column:" + dc.Caption);
-            }
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -175,30 +156,7 @@ namespace DIMonitor
             }
         }
 
-        private string GenerateUpdateQuery()
-        {
-            bool firstDetail = true;
-            StringBuilder query = new StringBuilder("UPDATE ILH_METADATA.MDA.KALENDERVERWERKING_");
-            query.Append(Period == Utility.PERIOD.MAAND ? "MAAND" : "DAG");
-            query.Append(" SET ");
-
-            foreach (clsRunDetail rd in _runDetailList)
-            {
-                if (rd.HasChanged)
-                {
-                    query.AppendFormat("{0}{1} = {2}", firstDetail ? "" : " ,", rd.Name, rd.NewValueDBFormatted);
-                    firstDetail = false;
-                }
-            }
-            if (firstDetail)
-                query.Clear();
-            else
-                query.AppendFormat(" WHERE Kalenderdatum = '{0}-{1}-{2}'", CalendarDate.Year, CalendarDate.Month, CalendarDate.Day);
-
-            return query.ToString();
-        }
-
-        private string FormatDate4DB(DateTime date)
+         private string FormatDate4DB(DateTime date)
         {
             return String.Format("{0}-{1}-{2}", date.Year, date.Month, date.Day);
         }
@@ -281,6 +239,16 @@ namespace DIMonitor
                 message = message.Substring(0, 100);
             toolStripStatusLabel1.Text = DateTime.Now.ToString() + ": " + message;
             MessageBox.Show(exceptionMessage);
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tbDistributieLijst_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

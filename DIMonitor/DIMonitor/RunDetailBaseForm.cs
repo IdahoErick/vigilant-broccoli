@@ -74,6 +74,20 @@ namespace DIMonitor
             set { _ILRunID = value; }
         }
 
+        private List<clsILProcess> _processList = new List<clsILProcess>();
+
+        internal List<clsILProcess> ProcessList
+        {
+            get { return _processList; }
+            set { _processList = value; }
+        }
+        private List<clsRunDetail> _runDetailList = new List<clsRunDetail>();
+
+        internal List<clsRunDetail> RunDetailList
+        {
+            get { return _runDetailList; }
+            set { _runDetailList = value; }
+        }
 
         protected override void Dispose(bool disposing)
         {
@@ -97,7 +111,7 @@ namespace DIMonitor
 
         protected void FillCalendarDateDropbox(DateTime kalenderDatum, ComboBox cbCalendarDates)
         {
-            string sqlQuery = SQLQueries.SQL_CALENDAR_DATES.Replace("<period>", Period.ToString());
+            string sqlQuery = (BU==Utility.BU.ILVB ? SQLQueries.SQL_CALENDAR_DATES_ILH : SQLQueries.SQL_CALENDAR_DATES_ILSB).Replace("<period>", Period.ToString());
             DataSet ds = SqlDA.GetQueryDataSet(Utility.GetConnectionString(this.ENV, this.BU, Period, false), sqlQuery, false);
 
             cbCalendarDates.DataSource = ds.Tables[0];
@@ -113,6 +127,45 @@ namespace DIMonitor
                 }
             }
         }
+        protected void LoadDetailsList(DataTable dtDetails)
+        {
+            foreach (DataColumn dc in dtDetails.Columns)
+            {
+                clsRunDetail rd = _runDetailList.Find(x => x.Name.Equals(dc.Caption));
+                if (rd != null)
+                    rd.SetValue(dtDetails.Rows[0][dc.Caption].ToString());
+                else
+                    MessageBox.Show("Detail not found in list for column:" + dc.Caption);
+            }
+        }
+        protected string GenerateUpdateQuery()
+        {
+            bool firstDetail = true;
+            StringBuilder query = new StringBuilder("UPDATE ");
+            query.Append(BU==Utility.BU.ILVB ? "ILH" : "ILSB");
+            query.Append("_METADATA.MDA.KALENDERVERWERKING_");
+            query.Append(Period == Utility.PERIOD.MAAND ? "MAAND" : "DAG");
+            query.Append(" SET ");
+
+            foreach (clsRunDetail rd in RunDetailList)
+            {
+                if (rd.HasChanged)
+                {
+                    query.AppendFormat("{0}{1} = {2}", firstDetail ? "" : " ,", rd.Name, rd.NewValueDBFormatted);
+                    firstDetail = false;
+                }
+            }
+            if (firstDetail)
+                query.Clear();
+            else
+            {
+                query.Append(" WHERE ");
+                query.Append(BU==Utility.BU.ILVB ? "Kalenderdatum" : "Draaidatum");
+                query.AppendFormat(" = '{0}-{1}-{2}'", CalendarDate.Year.ToString("D2"), CalendarDate.Month.ToString("D2"), CalendarDate.Day.ToString("D2"));
+            }
+            return query.ToString();
+        }
+
 
     }
 }

@@ -90,7 +90,9 @@ namespace DIMonitor
         public const string SQL_RUN_DETAILS_ILSB =
          "select Peildatum, LEGEN_STG, LAAD_STG, BRON_EP_MIDAS, BRON_OFS_MIDAS, BRON_EP_NN, BRON_OFS, BRON_IKV, DOEL_OFS_KLANTDATA, LEGEN_DDS, LAAD_DDS, LAAD_DDS_DWH, MAAK_CF, CFDistributielijst  from ILSB_METADATA.MDA.KALENDERVERWERKING_DAG where DRAAIDATUM='<Kalenderdatum>'";
 
-        public const string SQL_CALENDAR_DATES = "select distinct Kalenderdatum from ILH_METADATA.mda.KALENDERVERWERKING_<period>";
+        public const string SQL_CALENDAR_DATES_ILH = "select distinct Kalenderdatum from ILH_METADATA.mda.KALENDERVERWERKING_<period>";
+
+        public const string SQL_CALENDAR_DATES_ILSB = "select distinct DraaiDatum as Kalenderdatum from ILSB_METADATA.mda.KALENDERVERWERKING_<period>";
 
         public const string SQL_LOGBOEK_ILH = "select * from log.ST_LOGBOEK where RunId=(select max(RunID) from log.ST_LOGBOEK)";
 

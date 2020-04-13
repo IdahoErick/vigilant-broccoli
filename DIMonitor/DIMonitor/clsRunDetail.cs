@@ -15,7 +15,8 @@ namespace DIMonitor
             Checkbox = 1,
             DateTimePicker = 2,
             Label = 3,
-            DateTimeLabel=4
+            DateTimeLabel=4,
+            TextBox=5
         };
 
         private string _name;
@@ -56,10 +57,19 @@ namespace DIMonitor
               {
                   newValue = ((Label)_control).Text.ToString();
               }
+              else if (_runDetailType == DetailType.TextBox)
+              {
+                  newValue = ((TextBox)_control).Text.ToString();
+              }
               else if (_runDetailType == DetailType.DateTimePicker)
               {
-                  DateTime dt = DateTime.Parse(((DateTimePicker)_control).Text);
-                  newValue = dt.ToString();
+                  if ((this._cbPeilDatumNull != null) && (this._cbPeilDatumNull.Checked == true))
+                      newValue = "";
+                  else
+                  {
+                    DateTime dt = DateTime.Parse(((DateTimePicker)_control).Text);
+                    newValue = dt.ToString();
+                  }
               }
               else if (_runDetailType == DetailType.DateTimeLabel)
               {
@@ -77,9 +87,15 @@ namespace DIMonitor
                 string newValue = NewValue;
                 if ((_runDetailType == DetailType.DateTimeLabel) || (_runDetailType == DetailType.DateTimePicker))
                 {
-                    newValue = DateTime.Parse(newValue).ToString("yyyy-MM-dd");
+                    if (newValue == "")
+                        newValue = "null";
+                    else
+                        newValue = "'" + DateTime.Parse(newValue).ToString("yyyy-MM-dd") + "'";
                 }
-                return "'" + newValue + "'";
+                else
+                    newValue = "'" + newValue + "'";
+
+                return newValue;
             }
         }
 

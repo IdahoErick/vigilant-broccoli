@@ -41,7 +41,6 @@
             this.cbMaakCF = new System.Windows.Forms.CheckBox();
             this.cbLaadDDSDWH = new System.Windows.Forms.CheckBox();
             this.cbLaadDDS = new System.Windows.Forms.CheckBox();
-            this.lblCFDistributieLijst = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnStartRun = new System.Windows.Forms.Button();
@@ -59,6 +58,7 @@
             this.cbDoelOFSKlantdata = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cbLegenDDS = new System.Windows.Forms.CheckBox();
+            this.tbDistributieLijst = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -117,8 +117,7 @@
             // 
             // btnGenerateScript
             // 
-            this.btnGenerateScript.Enabled = false;
-            this.btnGenerateScript.Location = new System.Drawing.Point(380, 278);
+            this.btnGenerateScript.Location = new System.Drawing.Point(610, 110);
             this.btnGenerateScript.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnGenerateScript.Name = "btnGenerateScript";
             this.btnGenerateScript.Size = new System.Drawing.Size(124, 36);
@@ -130,7 +129,7 @@
             // btnUpdate
             // 
             this.btnUpdate.Enabled = false;
-            this.btnUpdate.Location = new System.Drawing.Point(380, 332);
+            this.btnUpdate.Location = new System.Drawing.Point(610, 164);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(124, 30);
@@ -201,20 +200,11 @@
             this.cbLaadDDS.Text = "Laad DDS";
             this.cbLaadDDS.UseVisualStyleBackColor = true;
             // 
-            // lblCFDistributieLijst
-            // 
-            this.lblCFDistributieLijst.AutoSize = true;
-            this.lblCFDistributieLijst.Location = new System.Drawing.Point(176, 535);
-            this.lblCFDistributieLijst.Name = "lblCFDistributieLijst";
-            this.lblCFDistributieLijst.Size = new System.Drawing.Size(124, 17);
-            this.lblCFDistributieLijst.TabIndex = 53;
-            this.lblCFDistributieLijst.Text = "<CFDistributielijst>";
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(35, 535);
+            this.label4.Location = new System.Drawing.Point(339, 408);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(136, 17);
             this.label4.TabIndex = 55;
@@ -222,7 +212,7 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(381, 476);
+            this.btnClose.Location = new System.Drawing.Point(611, 308);
             this.btnClose.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(124, 36);
@@ -234,7 +224,7 @@
             // btnStartRun
             // 
             this.btnStartRun.Enabled = false;
-            this.btnStartRun.Location = new System.Drawing.Point(380, 380);
+            this.btnStartRun.Location = new System.Drawing.Point(610, 212);
             this.btnStartRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnStartRun.Name = "btnStartRun";
             this.btnStartRun.Size = new System.Drawing.Size(124, 30);
@@ -247,10 +237,10 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 572);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 459);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(615, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(758, 22);
             this.statusStrip1.TabIndex = 59;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -272,7 +262,7 @@
             // btnAbortRun
             // 
             this.btnAbortRun.Enabled = false;
-            this.btnAbortRun.Location = new System.Drawing.Point(380, 428);
+            this.btnAbortRun.Location = new System.Drawing.Point(610, 260);
             this.btnAbortRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAbortRun.Name = "btnAbortRun";
             this.btnAbortRun.Size = new System.Drawing.Size(124, 30);
@@ -302,7 +292,6 @@
             this.cbLegenStaging.TabIndex = 21;
             this.cbLegenStaging.Text = "Legen Staging";
             this.cbLegenStaging.UseVisualStyleBackColor = true;
-            this.cbLegenStaging.CheckedChanged += new System.EventHandler(this.cbLegenStaging_CheckedChanged);
             // 
             // cbLaadEPMidas
             // 
@@ -385,10 +374,11 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(283, 334);
+            this.groupBox2.Size = new System.Drawing.Size(283, 287);
             this.groupBox2.TabIndex = 28;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Bronnen";
+            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
             // cbLegenDDS
             // 
@@ -401,11 +391,21 @@
             this.cbLegenDDS.Text = "Legen DDS";
             this.cbLegenDDS.UseVisualStyleBackColor = true;
             // 
+            // tbDistributieLijst
+            // 
+            this.tbDistributieLijst.Location = new System.Drawing.Point(483, 404);
+            this.tbDistributieLijst.Multiline = true;
+            this.tbDistributieLijst.Name = "tbDistributieLijst";
+            this.tbDistributieLijst.Size = new System.Drawing.Size(252, 39);
+            this.tbDistributieLijst.TabIndex = 63;
+            this.tbDistributieLijst.TextChanged += new System.EventHandler(this.tbDistributieLijst_TextChanged);
+            // 
             // VVRunDetailsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(615, 594);
+            this.ClientSize = new System.Drawing.Size(758, 481);
+            this.Controls.Add(this.tbDistributieLijst);
             this.Controls.Add(this.cbLegenDDS);
             this.Controls.Add(this.btnAbortRun);
             this.Controls.Add(this.cbCalendarDates);
@@ -413,7 +413,6 @@
             this.Controls.Add(this.btnStartRun);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.lblCFDistributieLijst);
             this.Controls.Add(this.lblPeilDatum);
             this.Controls.Add(this.cbMaakCF);
             this.Controls.Add(this.label3);
@@ -453,7 +452,6 @@
         private System.Windows.Forms.CheckBox cbMaakCF;
         private System.Windows.Forms.CheckBox cbLaadDDSDWH;
         private System.Windows.Forms.CheckBox cbLaadDDS;
-        private System.Windows.Forms.Label lblCFDistributieLijst;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnStartRun;
@@ -471,5 +469,6 @@
         private System.Windows.Forms.CheckBox cbDoelOFSKlantdata;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox cbLegenDDS;
+        private System.Windows.Forms.TextBox tbDistributieLijst;
     }
 }
