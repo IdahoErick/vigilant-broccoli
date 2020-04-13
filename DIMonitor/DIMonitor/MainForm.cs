@@ -103,8 +103,8 @@ namespace DIMonitor
                 string histOffset = cbHistoryVersion.Text;
                 if (histOffset == "")
                     histOffset = "0";
-                string statusQuery = (BUPart == "ILH" ? SQLQueries.SQL_RUN_STATUS_ILH.Replace("<HistOffset>", histOffset) : SQLQueries.SQL_RUN_STATUS_ILSB);
-
+                string statusQuery = (BUPart == "ILH" ? SQLQueries.SQL_RUN_STATUS_ILH : SQLQueries.SQL_RUN_STATUS_ILSB).Replace("<HistOffset>", histOffset);
+                
                 Utility.ENV env = (Utility.ENV)cbEnvironment.SelectedIndex;
                 Utility.BU bu = (Utility.BU)cbBU.SelectedIndex;
                 Utility.PERIOD period = (Utility.PERIOD)cbPeriod.SelectedIndex;
@@ -258,7 +258,7 @@ namespace DIMonitor
         {
             cbHistoryVersion.SelectedIndex = 0;
             Utility.BU bu = (Utility.BU)cbBU.SelectedIndex;
-            btnRunDetails.Enabled = (bu == Utility.BU.ILVB);
+            //btnRunDetails.Enabled = (bu == Utility.BU.ILVB);
             RefreshData();
         }
 
@@ -273,7 +273,12 @@ namespace DIMonitor
             Utility.BU bu = (Utility.BU)cbBU.SelectedIndex;
             Utility.PERIOD period = (Utility.PERIOD)cbPeriod.SelectedIndex;
 
-            RunDetailsForm runDetailsForm = new RunDetailsForm(env, bu, period, _kalenderDatum, _SSISRunID);
+            RunDetailBaseForm runDetailsForm;
+            if (bu==Utility.BU.ILVB)
+                runDetailsForm = new RunDetailsForm(env, bu, period, _kalenderDatum, _SSISRunID);
+            else
+                runDetailsForm = new VVRunDetailsForm(env, bu, period, _kalenderDatum, _SSISRunID);
+
             runDetailsForm.ShowDialog();
             RefreshData();
         }

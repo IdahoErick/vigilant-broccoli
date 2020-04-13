@@ -36,7 +36,8 @@ namespace DIMonitor
         public override void Refresh()
         {
             string cs = Utility.GetConnectionString(_eNV, _bU, _period, false);
-            string query = SQLQueries.SQL_RUNDETAILLOG.Replace("<RunID>", _runID.ToString());
+            string runDetailStatus = cbErrors.Checked == true ? "'F'" : "rdl.RunDetailStatus";
+            string query = SQLQueries.SQL_RUNDETAILLOG.Replace("<RunID>", _runID.ToString()).Replace("<RunDetailStatus>", runDetailStatus);
             if (_sortAsc == false)
                 query += " order by RunDetailId desc";
             try
@@ -68,6 +69,11 @@ namespace DIMonitor
             {
                 dgvRunDetailLog.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Beige;
             }
+        }
+
+        private void cbErrors_CheckedChanged(object sender, EventArgs e)
+        {
+            this.Refresh();
         }
     }
 }

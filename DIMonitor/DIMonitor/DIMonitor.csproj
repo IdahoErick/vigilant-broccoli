@@ -80,6 +80,15 @@
     </Compile>
     <Compile Include="clsILProcess.cs" />
     <Compile Include="clsRunDetail.cs" />
+    <Compile Include="RunDetailBaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VVRunDetailsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VVRunDetailsForm.Designer.cs">
+      <DependentUpon>VVRunDetailsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MakeCSVForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,6 +181,9 @@
     </Compile>
     <Compile Include="SQLDBAccess.cs" />
     <Compile Include="SQLQueries.cs" />
+    <EmbeddedResource Include="VVRunDetailsForm.resx">
+      <DependentUpon>VVRunDetailsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MakeCSVForm.resx">
       <DependentUpon>MakeCSVForm.cs</DependentUpon>
     </EmbeddedResource>

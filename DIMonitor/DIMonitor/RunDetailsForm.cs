@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace DIMonitor
 {
-    public partial class RunDetailsForm : Form
+    public partial class RunDetailsForm : RunDetailBaseForm
     {
         Utility.ENV _env;
         Utility.BU _bu;
@@ -106,7 +106,7 @@ namespace DIMonitor
             //_runDetailList.Add(new clsRunDetail("SAP_ICM_Maand_Ultimo"));
             _runDetailList.Add(new clsRunDetail("VOORBEREIDEN_RUN", clsRunDetail.DetailType.Checkbox, cbVoorbereidenRun));
             _runDetailList.Add(new clsRunDetail("ARCHIEFBESTANDEN_ZIPPEN", clsRunDetail.DetailType.Checkbox, cbArchiefbestandenZippen));
-            _runDetailList.Add(new clsRunDetail("LAAD_HOUSE_FP", clsRunDetail.DetailType.Checkbox, cbLaadHouseFP, false));
+            _runDetailList.Add(new clsRunDetail("LAAD_HOUSE_FP", clsRunDetail.DetailType.Checkbox, cbLaadHouseFP, true));
             _runDetailList.Add(new clsRunDetail("LEGEN_STG", clsRunDetail.DetailType.Checkbox, cbLegenStaging));
             _runDetailList.Add(new clsRunDetail("LAAD_STG", clsRunDetail.DetailType.Checkbox, cbLaadStaging));
             _runDetailList.Add(new clsRunDetail("LAAD_CBS", clsRunDetail.DetailType.Checkbox, cbLaadCBS, true));
@@ -162,7 +162,7 @@ namespace DIMonitor
                     cbLaadCloseBO.Checked = (ds.Tables[0].Rows[0]["LAAD_CLOSE"].ToString() == "P");
                     cbVoorbereidenRun.Checked = (ds.Tables[0].Rows[0]["VOORBEREIDEN_RUN"].ToString() == "J");
                     cbArchiefbestandenZippen.Checked = (ds.Tables[0].Rows[0]["ARCHIEFBESTANDEN_ZIPPEN"].ToString() == "J");
-                    cbLaadHouseFP.Checked = (ds.Tables[0].Rows[0]["LAAD_HOUSE_FP"].ToString() == "J");
+                    cbLaadHouseFP.Checked = (ds.Tables[0].Rows[0]["LAAD_HOUSE_FP"].ToString() == "P");
                     cbLaadCBS.Checked = (ds.Tables[0].Rows[0]["LAAD_CBS"].ToString() == "P");
                     cbLaadCloseCM.Checked = (ds.Tables[0].Rows[0]["LAAD_CLOSE_CM"].ToString() == "P");
                     cbLaadDaybreak.Checked = (ds.Tables[0].Rows[0]["LAAD_DAYBREAK"].ToString() == "P");

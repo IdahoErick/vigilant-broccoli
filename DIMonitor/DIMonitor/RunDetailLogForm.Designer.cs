@@ -34,6 +34,7 @@
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.switchOrderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.cbErrors = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRunDetailLog)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -86,11 +87,24 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(143, 20);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel";
             // 
+            // cbErrors
+            // 
+            this.cbErrors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbErrors.AutoSize = true;
+            this.cbErrors.Location = new System.Drawing.Point(576, 667);
+            this.cbErrors.Name = "cbErrors";
+            this.cbErrors.Size = new System.Drawing.Size(102, 21);
+            this.cbErrors.TabIndex = 2;
+            this.cbErrors.Text = "Errors Only";
+            this.cbErrors.UseVisualStyleBackColor = true;
+            this.cbErrors.CheckedChanged += new System.EventHandler(this.cbErrors_CheckedChanged);
+            // 
             // RunDetailLogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1672, 692);
+            this.Controls.Add(this.cbErrors);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.dgvRunDetailLog);
             this.Name = "RunDetailLogForm";
@@ -110,5 +124,6 @@
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem switchOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.CheckBox cbErrors;
     }
 }

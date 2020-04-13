@@ -42,23 +42,44 @@ namespace DIMonitor
         //" order by RL.RunId desc, RSL.StartDatumTijd desc";
 
         public const string SQL_RUN_STATUS_ILSB =
-        "with DetailCTE as\n" +
-        "(\n" +
-        "    select top 1 RunId, Controletype, InsertDatumTijd, Packagenaam, Opmerkingen, Bronsysteem\n" +
-        "    from LOG.RundetailLog\n" +
-        "    order by RunDetailId desc\n" +
-        ")\n" +
-        "select top 1 rl.RunID, RunStatus, cast(RL.StartDatumTijd as date) as KalenderDatum, case db_name() when 'ILSB_LOGGING_DAG' then KD.PeilDatum else KD.PeilDatum end as PeilDatum, RL.StartDatumTijd,RL.EindDatumTijd, RSL.Stepomschrijving\n" +
-        ", case db_name() when 'ILSB_LOGGING_DAG' then KD.LEGEN_STG else KM.LEGEN_STG end as LEGEN_STG\n" +
-        ", case db_name() when 'ILSB_LOGGING_DAG' then KD.LAAD_STG else KM.LAAD_STG end as LAAD_STG\n" +
-        ", DetailCTE.Controletype, DetailCTE.InsertDatumTijd as DetailDTM, DetailCTE.Packagenaam, DetailCTE.Opmerkingen, DetailCTE.Bronsysteem, rl.Execution_ID, SSISExe.status as SSISStatus\n" +
-        "from Log.RunLog RL\n" +
-        "left join Log.RunStepLog RSL on RL.RunId=RSL.RunId\n" +
-        "left join ILSB_METADATA.MDA.KALENDERVERWERKING_DAG KD on KD.DraaiDatum=cast(getdate() as date)\n" +
-        "left join ILSB_METADATA.MDA.KALENDERVERWERKING_MAAND KM on KM.DraaiDatum=cast(getdate() as date)\n" +
-        "left join DetailCTE on DetailCTE.RunId=RL.RunId\n" +
-        "left join SSISDB.catalog.executions SSISExe on SSISExe.execution_id=rl.Execution_ID\n" +
-        "order by RL.RunId desc, RSL.StartDatumTijd desc\n";
+        @"
+        declare @RunId int
+        select @RunId = max(RunId)+(<HistOffset>) from Log.RunLog
+        ;with DetailCTE as
+        (
+            select top 1 RunId, Controletype, InsertDatumTijd, Packagenaam, Opmerkingen, Bronsysteem
+            from LOG.RundetailLog
+            order by RunDetailId desc
+        )
+        select top 1 rl.RunID, RunStatus, p.DraaiDatum as KalenderDatum
+		, p.PeilDatum
+		, RL.StartDatumTijd,RL.EindDatumTijd, RSL.Stepomschrijving
+        , DetailCTE.Controletype, DetailCTE.InsertDatumTijd as DetailDTM, DetailCTE.Packagenaam, DetailCTE.Opmerkingen, DetailCTE.Bronsysteem, rl.Execution_ID, SSISExe.status as SSISStatus
+        from Log.RunLog RL
+        left join Log.RunStepLog RSL on RL.RunId=RSL.RunId
+		left join log.Parameters p on RL.RunId=p.RunId
+        left join DetailCTE on DetailCTE.RunId=RL.RunId
+        left join SSISDB.catalog.executions SSISExe on SSISExe.execution_id=rl.Execution_ID
+		where RL.RunId = @RunID
+        order by RL.RunId desc, RSL.StartDatumTijd desc";
+
+        //"with DetailCTE as\n" +
+        //"(\n" +
+        //"    select top 1 RunId, Controletype, InsertDatumTijd, Packagenaam, Opmerkingen, Bronsysteem\n" +
+        //"    from LOG.RundetailLog\n" +
+        //"    order by RunDetailId desc\n" +
+        //")\n" +
+        //"select top 1 rl.RunID, RunStatus, cast(RL.StartDatumTijd as date) as KalenderDatum, case db_name() when 'ILSB_LOGGING_DAG' then KD.PeilDatum else KD.PeilDatum end as PeilDatum, RL.StartDatumTijd,RL.EindDatumTijd, RSL.Stepomschrijving\n" +
+        //", case db_name() when 'ILSB_LOGGING_DAG' then KD.LEGEN_STG else KM.LEGEN_STG end as LEGEN_STG\n" +
+        //", case db_name() when 'ILSB_LOGGING_DAG' then KD.LAAD_STG else KM.LAAD_STG end as LAAD_STG\n" +
+        //", DetailCTE.Controletype, DetailCTE.InsertDatumTijd as DetailDTM, DetailCTE.Packagenaam, DetailCTE.Opmerkingen, DetailCTE.Bronsysteem, rl.Execution_ID, SSISExe.status as SSISStatus\n" +
+        //"from Log.RunLog RL\n" +
+        //"left join Log.RunStepLog RSL on RL.RunId=RSL.RunId\n" +
+        //"left join ILSB_METADATA.MDA.KALENDERVERWERKING_DAG KD on KD.DraaiDatum=cast(getdate() as date)\n" +
+        //"left join ILSB_METADATA.MDA.KALENDERVERWERKING_MAAND KM on KM.DraaiDatum=cast(getdate() as date)\n" +
+        //"left join DetailCTE on DetailCTE.RunId=RL.RunId\n" +
+        //"left join SSISDB.catalog.executions SSISExe on SSISExe.execution_id=rl.Execution_ID\n" +
+        //"order by RL.RunId desc, RSL.StartDatumTijd desc\n";
         
         public const string SQL_RUN_DETAILS_ILH =
         "select Peildatum, LEGEN_STG, LAAD_STG, CLOSE_Peildatum,CLOSE_CM_Peildatum,HOMES_Peildatum,MIDAS_Peildatum,HOUSE_Peildatum,QUION_Peildatum,SAPBW_Achterstand_PolisData_Peildatum " +
@@ -67,7 +88,7 @@ namespace DIMonitor
         ",LAAD_DDS,LAAD_DDS_DWH,MAAK_CF,CFDistributielijst,SoortRun from ILH_METADATA.MDA.KALENDERVERWERKING_DAG where Kalenderdatum='<Kalenderdatum>'";
 
         public const string SQL_RUN_DETAILS_ILSB =
-         "select Peildatum, LEGEN_STG, LAAD_STG from ILH_METADATA.MDA.KALENDERVERWERKING_DAG where Kalenderdatum='2013-01-01'";
+         "select Peildatum, LEGEN_STG, LAAD_STG, BRON_EP_MIDAS, BRON_OFS_MIDAS, BRON_EP_NN, BRON_OFS, BRON_IKV, DOEL_OFS_KLANTDATA, LEGEN_DDS, LAAD_DDS, LAAD_DDS_DWH, MAAK_CF, CFDistributielijst  from ILSB_METADATA.MDA.KALENDERVERWERKING_DAG where DRAAIDATUM='<Kalenderdatum>'";
 
         public const string SQL_CALENDAR_DATES = "select distinct Kalenderdatum from ILH_METADATA.mda.KALENDERVERWERKING_<period>";
 
@@ -78,7 +99,8 @@ namespace DIMonitor
         public const string SQL_RUNDETAILLOG = "select rdl.*, cast(rdl.InsertDatumTijd-rdlPrevious.InsertDatumTijd as Time) as Duration" +
             " from log.RunDetailLog rdl" +
             " inner join log.RunDetailLog rdlPrevious on rdl.RunDetailId=rdlPrevious.RunDetailId+1 and rdl.RunId=rdlPrevious.RunId" +
-            " where rdl.RunId=<RunID>";
+            " where rdl.RunId=<RunID>" +
+            " and rdl.RunDetailStatus=<RunDetailStatus>";
 
         public const string SQL_ABORT_RUN = "exec SSISDB.catalog.stop_operation <RunID>";
 
@@ -229,7 +251,7 @@ namespace DIMonitor
             "order by Start_Time desc ";
 
         public const string SQL_RUN_FAILURES =
-            "select * from [LOG].[RundetailLog] where runid = <RunID> and RunDetailStatus='F' order by InsertDatumTijd desc";
+            "select * from [LOG].[RundetailLog] where runid = <RunID> and RunDetailStatus in ('F','NOK') order by InsertDatumTijd desc";
 
         public const string SQL_SSIS_ERRORS =
             "use ssisdb;\n" +
