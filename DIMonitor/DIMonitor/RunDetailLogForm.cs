@@ -16,7 +16,7 @@ namespace DIMonitor
         private Utility.ENV _eNV;
         private Utility.PERIOD _period;
         private SQLDBAccess _sqlDA = new SQLDBAccess();
-        private Boolean _sortAsc = true;
+        private Boolean _sortAsc = false;
         private int _runID = 0;
 
         public RunDetailLogForm(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period, int runID)
@@ -36,10 +36,10 @@ namespace DIMonitor
         public override void Refresh()
         {
             string cs = Utility.GetConnectionString(_eNV, _bU, _period, false);
-            string runDetailStatus = cbErrors.Checked == true ? "'F'" : "rdl.RunDetailStatus";
+            string runDetailStatus = cbErrors.Checked == true ? "'Invalid Count or Sum'" : "[Status]";
             string query = SQLQueries.SQL_RUNDETAILLOG.Replace("<RunID>", _runID.ToString()).Replace("<RunDetailStatus>", runDetailStatus);
             if (_sortAsc == false)
-                query += " order by RunDetailId desc";
+                query += " order by CycleLogDetailId desc";
             try
             {
                 DataSet dsRunDetailLog = _sqlDA.GetQueryDataSet(cs, query, false);
@@ -61,11 +61,11 @@ namespace DIMonitor
 
         private void dgvRunDetailLog_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
-            if (dgvRunDetailLog.Rows[e.RowIndex].Cells["RunDetailStatus"].Value.ToString() == "F") 
+            if (dgvRunDetailLog.Rows[e.RowIndex].Cells["Status"].Value.ToString() == "Invalid Count or Sum") 
             {
                 dgvRunDetailLog.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Red;
             }
-            else if (dgvRunDetailLog.Rows[e.RowIndex].Cells["RunDetailStatus"].Value.ToString() == "INFO")
+            else if (dgvRunDetailLog.Rows[e.RowIndex].Cells["Status"].Value.ToString() == "In Progress")
             {
                 dgvRunDetailLog.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Beige;
             }

@@ -56,6 +56,7 @@ namespace BIMonitor
             this.dgvStatusSummary.CellContentClick += new DataGridViewCellEventHandler(dgvStatusSummary_CellContentClick);
 
             // Add data grid views to process objects
+/*
             _loadIBIProcess.AddGridView(eDWWfResultsTableDataGridView, _loadIBIProcess.GetEDWWorkflowData);
             _loadIBIProcess.AddGridView(dgvLatestEDWLoad, _loadIBIProcess.GetLatestEDWLoad);
             _loadIBIProcess.AddGridView(dgvLatestODSLoad, _loadIBIProcess.GetLatestODSLoad);
@@ -122,7 +123,7 @@ namespace BIMonitor
             _Infa86ProdStats.AddRequiredScheduledWorkflow("Telecom - Interm", "wf_SiteAccount");
 
             //_Infa86DevStats.AddRequiredScheduledWorkflow("Production Data Subsetting", "wf_RunDataloads");
-
+*/
             //BuildSummaryStatusDataset();
             timerRefresh.Interval = 60000 * appSettings.RefreshRateMin;
             timerRefresh.Start();

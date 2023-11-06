@@ -120,11 +120,11 @@ namespace DIMonitor
 
         protected void FillCalendarDateDropbox(DateTime kalenderDatum, ComboBox cbCalendarDates)
         {
-            string sqlQuery = (BU==Utility.BU.ILVB ? SQLQueries.SQL_CALENDAR_DATES_ILH : SQLQueries.SQL_CALENDAR_DATES_ILSB).Replace("<period>", Period.ToString());
+            string sqlQuery = SQLQueries.SQL_CALENDAR_DATES;
             DataSet ds = SqlDA.GetQueryDataSet(Utility.GetConnectionString(this.ENV, this.BU, Period, false), sqlQuery, false);
 
             cbCalendarDates.DataSource = ds.Tables[0];
-            cbCalendarDates.DisplayMember = "Kalenderdatum";
+            cbCalendarDates.DisplayMember = "CalendarDate";
 
             // Set selected item
             foreach (DataRowView item in cbCalendarDates.Items)

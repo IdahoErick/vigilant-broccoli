@@ -72,10 +72,8 @@ namespace DIMonitor
 
         private void SetupDetailsList()
         {
-            //RunDetailList.Add(new clsRunDetail("Kalenderdatum"));
-            RunDetailList.Add(new clsRunDetail("Peildatum", clsRunDetail.DetailType.DateTimeLabel, lblPeilDatum));
-            //RunDetailList.Add(new clsRunDetail("Dag"));
-            //RunDetailList.Add(new clsRunDetail("Special"));
+            RunDetailList.Add(new clsRunDetail("CycleLogDetailId", clsRunDetail.DetailType.Label, lblPeilDatum));
+/*
             RunDetailList.Add(new clsRunDetail("CLOSE_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpClosePeilDatum, false, cbLaadClosePDNull));
             //RunDetailList.Add(new clsRunDetail("CLOSE_Maand_Ultimo"));
             RunDetailList.Add(new clsRunDetail("CLOSE_CM_Peildatum", clsRunDetail.DetailType.DateTimePicker, dtpCloseCMPeilDatum, false, cbLaadCloseCMPDNull));
@@ -127,6 +125,7 @@ namespace DIMonitor
             RunDetailList.Add(new clsRunDetail("MAAK_CF", clsRunDetail.DetailType.Checkbox, cbMaakCF));
             RunDetailList.Add(new clsRunDetail("CFDistributielijst", clsRunDetail.DetailType.TextBox, tbCFDistributieLijst));
             RunDetailList.Add(new clsRunDetail("SoortRun", clsRunDetail.DetailType.Label, lblSoortRun));
+*/
         }
 
         public override int RefreshData()
@@ -138,10 +137,7 @@ namespace DIMonitor
 
             if (cs != "")
             {
-                string detailsQuery = (BU == Utility.BU.ILVB ? SQLQueries.SQL_RUN_DETAILS_ILH : SQLQueries.SQL_RUN_DETAILS_ILSB);
-                // Replace DAG with MAAND if this is a MAAND process
-                if (Period == Utility.PERIOD.MAAND)
-                    detailsQuery = detailsQuery.Replace("_DAG", "_MAAND");
+                string detailsQuery = SQLQueries.SQL_RUN_DETAILS;
 
                 // Replace <kalenderdatum> with real date
                 detailsQuery = detailsQuery.Replace("<Kalenderdatum>", CalendarDate.Year + "-" + CalendarDate.Month + "-" + CalendarDate.Day);

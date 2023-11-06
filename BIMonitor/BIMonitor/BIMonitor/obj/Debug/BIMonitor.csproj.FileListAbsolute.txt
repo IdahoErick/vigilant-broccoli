@@ -34,3 +34,10 @@ C:\Documents and Settings\ekorsten\My Documents\Visual Studio 2008\Projects\BIMo
 C:\Temp\Projects\BIMonitor\BIMonitor\BIMonitor\bin\Debug\BIMonitor.exe.config
 C:\Temp\Projects\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.exe
 C:\Temp\Projects\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.pdb
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.csproj.AssemblyReference.cache
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.Form1.resources
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.csproj.GenerateResource.cache
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.exe
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.pdb
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.Properties.Resources.resources
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIMonitor\BIMonitor\obj\Debug\BIMonitor.csproj.CoreCompileInputs.cache

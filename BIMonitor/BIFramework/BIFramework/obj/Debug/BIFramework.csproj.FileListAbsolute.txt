@@ -8,3 +8,8 @@ C:\Applications\BIMonitor\trunk\BIFramework\BIFramework\bin\Debug\BIFramework.pd
 C:\Applications\BIMonitor\trunk\BIFramework\BIFramework\obj\Debug\ResolveAssemblyReference.cache
 C:\Applications\BIMonitor\trunk\BIFramework\BIFramework\obj\Debug\BIFramework.dll
 C:\Applications\BIMonitor\trunk\BIFramework\BIFramework\obj\Debug\BIFramework.pdb
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIFramework\BIFramework\bin\Debug\BIFramework.dll
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIFramework\BIFramework\bin\Debug\BIFramework.pdb
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIFramework\BIFramework\obj\Debug\BIFramework.csproj.CoreCompileInputs.cache
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIFramework\BIFramework\obj\Debug\BIFramework.dll
+C:\Users\ekorsten\source\repos\vigilant-broccoli\BIMonitor\BIFramework\BIFramework\obj\Debug\BIFramework.pdb

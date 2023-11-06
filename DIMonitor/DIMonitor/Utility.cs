@@ -31,14 +31,15 @@ namespace DIMonitor
 
         public static string GetConnectionString(ENV env, BU bu, PERIOD period, bool useLocalIS=true)
         {
-            string BUPart = bu == (int)BU.ILVB ? "ILH" : "ILSB";
-            string periodPart = period == (int)PERIOD.DAG ? "DAG" : "MAAND";
-            string databasePart = "; Database=" + BUPart + "_LOGGING_" + periodPart;
+            //string BUPart = bu == (int)BU.ILVB ? "ILH" : "ILSB";
+            //string periodPart = period == (int)PERIOD.DAG ? "DAG" : "MAAND";
+            string databasePart = "; Database=SSISFramework";
             string cs = "";
 
             switch ((int)env)
             {
-                case (int)ENV.LOCAL:
+ /*
+  * case (int)ENV.LOCAL:
                     if (useLocalIS == false)
                         cs = NNConnectionStrings.SQL_LOCALHOST.Replace("<LocalAdminPassword>", Utility.DecryptString(Properties.Settings.Default.LocalAdminPassword)) + databasePart;
                     else
@@ -46,17 +47,18 @@ namespace DIMonitor
                         
                     //cs = NNConnectionStrings.SQL_LOCALHOST.Replace("<LocalAdminPassword>", "MacyMarle2") + databasePart;
                     break;
+*/
                 case (int)ENV.DEV:
-                    cs = (BUPart == "ILH" ? NNConnectionStrings.SQL_ILH_DEV_IS : NNConnectionStrings.SQL_ILSB_DEV_IS) + databasePart;
+                    cs = WSSConnectionStrings.SQL_EDW_DEV + databasePart;
                     break;
                 case (int)ENV.TEST:
-                    cs = (BUPart == "ILH" ? NNConnectionStrings.SQL_ILH_TEST_IS : NNConnectionStrings.SQL_ILSB_TEST_IS) + databasePart;
+                    cs = WSSConnectionStrings.SQL_EDW_TEST + databasePart;
                     break;
                 case (int)ENV.ACC:
-                    cs = (BUPart == "ILH" ? NNConnectionStrings.SQL_ILH_ACC_IS : NNConnectionStrings.SQL_ILSB_ACC_IS) + databasePart;
+                    cs = WSSConnectionStrings.SQL_EDW_ACC + databasePart;
                     break;
                 case (int)ENV.PROD:
-                    cs = (BUPart == "ILH" ? NNConnectionStrings.SQL_ILH_PROD_IS : NNConnectionStrings.SQL_ILSB_PROD_IS) + databasePart;
+                    cs = WSSConnectionStrings.SQL_EDW_PROD + databasePart;
                     break;
                 default:
                     cs = "";

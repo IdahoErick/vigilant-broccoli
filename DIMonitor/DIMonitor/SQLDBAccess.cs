@@ -9,6 +9,16 @@ namespace DIMonitor
 {
     public class SQLDBAccess : BaseDBAccess
     {
+        public DataSet GetQueryDataSet(string connectionString, string sql, bool ignoreExceptions, List<CommandParams> commandParams)
+        {
+            // Replace the parameters in the command text
+            foreach (CommandParams parameters in commandParams)
+            {
+                sql = sql.Replace(parameters.ParamName, parameters.ParamValue);
+            }
+            // Execute the command
+            return GetQueryDataSet(connectionString, sql, ignoreExceptions);
+        }
         public override DataSet GetQueryDataSet(string connectionString, string sql, bool ignoreExceptions)
         {
             DataSet ds = new DataSet();

@@ -8,7 +8,31 @@ namespace DIMonitor
     class SQLQueries
     {
 
-#region SQL Server
+        #region SQL Server
+        public const string SQL_RUN_STATUS_EDW =
+        @"SELECT TOP 1 cl.CycleLogId, cl.Start, cl.[END], cl.Status, cld.StepName, cld.TableGroupName, cld.Start AS DetailDTM, ce.ErrorDescription, cl.ScheduleName, e.execution_id, e.SSISStatus
+	    FROM SSIS.CycleLog AS cl
+	    OUTER APPLY (
+		    SELECT TOP(1) TableGroupName, SchemaName + '.' + Executable AS StepName , Start, CycleLogDetailId
+		    FROM ssis.CycleLogDetails
+		    WHERE CycleLogID=cl.CycleLogId
+    		ORDER BY COALESCE([END], Start) DESC
+	    ) cld
+	    OUTER APPLY (
+		    SELECT TOP 1 ErrorDescription 
+		    FROM SSIS.CycleErrors WHERE CycleLogID=cl.CycleLogId AND CycleLogDetailId=cld.CycleLogDetailId
+		    ORDER BY ErrorDate desc
+	    ) ce
+	    OUTER APPLY  (
+		    SELECT top 1 e.execution_id, e.Status as SSISStatus
+		    FROM SSISDB.catalog.executions e
+		    WHERE package_name = 'MainFramework.dtsx'
+		    AND CAST(e.start_time AS DATETIME) BETWEEN DATEADD(MINUTE, -10, cl.Start) AND DATEADD(HOUR, 23, cl.Start)
+		    ORDER BY execution_id DESC
+        ) e
+	    WHERE cl.ScheduleName = 'EDW Main Load'
+	    ORDER BY cl.Start DESC";
+
         public const string SQL_RUN_STATUS_ILH =
         @"
         declare @RunId int
@@ -80,7 +104,10 @@ namespace DIMonitor
         //"left join DetailCTE on DetailCTE.RunId=RL.RunId\n" +
         //"left join SSISDB.catalog.executions SSISExe on SSISExe.execution_id=rl.Execution_ID\n" +
         //"order by RL.RunId desc, RSL.StartDatumTijd desc\n";
-        
+
+        public const string SQL_RUN_DETAILS =
+        "SELECT * FROM ssis.CycleLogDetails WHERE CycleLogID = (SELECT MAX(CycleLogID) FROM SSIS.CycleLog WHERE ScheduleName = 'EDW Main Load')";
+
         public const string SQL_RUN_DETAILS_ILH =
         "select Peildatum, LEGEN_STG, LAAD_STG, CLOSE_Peildatum,CLOSE_CM_Peildatum,HOMES_Peildatum,MIDAS_Peildatum,HOUSE_Peildatum,QUION_Peildatum,SAPBW_Achterstand_PolisData_Peildatum " +
         ",SAPBW_KlantData_Peildatum,SAPBW_PolisData_Peildatum,SAP_ICM_Verwacht_Peildatum,DAYBREAK_Verwacht_Peildatum, MIDAS_CK_Verwacht_Peildatum,VOORBEREIDEN_RUN,ARCHIEFBESTANDEN_ZIPPEN,LAAD_HOUSE_FP,LAAD_CBS,LAAD_CLOSE" +
@@ -90,7 +117,7 @@ namespace DIMonitor
         public const string SQL_RUN_DETAILS_ILSB =
          "select Peildatum, LEGEN_STG, LAAD_STG, BRON_EP_MIDAS, BRON_OFS_MIDAS, BRON_EP_NN, BRON_OFS, BRON_IKV, DOEL_OFS_KLANTDATA, LEGEN_DDS, LAAD_DDS, LAAD_DDS_DWH, MAAK_CF, CFDistributielijst  from ILSB_METADATA.MDA.KALENDERVERWERKING_DAG where DRAAIDATUM='<Kalenderdatum>'";
 
-        public const string SQL_CALENDAR_DATES_ILH = "select distinct Kalenderdatum from ILH_METADATA.mda.KALENDERVERWERKING_<period>";
+        public const string SQL_CALENDAR_DATES = "SELECT DISTINCT CalendarDate =CAST(Start AS DATE) FROM SSIS.CycleLog AS cl WHERE cl.ScheduleName = 'EDW Main Load'";
 
         public const string SQL_CALENDAR_DATES_ILSB = "select distinct DraaiDatum as Kalenderdatum from ILSB_METADATA.mda.KALENDERVERWERKING_<period>";
 
@@ -98,17 +125,15 @@ namespace DIMonitor
 
         public const string SQL_LOGBOEK_ILSB = "select 'Logboek not available for S&B'";
 
-        public const string SQL_RUNDETAILLOG = "select rdl.*, cast(rdl.InsertDatumTijd-rdlPrevious.InsertDatumTijd as Time) as Duration" +
-            " from log.RunDetailLog rdl" +
-            " inner join log.RunDetailLog rdlPrevious on rdl.RunDetailId=rdlPrevious.RunDetailId+1 and rdl.RunId=rdlPrevious.RunId" +
-            " where rdl.RunId=<RunID>" +
-            " and rdl.RunDetailStatus=<RunDetailStatus>";
+        public const string SQL_RUNDETAILLOG = "	SELECT CycleLogDetailId,CycleLogId,TableGroupName,SchemaName,TableName,ExecutableSchema,Executable,Start,[End], Duration = DATEDIFF(ss,Start,[END]), Status,LastUpdateDate,UpdateDate,CountDiffPercent,AmountDiffPercent,SourceCount,DestCount,SourceAmount,DestAmount,TableGroupId,TableId,Message,GroupOwner,Run32Bit FROM ssis.CycleLogDetails WITH (NOLOCK) WHERE CycleLogID = <RunID> AND STATUS = <RunDetailStatus>";
 
         public const string SQL_ABORT_RUN = "exec SSISDB.catalog.stop_operation <RunID>";
 
         public const string SQL_LATEST_SSIS_MESSAGE = "select top 1 execution_path from SSISDB.catalog.executable_statistics with (nolock) where execution_id=<RunID> order by start_time desc";
 
         public const string SQL_LATEST_SSIS_MESSAGES = "select top 10 * from SSISDB.catalog.executable_statistics with (nolock) where execution_id=<RunID> order by start_time desc";
+
+        public const string SQL_DATA_COMPARE = "";
         
         public const string SQL_WF_RUNNING =
             " SELECT Workflow_name Name," +
@@ -253,7 +278,8 @@ namespace DIMonitor
             "order by Start_Time desc ";
 
         public const string SQL_RUN_FAILURES =
-            "select * from [LOG].[RundetailLog] where runid = <RunID> and RunDetailStatus in ('F','NOK') order by InsertDatumTijd desc";
+            "SELECT TOP 10 * FROM SSIS.vwCycleErrors";
+  //          "select * from [LOG].[RundetailLog] where runid = <RunID> and RunDetailStatus in ('F','NOK') order by InsertDatumTijd desc";
 
         public const string SQL_SSIS_ERRORS =
             "use ssisdb;\n" +

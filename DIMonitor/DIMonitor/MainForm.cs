@@ -26,7 +26,7 @@ namespace DIMonitor
         private SSISLogForm _ssisLogForm;
         private SourceFilesForm _sourceFilesForm;
         private Int64 _SSISRunID;
-        private int _runID;
+        private long _runID;
 
         
         [DllImport("user32.dll")]
@@ -37,7 +37,7 @@ namespace DIMonitor
         public MainForm()
         {
             InitializeComponent();
-            cbEnvironment.SelectedIndex = (int)Utility.ENV.LOCAL;
+            cbEnvironment.SelectedIndex = (int)Utility.ENV.DEV;
             cbPeriod.SelectedIndex = (int)Utility.PERIOD.DAG;
             cbBU.SelectedIndex = (int)Utility.BU.ILVB;
             cbHistoryVersion.SelectedIndex = 0;
@@ -103,7 +103,7 @@ namespace DIMonitor
                 string histOffset = cbHistoryVersion.Text;
                 if (histOffset == "")
                     histOffset = "0";
-                string statusQuery = (BUPart == "ILH" ? SQLQueries.SQL_RUN_STATUS_ILH : SQLQueries.SQL_RUN_STATUS_ILSB).Replace("<HistOffset>", histOffset);
+                string statusQuery = SQLQueries.SQL_RUN_STATUS_EDW;
                 
                 Utility.ENV env = (Utility.ENV)cbEnvironment.SelectedIndex;
                 Utility.BU bu = (Utility.BU)cbBU.SelectedIndex;
@@ -120,17 +120,17 @@ namespace DIMonitor
                         // set process status
                         if (ds.Tables[0].Rows.Count > 0)
                         {
-                            _runID = (int)(ds.Tables[0].Rows[0]["RunID"]);
-                            runStatus = ds.Tables[0].Rows[0]["RunStatus"].ToString();
+                            _runID = (long)ds.Tables[0].Rows[0]["CycleLogId"];
+                            runStatus = ds.Tables[0].Rows[0]["Status"].ToString();
                             lblResult.Text = runStatus;
                             if (runStatus != _status)
                                 bNewInfo = true;
                             _status = runStatus;
 
-                            _kalenderDatum = Utility.ParseDateStringToDate(ds.Tables[0].Rows[0]["KalenderDatum"].ToString());
-                            lblKalenderDatum.Text = Utility.ParseDateStringToLabel(ds.Tables[0].Rows[0]["KalenderDatum"].ToString());
-                            lblBeginDTM.Text = ds.Tables[0].Rows[0]["StartDatumTijd"].ToString();
-                            lblEndDTM.Text = ds.Tables[0].Rows[0]["EindDatumTijd"].ToString();
+                            _kalenderDatum = Utility.ParseDateStringToDate(ds.Tables[0].Rows[0]["Start"].ToString());
+                            lblKalenderDatum.Text = Utility.ParseDateStringToLabel(ds.Tables[0].Rows[0]["Start"].ToString());
+                            lblBeginDTM.Text = ds.Tables[0].Rows[0]["Start"].ToString();
+                            lblEndDTM.Text = ds.Tables[0].Rows[0]["End"].ToString();
                             _SSISRunID = Convert.ToInt64(ds.Tables[0].Rows[0]["Execution_ID"]);
                             lblSSISRunID.Text = _SSISRunID.ToString();
                             // Set label background color depending on the SSIS status
@@ -187,28 +187,27 @@ namespace DIMonitor
                             lblSSISRunID.BackColor = c;
                             System.Windows.Forms.ToolTip SSISStatusToolTip = new System.Windows.Forms.ToolTip();
                             SSISStatusToolTip.SetToolTip(lblSSISRunID, toolTipText);
-                            //lblLatestSSISMessage.Text = GetLatestSSISMessage(cs, _SSISRunID);
 
-                            if (ds.Tables[0].Rows[0]["PeilDatum"].ToString() != "")
-                                lblPeilDatum.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["PeilDatum"]).ToString("dd-MM-yyyy");
+                            lblLatestSSISMessage.Text = GetLatestSSISMessage(cs, _SSISRunID);
+
+                            if (ds.Tables[0].Rows[0]["Start"].ToString() != "")
+                                lblPeilDatum.Text = Convert.ToDateTime(ds.Tables[0].Rows[0]["Start"]).ToString("dd-MM-yyyy");
                             else
                                 lblPeilDatum.Text = "";
-                            if (ds.Tables[0].Rows[0]["Stepomschrijving"].ToString() != "")
-                                lblLastStep.Text = ds.Tables[0].Rows[0]["Stepomschrijving"].ToString();
+                            
+                            if (ds.Tables[0].Rows[0]["StepName"].ToString() != "")
+                                lblLastStep.Text = ds.Tables[0].Rows[0]["StepName"].ToString();
                             else
                                 lblLastStep.Text = "";
                             if (lblLastStep.Text != _lastStep)
                                 bNewInfo = true;
                             _lastStep = lblLastStep.Text;
-
-                            lblControleType.Text = ds.Tables[0].Rows[0]["ControleType"].ToString();
-                            lblPackage.Text = ds.Tables[0].Rows[0]["Packagenaam"].ToString();
+//                                                        lblControleType.Text = ds.Tables[0].Rows[0]["ControleType"].ToString();
+                            lblPackage.Text = ds.Tables[0].Rows[0]["TableGroupName"].ToString();
                             lblDetailDTM.Text = ds.Tables[0].Rows[0]["DetailDTM"].ToString();
-                            lblOpmerkingen.Text = ds.Tables[0].Rows[0]["Opmerkingen"].ToString();
-                            lblBronsysteem.Text = ds.Tables[0].Rows[0]["Bronsysteem"].ToString();
-
-
-  
+                            lblOpmerkingen.Text = ds.Tables[0].Rows[0]["ErrorDescription"].ToString();
+                            lblOpmerkingen.Text = ds.Tables[0].Rows[0]["ErrorDescription"].ToString();
+                            lblBronsysteem.Text = ds.Tables[0].Rows[0]["ScheduleName"].ToString();
                         }
                         else
                             ReportMessage("There is no run information available", "Info");
@@ -218,11 +217,11 @@ namespace DIMonitor
                         ReportMessage(e.Message, "Error");
                     };
 
-                    if (runStatus == "OK")
+                    if (runStatus == "Completed")
                     {
                         lblResult.BackColor = Color.LightGreen;
                     }
-                    else if (runStatus == "NOK")
+                    else if (runStatus == "Failed")
                     {
                         lblResult.BackColor = Color.Red;
                     }
@@ -352,7 +351,7 @@ namespace DIMonitor
 
         private void runDetailLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _runDetailLogForm = new RunDetailLogForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, _runID);
+            _runDetailLogForm = new RunDetailLogForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, (int)_runID);
             _runDetailLogForm.ShowDialog();
         }
 
@@ -404,19 +403,19 @@ namespace DIMonitor
 
         private void runDetailLogToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            _runDetailLogForm = new RunDetailLogForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, _runID);
+            _runDetailLogForm = new RunDetailLogForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, (int)_runID);
             _runDetailLogForm.ShowDialog();
         }
 
         private void sSISLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _ssisLogForm = new SSISLogForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, _runID, _SSISRunID, _kalenderDatum);
+            _ssisLogForm = new SSISLogForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, (int)_runID, _SSISRunID, _kalenderDatum);
             _ssisLogForm.ShowDialog();
         }
 
         private void sourceFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _sourceFilesForm = new SourceFilesForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, _runID, _SSISRunID, _kalenderDatum);
+            _sourceFilesForm = new SourceFilesForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, (int)_runID, _SSISRunID, _kalenderDatum);
             _sourceFilesForm.ShowDialog();
         }
 
@@ -535,6 +534,12 @@ namespace DIMonitor
         {
             string cs = Utility.GetConnectionString((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, false);
             lblLatestSSISMessage.Text = GetLatestSSISMessage(cs, _SSISRunID);
+        }
+
+        private void dataCompareToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataCompareForm dataCompareForm = new DataCompareForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex);
+            dataCompareForm.Show();
         }
     }
 }

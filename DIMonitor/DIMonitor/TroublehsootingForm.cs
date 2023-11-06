@@ -12,11 +12,11 @@ namespace DIMonitor
 {
     public partial class TroublehsootingForm : BaseForm
     {
-         public TroublehsootingForm(Utility.ENV env, Utility.BU bu, Utility.PERIOD period, DateTime kalenderDatum, int ILRunID, Int64 ssisRunID)
+         public TroublehsootingForm(Utility.ENV env, Utility.BU bu, Utility.PERIOD period, DateTime kalenderDatum, long ILRunID, Int64 ssisRunID)
         {
             InitializeComponent();
 
-            Init(env, bu, period, ILRunID, ssisRunID, kalenderDatum);
+            Init(env, bu, period, (int)ILRunID, ssisRunID, kalenderDatum);
  
              // Get Failure Details
             string cs = Utility.GetConnectionString(ENV, BU, Period, false);
