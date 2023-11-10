@@ -1,13 +1,13 @@
 SET NOCOUNT ON
 SET TRAN ISOLATION LEVEL READ UNCOMMITTED
 
-USE IDSConsolidated
+--USE IDSConsolidated
 
 DROP TABLE IF EXISTS #ComparisonResults
 CREATE TABLE #ComparisonResults (ResultDTM DATETIME, TableName sysname, Inserts BIGINT, Updates BIGINT, Deletes BIGINT, NoAction BIGINT, NbrPKFields INT)
 
-DROP TABLE IF EXISTS ##SyncRows
-CREATE TABLE ##SyncRows (TableName VARCHAR(100) NOT NULL, PKValue VARCHAR(255) NOT NULL, SyncType CHAR(1) NOT NULL)
+DROP TABLE IF EXISTS #SyncRows
+CREATE TABLE #SyncRows (TableName VARCHAR(100) NOT NULL, PKValue VARCHAR(255) NOT NULL, SyncType CHAR(1) NOT NULL)
 
 DROP TABLE IF EXISTS #SyncStatements
 CREATE TABLE #SyncStatements (TableName VARCHAR(100) NOT NULL, SyncStatement NVARCHAR(MAX) NOT NULL)
@@ -27,8 +27,10 @@ DECLARE @startDate DATE = '<START_DATE>'
 	, @runPatchStatements BIT = 0				-- Run the SQL statements to update the target table from the source table (@generatePatchStatements needs to be set to 1 to be able to run the update statements)
 	, @upperRowLimit BIGINT = <COMPARE_TABLE_SIZE_MAX>
 	, @showDiff BIT = <SHOW_DIFF>				-- Show the row level differences
-	, @sourceDBName sysname = 'IDS_Qlik'
-	, @targetDBName sysname = 'IDSConsolidated'
+--	, @sourceDBName sysname = 'IDS_Qlik'
+--	, @targetDBName sysname = 'IDSConsolidated'
+	, @sourceDBName sysname = '<SOURCE_DB>'
+	, @targetDBName sysname = '<TARGET_DB>'
 
 DECLARE @schemaName sysname = '<SCHEMA_NAME>'
 	, @tableName sysname = '<TABLE_NAME>'
@@ -44,6 +46,7 @@ DECLARE @schemaName sysname = '<SCHEMA_NAME>'
 	, @fieldList VARCHAR(MAX) = ''
 	, @fieldUpdateList VARCHAR(MAX) = ''
 	, @UpdateDateFieldExists BIT = 0
+	, @DataLoadIsDeletedExists BIT = 0
 	, @lineEnd CHAR(6) = CHAR(13) + CHAR(10)
 	, @nbrPKFields INT
 	, @tableNbr INT = 0
@@ -166,6 +169,12 @@ BEGIN
 			SET @ufe = 1'
 		EXEC sp_executesql @stmt=@SQL, @params=N'@sn sysname, @tn sysname, @ufe BIT OUT', @sn=@schemaName, @tn=@tableName, @ufe = @UpdateDateFieldExists OUT
 
+		-- Determine if DataLoadIsDeleted field exists in the target table
+		SET @DataLoadIsDeletedExists = 0
+		SET @SQL = 'IF EXISTS (SELECT 1 FROM ' + @targetDBName + '.information_schema.columns WHERE table_schema=@sn AND TABLE_NAME = @tn AND COLUMN_NAME = ''DataLoadIsDeleted'')
+			SET @dfe = 1'
+		EXEC sp_executesql @stmt=@SQL, @params=N'@sn sysname, @tn sysname, @dfe BIT OUT', @sn=@schemaName, @tn=@tableName, @dfe = @DataLoadIsDeletedExists OUT
+
 		SET @compareSQL = '
 		insert #ComparisonResults (ResultDTM, TableName, Inserts, Updates, Deletes, NoAction, NbrPKFields)
 		select getdate(), ''' + @FQTableName + ''', Inserts, Updates, Deletes, TotalRows - Inserts - Updates - Deletes,' + CAST(@NbrPKFields AS VARCHAR) + '
@@ -175,17 +184,17 @@ BEGIN
 			FROM
 			(
 				select
-				Inserts = case when t.' + @firstPKField + ' IS NULL THEN 1 else 0 end
-				, Deletes = case when s.' + @firstPKField + ' IS NULL AND t.DataLoadIsDeleted = 0 THEN 1 else 0 end
-				, Updates = ' + CASE WHEN @checkUpdates=1 THEN 'CASE when ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then 1 else 0 end' ELSE '0' END + '
-				, NbrRows = 1
+				Inserts = case when t.' + @firstPKField + ' IS NULL THEN 1 ELSE 0 END'
+				+ ', Deletes = case when s.' + @firstPKField + ' IS NULL' + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted = 0' ELSE '' END + ' THEN 1 ELSE 0 END'
+				+ ', Updates = ' + CASE WHEN @checkUpdates=1 THEN 'CASE when ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then 1 else 0 end' ELSE '0' END
+				+ ', NbrRows = 1
 				FROM ' + @sourceDBName + '.' + @FQTableName +' s
-				FULL OUTER JOIN ' + @targetDBName +'.' + @FQTableName + ' t ON ' + @joinClause + ' AND t.DataLoadIsDeleted=0'
+				FULL OUTER JOIN ' + @targetDBName +'.' + @FQTableName + ' t ON ' + @joinClause + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted=0' ELSE '' END
 				+ ' WHERE 1=1'
 				+ CASE WHEN @checkInserts=0 THEN ' AND t.' + @firstPKField + ' IS NOT NULL' ELSE '' END
 				+ CASE WHEN @checkUpdates=0 THEN ' AND (s.' + @firstPKField + ' IS NULL OR t.' + @firstPKField + ' IS NULL)' ELSE '' END
 				+ CASE WHEN @checkDeletes=0 THEN ' AND s.' + @firstPKField + ' IS NOT NULL' ELSE '' END
-				+ CASE WHEN @UpdateDateFieldExists=1 THEN ' AND (t.DataLoadDateUpdated IS NULL OR t.DataLoadDateUpdated between ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + '''' ELSE '' END + ')
+				+ CASE WHEN @UpdateDateFieldExists=1 THEN ' AND (t.DataLoadDateUpdated IS NULL OR t.DataLoadDateUpdated between ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + ''')' ELSE '' END + '
 			) t
 		) u
 		';
@@ -193,14 +202,14 @@ BEGIN
 		-- Create SQL statement to capture the row PK values for I/U/D rows
 		IF @runSyncSQL = 1
 		BEGIN
-        	SET @syncSQL = 'INSERT ##SyncRows (TableName, PKValue, SyncType)' + @lineEnd
+        	SET @syncSQL = 'INSERT #SyncRows (TableName, PKValue, SyncType)' + @lineEnd
 			+ 'SELECT * FROM' + @lineEnd
 			+ '(' + @lineEnd
 			+ 'SELECT ''' + @FQTableName + ''' AS TableName ' + ', ' + 'COALESCE(' + REPLACE(@PKFieldString, '<prefix>', 's') + ', '  + REPLACE(@PKFieldString, '<prefix>', 't') + ') AS PKValue' + ','  + @lineEnd
-			+ 'SyncType = case when t.' + @firstPKField + ' IS NULL THEN ''I'' when s.' + @firstPKField + ' IS NULL AND t.DataLoadIsDeleted = 0 THEN ''D'''  + @lineEnd
+			+ 'SyncType = case when t.' + @firstPKField + ' IS NULL THEN ''I'' when s.' + @firstPKField + ' IS NULL' + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted = 0' ELSE '' END + ' THEN ''D'''  + @lineEnd
 			+ CASE WHEN @checkUpdates=1 THEN ' WHEN ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then ''U'' END' ELSE ' END' END  + @lineEnd
 			+ ' FROM ' + @sourceDBName + '.' + @FQTableName +' s' + @lineEnd
-			+ ' FULL OUTER JOIN ' + @targetDBName + '.' + @FQTableName + ' t ON ' + @joinClause + ' AND t.DataLoadIsDeleted=0' + @lineEnd
+			+ ' FULL OUTER JOIN ' + @targetDBName + '.' + @FQTableName + ' t ON ' + @joinClause + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted=0' ELSE '' END + @lineEnd
 			+  CASE WHEN @UpdateDateFieldExists=1 THEN ' where t.DataLoadDateUpdated is null or t.DataLoadDateUpdated between ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + '''' ELSE '' END + @lineEnd
 			+ ') t' + @lineEnd
 			+ ' WHERE SyncType != '''''
@@ -215,7 +224,7 @@ BEGIN
 				+ ' SELECT ' + REPLACE(@fieldList, '<prefix>', '') + ', getdate(), 0'
 				+ ' FROM ' + @sourceDBName + '.' + @FQTableName + ' s'
 				+ ' WHERE ' + REPLACE(REPLACE(@PKFieldString, '<prefix>', 's'), '|', '''|''') + ' IN ('
-				+ '    SELECT PKValue FROM ##SyncRows WHERE TableName = ''''' + @FQTableName + ''''' AND SyncType=''''I'''''
+				+ '    SELECT PKValue FROM #SyncRows WHERE TableName = ''''' + @FQTableName + ''''' AND SyncType=''''I'''''
 				+ ')'''
 
 			-- Construct SQL statement that generates the Update queries and stores them in #SyncStatements table
@@ -225,7 +234,7 @@ BEGIN
 					SET ' + REPLACE(REPLACE(@fieldUpdateList, '<prefix1>', 't.'), '<prefix2>', 's.') + ', DataLoadDateUpdated = getdate(), DataLoadIsDeleted=0'
 					+ ' FROM ' + @targetDBName + '.'+ @FQTableName + ' t'
 					+ ' INNER JOIN ' + @sourceDBName + '.'+ @FQTableName + ' s ON ' + @joinClause
-					+ ' INNER JOIN ##SyncRows sy ON ' + REPLACE(REPLACE(@PKFieldString, '<prefix>', 's'), '|', '''|''') + '= sy.PKValue and sy.TableName = ''''' + @FQTableName + ''''' AND sy.SyncType=''''U'''''''
+					+ ' INNER JOIN #SyncRows sy ON ' + REPLACE(REPLACE(@PKFieldString, '<prefix>', 's'), '|', '''|''') + '= sy.PKValue and sy.TableName = ''''' + @FQTableName + ''''' AND sy.SyncType=''''U'''''''
 
 			-- Construct SQL statement that generates the Soft-Delete queries and stores them in #SyncStatements table
 			SET @deleteSQL = 'INSERT #SyncStatements (TableName, SyncStatement)'+ @lineEnd
@@ -233,7 +242,7 @@ BEGIN
 				+ 'UPDATE t
 					SET DataLoadIsDeleted = 1, DataLoadDateUpdated = getdate()'
 					+ ' FROM ' + @targetDBName + '.'+ @FQTableName + ' t'
-					+ ' INNER JOIN ##SyncRows sy ON ' + REPLACE(REPLACE(@PKFieldString, '<prefix>', 't'), '|', '''|''') + '= sy.PKValue and sy.TableName = ''''' + @FQTableName + ''''' AND sy.SyncType=''''D'''''''
+					+ ' INNER JOIN #SyncRows sy ON ' + REPLACE(REPLACE(@PKFieldString, '<prefix>', 't'), '|', '''|''') + '= sy.PKValue and sy.TableName = ''''' + @FQTableName + ''''' AND sy.SyncType=''''D'''''''
 		END
 	
 		BEGIN TRY  
@@ -284,8 +293,8 @@ SELECT * FROM #ComparisonResults WHERE Inserts > 0 OR Updates > 0 OR Deletes > 0
 
 IF @runSyncSQL = 1 AND @showSyncRows = 1
 BEGIN
-	RAISERROR('Retrieving Sync rows from table %s ...', 0, 1, '##SyncRows') WITH NOWAIT;
-	SELECT TOP 100 * FROM ##SyncRows
+	RAISERROR('Retrieving Sync rows from table %s ...', 0, 1, '#SyncRows') WITH NOWAIT;
+	SELECT TOP 100 * FROM #SyncRows
 END
 
 IF @showDiff = 1	-- Show the row level differences
@@ -297,7 +306,7 @@ BEGIN
 	DROP TABLE IF EXISTS #ColumnDiffs
 	DROP TABLE IF EXISTS #results
 
-	SELECT TOP 1 @FQTableName=TableName FROM ##SyncRows
+	SELECT TOP 1 @FQTableName=TableName FROM #syncRows
 	SELECT TOP 1 @schemaName = value FROM STRING_SPLIT(@FQTableName, '.')
 	SELECT @tableName = value FROM STRING_SPLIT(@FQTableName, '.')
 
@@ -307,62 +316,79 @@ BEGIN
 	BEGIN
 
 		CREATE TABLE #dataCompare (TableName VARCHAR(100) NOT NULL, PKValue VARCHAR(255) NOT NULL, FieldDiffMask INT NOT NULL)
-		CREATE TABLE #results (TableName VARCHAR(100), FieldName sysname, PKValue VARCHAR(255) NOT NULL, SourceValue VARCHAR(255) NOT NULL, TargetValue VARCHAR(255) NOT NULL)
+		CREATE TABLE #results (TableName VARCHAR(100), FieldName sysname, PKValue VARCHAR(255) NOT NULL, SourceValue VARCHAR(255) NULL, TargetValue VARCHAR(255) NULL)
 
 		-- Construct PK Field string
 		SET @PKFieldString = ''
-		SELECT @PKFieldString =  @PKFieldString + CASE WHEN @PKFieldString='' THEN '' ELSE '+''|''+' END + 'CAST(s.' + ku.column_name + ' AS VARCHAR)'
-		FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC
-		INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
-		WHERE KU.table_name = @tableName
-		AND ku.TABLE_SCHEMA = @schemaName
+		SET @SQL = 'SELECT @pkfs =  @pkfs + CASE WHEN @pkfs='''' THEN '''' ELSE ''+''''|''''+'' END + ''CAST(s.'' + ku.column_name + '' AS VARCHAR)''
+		FROM ' + @targetDBName + '.INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC
+		INNER JOIN ' + @targetDBName + '.INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = ''PRIMARY KEY'' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
+		WHERE KU.table_name = @tn
+		AND ku.TABLE_SCHEMA = @sn'
+		exec sp_executesql @stmt=@SQL, @params=N'@sn sysname, @tn sysname, @pkfs VARCHAR(MAX) OUT', @sn=@schemaName, @tn=@tableName, @pkfs = @PKFieldString OUT
 
 		-- Concatenate PK Values
 		DECLARE @PKValues VARCHAR(MAX) = ''
 		SELECT @PKValues = @PKValues + CASE WHEN @PKValues='' THEN '' ELSE ',' END + '''' + PKValue + ''''
-		FROM ##SyncRows WHERE TableName = @FQTableName AND SyncType='U'
+		FROM #SyncRows WHERE TableName = @FQTableName AND SyncType='U'
 
 		-- Construct join clause
 		SET @joinClause = ''
-		SELECT @joinClause =  @joinClause + CASE WHEN @joinClause='' THEN '' ELSE ' AND ' END + 's.' + ku.column_name + ' = t.' + ku.column_name
-		FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC 
-		INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
-		WHERE KU.table_name = @tableName
-		AND ku.TABLE_SCHEMA = @schemaName
+		SET @SQL = 'SELECT @jc =  @jc + CASE WHEN @jc='''' THEN '''' ELSE '' AND '' END + ''s.'' + ku.column_name + '' = t.'' + ku.column_name
+		FROM ' + @targetDBName + '.INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC 
+		INNER JOIN ' + @targetDBName + '.INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = ''PRIMARY KEY'' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
+		WHERE KU.table_name = @tn
+		AND ku.TABLE_SCHEMA = @sn'
+		exec sp_executesql @stmt=@SQL, @params=N'@sn sysname, @tn sysname, @jc VARCHAR(MAX) OUT', @sn=@schemaName, @tn=@tableName, @jc = @joinClause OUT
+
+		--SELECT * FROM information_schema.columns WHERE table_name = 'Period' AND TABLE_SCHEMA='Financial'
 
 		-- Cunstruct Field Diff Mask clause
 		SET @fieldDiffMaskClause=''
-		SELECT @fieldDiffMaskClause =  @fieldDiffMaskClause + CASE WHEN @fieldDiffMaskClause='' THEN '' ELSE ' + ' END + 'CASE WHEN ISNULL(s.' + cc.COLUMN_NAME + ', ' 
-			+ CASE WHEN cc.DATA_TYPE LIKE 'date%' THEN '''1900-01-01''' ELSE '''0''' END + ') != ISNULL(t.' + cc.Column_NAME + ', ' + CASE WHEN cc.DATA_TYPE LIKE 'date%' THEN '''1900-01-01''' ELSE '''0''' END + ') THEN ' + CAST(POWER(2, cc.ORDINAL_POSITION) AS VARCHAR) + ' ELSE 0 END'
-		FROM IDSConsolidated.INFORMATION_SCHEMA.columns cc
-		INNER JOIN ids_qlik.information_schema.columns cq ON cc.TABLE_SCHEMA=cq.TABLE_SCHEMA AND cc.TABLE_NAME=cq.TABLE_NAME AND cc.COLUMN_NAME=cq.COLUMN_NAME
-		WHERE cc.table_name = @tableName
-		AND cc.TABLE_SCHEMA = @schemaName
-		AND cc.COLUMN_NAME NOT IN ('ConcurrencyCheck')
+		SET @SQL = 'SELECT @fdmc =  @fdmc + CASE WHEN @fdmc='''' THEN '''' ELSE '' + '' END + ''CASE WHEN ISNULL(s.'' + cc.COLUMN_NAME + '', '' 
+			+ CASE WHEN cc.DATA_TYPE LIKE ''date%'' THEN ''''''1900-01-01'''''' ELSE ''''''0'''''' END + '') != ISNULL(t.'' + cc.Column_NAME + '', '' + CASE WHEN cc.DATA_TYPE LIKE ''date%'' THEN ''''''1900-01-01'''''' ELSE ''''''0'''''' END + '') THEN '' + CAST(POWER(2, cc.ORDINAL_POSITION) AS VARCHAR) + '' ELSE 0 END''
+		FROM ' + @targetDBName + '.INFORMATION_SCHEMA.columns cc
+		INNER JOIN ' + @sourceDBName + '.information_schema.columns cq ON cc.TABLE_SCHEMA=cq.TABLE_SCHEMA AND cc.TABLE_NAME=cq.TABLE_NAME AND cc.COLUMN_NAME=cq.COLUMN_NAME
+		WHERE cc.table_name = @tn
+		AND cc.TABLE_SCHEMA = @sn
+		AND cc.COLUMN_NAME NOT IN (''ConcurrencyCheck'')
 		AND NOT EXISTS (
-			SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC 
-			INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = 'PRIMARY KEY' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
+			SELECT 1 FROM ' + @targetDBName + '.INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC 
+			INNER JOIN ' + @targetDBName + '.INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = ''PRIMARY KEY'' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
 			WHERE ku.table_name = cc.TABLE_NAME
 			AND ku.TABLE_SCHEMA = cc.TABLE_SCHEMA
 			AND ku.COLUMN_NAME = cc.COLUMN_NAME
-		)
-
-		--PRINT @fieldDiffMaskClause
+		)'
+		exec sp_executesql @stmt=@SQL, @params=N'@sn sysname, @tn sysname, @fdmc VARCHAR(MAX) OUT', @sn=@schemaName, @tn=@tableName, @fdmc = @fieldDiffMaskClause OUT
 
 		SET @sql = 'INSERT INTO #DataCompare (TableName, PKValue, FieldDiffMask)' + @lineEnd
 				+ 'SELECT ''' + @FQTableName + ''' AS TableName, ' + @PKFieldString + ' AS PKValue' + @lineEnd
-				+ ', FieldDiffMask = ' + @fieldDiffMaskClause + @lineEnd
-				+ 'FROM IDS_Qlik.' + @FQTableName + ' s' + @lineEnd
-				+ 'INNER JOIN IDSConsolidated.' + @FQTableName + ' t ON ' + @joinClause + @lineEnd
-				+ 'INNER JOIN ##SyncRows sr ON ' + @PKFieldString + ' = sr.PKValue AND sr.SyncType=''U'''
-
+				+ ', FieldDiffMask = CASE WHEN sr.SyncType=''I'' THEN -1 ELSE ' + @fieldDiffMaskClause + ' END' + @lineEnd
+				+ 'FROM ' + @sourceDBName + '.' + @FQTableName + ' s' + @lineEnd
+				+ 'INNER JOIN ' + @targetDBName + '.' + @FQTableName + ' t ON ' + @joinClause + @lineEnd
+				+ 'INNER JOIN #SyncRows sr ON ' + @PKFieldString + ' = sr.PKValue AND sr.SyncType IN (''U'')'
+	--	PRINT @sql
 		EXEC sp_executesql @stmt = @sql
 
-		DECLARE diffCursor CURSOR FOR
+		-- Insert Inserts and Deletes into #results
+		INSERT INTO #results (TableName, FieldName, PKValue, SourceValue, TargetValue)
+		SELECT TableName, 'N/A - ' + CASE WHEN SyncType = 'I' THEN 'Insert' WHEN SyncType = 'D' THEN 'Delete' ELSE '' END, PKValue, NULL, NULL
+		FROM #SyncRows
+		WHERE SyncType IN ('D', 'I')
+
+		-- Insert Update field values in #results
+		DROP TABLE IF EXISTS #pks
+		CREATE TABLE #pks (tableName sysname, columnName sysname, PKValue VARCHAR(1000))
+
+		SET @SQL = 'INSERT INTO #pks
 		SELECT dc.TableName, c.COLUMN_NAME, dc.PKValue
 		FROM #DataCompare dc
-		INNER JOIN information_schema.columns c ON  c.TABLE_SCHEMA+'.'+ c.table_name=dc.TableName
-		WHERE dc.FieldDiffMask & POWER(2, c.ORDINAL_POSITION) > 0
+		INNER JOIN ' + @targetDBName + '.information_schema.columns c ON  c.TABLE_SCHEMA+''.''+ c.table_name=dc.TableName
+		WHERE dc.FieldDiffMask & POWER(2, c.ORDINAL_POSITION) > 0'
+		EXEC sp_executesql @stmt = @SQL
+
+		DECLARE diffCursor CURSOR FOR
+		SELECT TableName, columnName, PKValue FROM #pks
 
 		OPEN diffCursor  
 		FETCH NEXT FROM diffCursor INTO @tableName, @columnName, @PKValue
@@ -372,8 +398,8 @@ BEGIN
 		BEGIN 
 			SET @sql = 'INSERT INTO #results (TableName, FieldName, PKValue, SourceValue, TargetValue)' + @lineEnd
 			+ 'SELECT ''' + @tableName + ''', ''' + @columnName + ''',''' + @PKValue + ''', s.' + @columnName + ', t.' + @columnName + @lineEnd
-			+ 'FROM IDS_Qlik.' + @tableName + ' s'+  + @lineEnd
-			+ 'INNER JOIN IDSConsolidated.' + @tableName + ' t ON ' + @joinClause +  + @lineEnd
+			+ 'FROM ' + @sourceDBName +'.' + @tableName + ' s'+  + @lineEnd
+			+ 'LEFT JOIN ' + @targetDBName + '.' + @tableName + ' t ON ' + @joinClause +  + @lineEnd
 			+ 'WHERE ' + @PKFieldString + ' = ''' + @PKValue + ''''
 
 			PRINT @sql

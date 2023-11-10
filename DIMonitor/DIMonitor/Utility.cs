@@ -38,16 +38,14 @@ namespace DIMonitor
 
             switch ((int)env)
             {
- /*
-  * case (int)ENV.LOCAL:
+ 
+                case (int)ENV.LOCAL:
                     if (useLocalIS == false)
-                        cs = NNConnectionStrings.SQL_LOCALHOST.Replace("<LocalAdminPassword>", Utility.DecryptString(Properties.Settings.Default.LocalAdminPassword)) + databasePart;
-                    else
+ //                       cs = NNConnectionStrings.SQL_LOCALHOST.Replace("<LocalAdminPassword>", Utility.DecryptString(Properties.Settings.Default.LocalAdminPassword)) + databasePart;
+ //                   else
                         cs = NNConnectionStrings.SQL_LOCALHOST_IS + databasePart;
-                        
                     //cs = NNConnectionStrings.SQL_LOCALHOST.Replace("<LocalAdminPassword>", "MacyMarle2") + databasePart;
                     break;
-*/
                 case (int)ENV.DEV:
                     cs = WSSConnectionStrings.SQL_EDW_DEV + databasePart;
                     break;

@@ -50,6 +50,10 @@ namespace DIMonitor
             this.cbShowDifferences = new System.Windows.Forms.CheckBox();
             this.lblRowLevelDataDifferences = new System.Windows.Forms.Label();
             this.dgvRowLevelDataDifferences = new System.Windows.Forms.DataGridView();
+            this.label7 = new System.Windows.Forms.Label();
+            this.tbSourceDB = new System.Windows.Forms.TextBox();
+            this.tbTargetDB = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataCompareResultsSummary)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataCompareResultsPerTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRowLevelDataDifferences)).BeginInit();
@@ -125,7 +129,7 @@ namespace DIMonitor
             // lblSchemaName
             // 
             this.lblSchemaName.AutoSize = true;
-            this.lblSchemaName.Location = new System.Drawing.Point(27, 31);
+            this.lblSchemaName.Location = new System.Drawing.Point(20, 47);
             this.lblSchemaName.Name = "lblSchemaName";
             this.lblSchemaName.Size = new System.Drawing.Size(77, 13);
             this.lblSchemaName.TabIndex = 8;
@@ -133,7 +137,7 @@ namespace DIMonitor
             // 
             // tbSchemaName
             // 
-            this.tbSchemaName.Location = new System.Drawing.Point(30, 48);
+            this.tbSchemaName.Location = new System.Drawing.Point(23, 64);
             this.tbSchemaName.Name = "tbSchemaName";
             this.tbSchemaName.Size = new System.Drawing.Size(134, 22);
             this.tbSchemaName.TabIndex = 9;
@@ -141,7 +145,7 @@ namespace DIMonitor
             // 
             // tbTableName
             // 
-            this.tbTableName.Location = new System.Drawing.Point(175, 49);
+            this.tbTableName.Location = new System.Drawing.Point(168, 65);
             this.tbTableName.Name = "tbTableName";
             this.tbTableName.Size = new System.Drawing.Size(134, 22);
             this.tbTableName.TabIndex = 11;
@@ -150,7 +154,7 @@ namespace DIMonitor
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(172, 32);
+            this.label3.Location = new System.Drawing.Point(165, 48);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 13);
             this.label3.TabIndex = 10;
@@ -159,7 +163,7 @@ namespace DIMonitor
             // dtmpStartDate
             // 
             this.dtmpStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtmpStartDate.Location = new System.Drawing.Point(321, 49);
+            this.dtmpStartDate.Location = new System.Drawing.Point(314, 65);
             this.dtmpStartDate.Name = "dtmpStartDate";
             this.dtmpStartDate.Size = new System.Drawing.Size(110, 22);
             this.dtmpStartDate.TabIndex = 12;
@@ -168,7 +172,7 @@ namespace DIMonitor
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(318, 32);
+            this.label4.Location = new System.Drawing.Point(311, 48);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(55, 13);
             this.label4.TabIndex = 13;
@@ -177,7 +181,7 @@ namespace DIMonitor
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(441, 32);
+            this.label5.Location = new System.Drawing.Point(434, 48);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 13);
             this.label5.TabIndex = 15;
@@ -187,7 +191,7 @@ namespace DIMonitor
             // 
             this.dtmpEndDate.CustomFormat = "MM/dd/yyyy";
             this.dtmpEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtmpEndDate.Location = new System.Drawing.Point(444, 49);
+            this.dtmpEndDate.Location = new System.Drawing.Point(437, 65);
             this.dtmpEndDate.Name = "dtmpEndDate";
             this.dtmpEndDate.Size = new System.Drawing.Size(114, 22);
             this.dtmpEndDate.TabIndex = 14;
@@ -219,7 +223,7 @@ namespace DIMonitor
             // 
             // tbMaxTableRows
             // 
-            this.tbMaxTableRows.Location = new System.Drawing.Point(571, 48);
+            this.tbMaxTableRows.Location = new System.Drawing.Point(564, 64);
             this.tbMaxTableRows.Name = "tbMaxTableRows";
             this.tbMaxTableRows.Size = new System.Drawing.Size(134, 22);
             this.tbMaxTableRows.TabIndex = 19;
@@ -228,7 +232,7 @@ namespace DIMonitor
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(568, 31);
+            this.label6.Location = new System.Drawing.Point(561, 47);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(87, 13);
             this.label6.TabIndex = 18;
@@ -268,9 +272,48 @@ namespace DIMonitor
             this.dgvRowLevelDataDifferences.TabIndex = 21;
             this.dgvRowLevelDataDifferences.Visible = false;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(23, 24);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(59, 13);
+            this.label7.TabIndex = 23;
+            this.label7.Text = "Source DB";
+            this.label7.Click += new System.EventHandler(this.label7_Click);
+            // 
+            // tbSourceDB
+            // 
+            this.tbSourceDB.Location = new System.Drawing.Point(88, 20);
+            this.tbSourceDB.Name = "tbSourceDB";
+            this.tbSourceDB.Size = new System.Drawing.Size(134, 22);
+            this.tbSourceDB.TabIndex = 24;
+            this.tbSourceDB.Text = "IDS_Qlik";
+            // 
+            // tbTargetDB
+            // 
+            this.tbTargetDB.Location = new System.Drawing.Point(318, 20);
+            this.tbTargetDB.Name = "tbTargetDB";
+            this.tbTargetDB.Size = new System.Drawing.Size(134, 22);
+            this.tbTargetDB.TabIndex = 26;
+            this.tbTargetDB.Text = "IDSConsolidated";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(253, 24);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(56, 13);
+            this.label8.TabIndex = 25;
+            this.label8.Text = "Target DB";
+            // 
             // DataCompareForm
             // 
             this.ClientSize = new System.Drawing.Size(854, 553);
+            this.Controls.Add(this.tbTargetDB);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.tbSourceDB);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.lblRowLevelDataDifferences);
             this.Controls.Add(this.dgvRowLevelDataDifferences);
             this.Controls.Add(this.cbShowDifferences);
@@ -324,5 +367,9 @@ namespace DIMonitor
         private System.Windows.Forms.CheckBox cbShowDifferences;
         private System.Windows.Forms.Label lblRowLevelDataDifferences;
         private System.Windows.Forms.DataGridView dgvRowLevelDataDifferences;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox tbSourceDB;
+        private System.Windows.Forms.TextBox tbTargetDB;
+        private System.Windows.Forms.Label label8;
     }
 }

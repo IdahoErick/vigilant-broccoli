@@ -1,7 +1,5 @@
 ﻿/*
  * TODO:
- * - Show Inserts in data compare row results
- * - Show Deletes in data compare row results
  * - Make source and target database configurable
  * - Allow user to specify source / target query
  * - Compare between two servers
@@ -63,9 +61,11 @@ namespace DIMonitor
                 parameters.Add(new BaseDBAccess.CommandParams("<CHECK_INSERTS>", cbCheckInserts.Checked ? "1" : "0"));
                 parameters.Add(new BaseDBAccess.CommandParams("<CHECK_UPDATES>", cbCheckUpdates.Checked ? "1" : "0"));
                 parameters.Add(new BaseDBAccess.CommandParams("<CHECK_DELETES>", cbCheckDeletes.Checked ? "1" : "0"));
-                parameters.Add(new BaseDBAccess.CommandParams("<RUN_SYNC_SQL>", "0"));
+                parameters.Add(new BaseDBAccess.CommandParams("<RUN_SYNC_SQL>", cbShowDifferences.Checked ? "1" : "0"));
                 parameters.Add(new BaseDBAccess.CommandParams("<COMPARE_TABLE_SIZE_MAX>", tbMaxTableRows.Text));
                 parameters.Add(new BaseDBAccess.CommandParams("<SHOW_DIFF>", cbShowDifferences.Checked ? "1" : "0"));
+                parameters.Add(new BaseDBAccess.CommandParams("<SOURCE_DB>", tbSourceDB.Text));
+                parameters.Add(new BaseDBAccess.CommandParams("<TARGET_DB>", tbTargetDB.Text));
 
                 Cursor.Current = Cursors.WaitCursor;
 
@@ -102,6 +102,11 @@ namespace DIMonitor
                 throw e;
             }
             
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

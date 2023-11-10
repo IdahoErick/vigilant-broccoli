@@ -108,7 +108,7 @@ namespace DIMonitor
                 Utility.ENV env = (Utility.ENV)cbEnvironment.SelectedIndex;
                 Utility.BU bu = (Utility.BU)cbBU.SelectedIndex;
                 Utility.PERIOD period = (Utility.PERIOD)cbPeriod.SelectedIndex;
-                cs = Utility.GetConnectionString((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, false);
+                cs = Utility.GetConnectionString((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, true);
 
                 if (cs != "")
                 {
