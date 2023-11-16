@@ -31,9 +31,11 @@ DECLARE @startDate DATE = '<START_DATE>'
 --	, @targetDBName sysname = 'IDSConsolidated'
 	, @sourceDBName sysname = '<SOURCE_DB>'
 	, @targetDBName sysname = '<TARGET_DB>'
+	, @parameterSchemaName sysname = '<SCHEMA_NAME>'
+	, @parameterTableName sysname = '<TABLE_NAME>'
 
-DECLARE @schemaName sysname = '<SCHEMA_NAME>'
-	, @tableName sysname = '<TABLE_NAME>'
+DECLARE @schemaName sysname = ''
+	, @tableName sysname = ''
 	, @firstPKField sysname = ''
 	, @SQL NVARCHAR(MAX) = ''
 	, @compareSQL VARCHAR(MAX) = ''
@@ -51,6 +53,7 @@ DECLARE @schemaName sysname = '<SCHEMA_NAME>'
 	, @nbrPKFields INT
 	, @tableNbr INT = 0
 	, @PKFieldString VARCHAR(250) =''
+	, @DateUpdatedExists BIT = 0
 
 IF @startDate IS NULL	
 	SET @startDate = '1900-01-01'
@@ -60,8 +63,8 @@ IF @endDate IS NULL
 -- Fill tables
 DROP TABLE IF EXISTS #tables
 CREATE TABLE #tables (schemaName sysname NOT NULL, tableName sysName NOT NULL)
-IF @schemaName IS NOT NULL AND @tableName IS NOT NULL AND @schemaName <> '' AND @tableName <> ''
-	INSERT #tables SELECT @schemaName, @tableName
+IF @parameterSchemaName IS NOT NULL AND @parameterTableName IS NOT NULL AND @parameterSchemaName <> '' AND @parameterTableName <> ''
+	INSERT #tables SELECT @parameterSchemaName, @parameterTableName
 ELSE
 BEGIN
 	SET @SQL = 'INSERT #tables 
@@ -175,6 +178,12 @@ BEGIN
 			SET @dfe = 1'
 		EXEC sp_executesql @stmt=@SQL, @params=N'@sn sysname, @tn sysname, @dfe BIT OUT', @sn=@schemaName, @tn=@tableName, @dfe = @DataLoadIsDeletedExists OUT
 
+		-- Determine if DateUpdated field exists in the source table
+		SET @DateUpdatedExists = 0
+		SET @SQL = 'IF EXISTS (SELECT 1 FROM ' + @sourceDBName + '.information_schema.columns WHERE table_schema=@sn AND TABLE_NAME = @tn AND COLUMN_NAME = ''DateUpdated'')
+			SET @dfe = 1'
+		EXEC sp_executesql @stmt=@SQL, @params=N'@sn sysname, @tn sysname, @dfe BIT OUT', @sn=@schemaName, @tn=@tableName, @dfe = @DateUpdatedExists OUT
+
 		SET @compareSQL = '
 		insert #ComparisonResults (ResultDTM, TableName, Inserts, Updates, Deletes, NoAction, NbrPKFields)
 		select getdate(), ''' + @FQTableName + ''', Inserts, Updates, Deletes, TotalRows - Inserts - Updates - Deletes,' + CAST(@NbrPKFields AS VARCHAR) + '
@@ -190,12 +199,13 @@ BEGIN
 				+ ', NbrRows = 1
 				FROM ' + @sourceDBName + '.' + @FQTableName +' s
 				FULL OUTER JOIN ' + @targetDBName +'.' + @FQTableName + ' t ON ' + @joinClause + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted=0' ELSE '' END
-				+ ' WHERE 1=1'
-				+ CASE WHEN @checkInserts=0 THEN ' AND t.' + @firstPKField + ' IS NOT NULL' ELSE '' END
-				+ CASE WHEN @checkUpdates=0 THEN ' AND (s.' + @firstPKField + ' IS NULL OR t.' + @firstPKField + ' IS NULL)' ELSE '' END
-				+ CASE WHEN @checkDeletes=0 THEN ' AND s.' + @firstPKField + ' IS NOT NULL' ELSE '' END
-				+ CASE WHEN @UpdateDateFieldExists=1 THEN ' AND (t.DataLoadDateUpdated IS NULL OR t.DataLoadDateUpdated between ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + ''')' ELSE '' END + '
-			) t
+				+ ' WHERE 1=1' + @lineEnd
+				+ CASE WHEN @checkInserts=0 THEN ' AND t.' + @firstPKField + ' IS NOT NULL' + @lineEnd ELSE '' END
+				+ CASE WHEN @checkUpdates=0 THEN ' AND (s.' + @firstPKField + ' IS NULL OR t.' + @firstPKField + ' IS NULL)'+ @lineEnd ELSE '' END
+				+ CASE WHEN @checkDeletes=0 THEN ' AND s.' + @firstPKField + ' IS NOT NULL'  + @lineEnd ELSE '' END
+				+ CASE WHEN @UpdateDateFieldExists=1 THEN ' AND (t.DataLoadDateUpdated IS NULL OR t.DataLoadDateUpdated between ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + ''')' + @lineEnd ELSE '' END
+				+ CASE WHEN @DateUpdatedExists=1 THEN ' AND (s.DateUpdated IS NULL OR s.DateUpdated between ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + ''')' + @lineEnd ELSE '' END
+			+ ') t
 		) u
 		';
 
@@ -210,7 +220,9 @@ BEGIN
 			+ CASE WHEN @checkUpdates=1 THEN ' WHEN ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then ''U'' END' ELSE ' END' END  + @lineEnd
 			+ ' FROM ' + @sourceDBName + '.' + @FQTableName +' s' + @lineEnd
 			+ ' FULL OUTER JOIN ' + @targetDBName + '.' + @FQTableName + ' t ON ' + @joinClause + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted=0' ELSE '' END + @lineEnd
-			+  CASE WHEN @UpdateDateFieldExists=1 THEN ' where t.DataLoadDateUpdated is null or t.DataLoadDateUpdated between ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + '''' ELSE '' END + @lineEnd
+			+ ' WHERE 1=1' + @lineEnd
+			+ CASE WHEN @UpdateDateFieldExists=1 THEN ' AND (t.DataLoadDateUpdated IS NULL OR t.DataLoadDateUpdated BETWEEN ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + ''')' ELSE '' END + @lineEnd
+			+ CASE WHEN @DateUpdatedExists=1 THEN ' AND (s.DateUpdated IS NULL OR s.DateUpdated between ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + ''')' + @lineEnd ELSE '' END
 			+ ') t' + @lineEnd
 			+ ' WHERE SyncType != '''''
 		END
@@ -306,17 +318,37 @@ BEGIN
 	DROP TABLE IF EXISTS #ColumnDiffs
 	DROP TABLE IF EXISTS #results
 
-	SELECT TOP 1 @FQTableName=TableName FROM #syncRows
-	SELECT TOP 1 @schemaName = value FROM STRING_SPLIT(@FQTableName, '.')
-	SELECT @tableName = value FROM STRING_SPLIT(@FQTableName, '.')
+	CREATE TABLE #dataCompare (TableName VARCHAR(100) NOT NULL, PKValue VARCHAR(255) NOT NULL, FieldDiffMask INT NOT NULL)
+	CREATE TABLE #results (TableName VARCHAR(100), FieldName sysname, PKValue VARCHAR(255) NOT NULL, SourceValue VARCHAR(255) NULL, TargetValue VARCHAR(255) NULL)
 
-	IF @schemaName IS NULL OR @tableName IS NULL OR @schemaName = '' OR @tableName=''
-		PRINT 'Can not find table'
-	ELSE
-	BEGIN
+	-- Insert Inserts and Deletes into #results
+	INSERT INTO #results (TableName, FieldName, PKValue, SourceValue, TargetValue)
+	SELECT TableName, 'N/A - ' + CASE WHEN SyncType = 'I' THEN 'Insert' WHEN SyncType = 'D' THEN 'Delete' ELSE '' END, PKValue, NULL, NULL
+	FROM #SyncRows
+	WHERE SyncType IN ('D', 'I')
+	AND (ISNULL(@parameterSchemaName, '')='' OR @parameterSchemaName+'.' + @parameterTableName = TableName)
 
-		CREATE TABLE #dataCompare (TableName VARCHAR(100) NOT NULL, PKValue VARCHAR(255) NOT NULL, FieldDiffMask INT NOT NULL)
-		CREATE TABLE #results (TableName VARCHAR(100), FieldName sysname, PKValue VARCHAR(255) NOT NULL, SourceValue VARCHAR(255) NULL, TargetValue VARCHAR(255) NULL)
+	-- Insert Updates - Loop through tables in #SyncRows table
+	DECLARE tableCursor CURSOR FOR
+	SELECT SchemaName, TableName
+	FROM
+	(
+		SELECT DISTINCT LEFT(TableName, CHARINDEX('.', TableName)-1) AS SchemaName 
+			, RIGHT(TableName, LEN(TableName)-CHARINDEX('.', TableName)) AS TableName
+		FROM #SyncRows
+		WHERE SyncType = 'U'
+	) t
+	WHERE (ISNULL(@parameterSchemaName, '')='' OR @parameterSchemaName=SchemaName)
+	AND (ISNULL(@parameterTableName, '')='' OR @parameterTableName=TableName)
+
+	OPEN tableCursor  
+	FETCH NEXT FROM tableCursor INTO @schemaName, @tableName
+
+	-- Loop through all tables
+	WHILE @@FETCH_STATUS = 0  
+	BEGIN 
+		-- Construct Fully Qualified table name
+		SET @FQTableName = @schemaName + '.' + @tableName
 
 		-- Construct PK Field string
 		SET @PKFieldString = ''
@@ -326,6 +358,8 @@ BEGIN
 		WHERE KU.table_name = @tn
 		AND ku.TABLE_SCHEMA = @sn'
 		exec sp_executesql @stmt=@SQL, @params=N'@sn sysname, @tn sysname, @pkfs VARCHAR(MAX) OUT', @sn=@schemaName, @tn=@tableName, @pkfs = @PKFieldString OUT
+
+		PRINT 'TableName: ' + @tableName + '; PKFieldString: ' + @PKFieldString
 
 		-- Concatenate PK Values
 		DECLARE @PKValues VARCHAR(MAX) = ''
@@ -370,48 +404,47 @@ BEGIN
 	--	PRINT @sql
 		EXEC sp_executesql @stmt = @sql
 
-		-- Insert Inserts and Deletes into #results
-		INSERT INTO #results (TableName, FieldName, PKValue, SourceValue, TargetValue)
-		SELECT TableName, 'N/A - ' + CASE WHEN SyncType = 'I' THEN 'Insert' WHEN SyncType = 'D' THEN 'Delete' ELSE '' END, PKValue, NULL, NULL
-		FROM #SyncRows
-		WHERE SyncType IN ('D', 'I')
-
 		-- Insert Update field values in #results
 		DROP TABLE IF EXISTS #pks
-		CREATE TABLE #pks (tableName sysname, columnName sysname, PKValue VARCHAR(1000))
+		CREATE TABLE #pks (columnName sysname, PKValue VARCHAR(1000))
 
 		SET @SQL = 'INSERT INTO #pks
-		SELECT dc.TableName, c.COLUMN_NAME, dc.PKValue
+		SELECT c.COLUMN_NAME, dc.PKValue
 		FROM #DataCompare dc
 		INNER JOIN ' + @targetDBName + '.information_schema.columns c ON  c.TABLE_SCHEMA+''.''+ c.table_name=dc.TableName
 		WHERE dc.FieldDiffMask & POWER(2, c.ORDINAL_POSITION) > 0'
 		EXEC sp_executesql @stmt = @SQL
 
 		DECLARE diffCursor CURSOR FOR
-		SELECT TableName, columnName, PKValue FROM #pks
+		SELECT columnName, PKValue FROM #pks
 
 		OPEN diffCursor  
-		FETCH NEXT FROM diffCursor INTO @tableName, @columnName, @PKValue
+		FETCH NEXT FROM diffCursor INTO @columnName, @PKValue
 
 		-- Loop through all columns
 		WHILE @@FETCH_STATUS = 0  
 		BEGIN 
 			SET @sql = 'INSERT INTO #results (TableName, FieldName, PKValue, SourceValue, TargetValue)' + @lineEnd
-			+ 'SELECT ''' + @tableName + ''', ''' + @columnName + ''',''' + @PKValue + ''', s.' + @columnName + ', t.' + @columnName + @lineEnd
-			+ 'FROM ' + @sourceDBName +'.' + @tableName + ' s'+  + @lineEnd
-			+ 'LEFT JOIN ' + @targetDBName + '.' + @tableName + ' t ON ' + @joinClause +  + @lineEnd
+			+ 'SELECT ''' + @FQTableName + ''', ''' + @columnName + ''',''' + @PKValue + ''', s.' + @columnName + ', t.' + @columnName + @lineEnd
+			+ 'FROM ' + @sourceDBName +'.' + @FQTableName + ' s'+  + @lineEnd
+			+ 'LEFT JOIN ' + @targetDBName + '.' + @FQTableName + ' t ON ' + @joinClause +  + @lineEnd
 			+ 'WHERE ' + @PKFieldString + ' = ''' + @PKValue + ''''
 
 			PRINT @sql
 			EXEC sp_executesql @stmt = @sql
 
-			FETCH NEXT FROM diffCursor INTO @tableName, @columnName, @PKValue
+			FETCH NEXT FROM diffCursor INTO @columnName, @PKValue
 		END 
 
 		CLOSE diffCursor  
 		DEALLOCATE diffCursor
 
-		SELECT * FROM #results
-	END
+		FETCH NEXT FROM tableCursor INTO @schemaName, @tableName
+	END 
+
+	CLOSE tableCursor  
+	DEALLOCATE tableCursor
+
+	SELECT * FROM #results ORDER BY TableName
 END
 

@@ -49,7 +49,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>UbgJHpofMAbZ5qfmUnSbTZ3ujwtuwTpBT33LOft+Wmg=</dsig:DigestValue>
+        <dsig:DigestValue>1nzew1OQoculW5879eMnAg4UJfsTYrj1u0HmtmYEVW4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -71,13 +71,13 @@
       <dsig:DigestValue>z9HR9N+YnyFvyP3pC8p/j1zRK8mSL86uUd327753OKc=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SourceTargetComparison.sql" size="22863">
+  <file name="SourceTargetComparison.sql" size="24611">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>vOuFg3aMd6bYNsKub/8I8+Zm2b2tlMmXDNxOVkhKseo=</dsig:DigestValue>
+      <dsig:DigestValue>VZ824kNQj6Y9b1efgB5aiajOVTZFgzlwpMBQ1frUvXg=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

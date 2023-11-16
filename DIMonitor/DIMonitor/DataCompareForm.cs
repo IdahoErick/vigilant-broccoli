@@ -37,6 +37,9 @@ namespace DIMonitor
         {
             InitializeComponent();
 
+            // Set end date to one month ago
+            dtmpEndDate.Value = DateTime.Today.AddMonths(-1);
+
             _eNV = eNV;
             _period = period;
             _bU = bU;
