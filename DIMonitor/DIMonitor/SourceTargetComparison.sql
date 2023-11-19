@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS #ComparisonResults
 CREATE TABLE #ComparisonResults (ResultDTM DATETIME, TableName sysname, Inserts BIGINT, Updates BIGINT, Deletes BIGINT, NoAction BIGINT, NbrPKFields INT)
 
 DROP TABLE IF EXISTS #SyncRows
-CREATE TABLE #SyncRows (TableName VARCHAR(100) NOT NULL, PKValue VARCHAR(255) NOT NULL, SyncType CHAR(1) NOT NULL)
+CREATE TABLE #SyncRows (TableName VARCHAR(100) NOT NULL, PKName VARCHAR(255) NOT NULL, PKValue VARCHAR(255) NOT NULL, SyncType CHAR(1) NOT NULL)
 
 DROP TABLE IF EXISTS #SyncStatements
 CREATE TABLE #SyncStatements (TableName VARCHAR(100) NOT NULL, SyncStatement NVARCHAR(MAX) NOT NULL)
@@ -212,10 +212,11 @@ BEGIN
 		-- Create SQL statement to capture the row PK values for I/U/D rows
 		IF @runSyncSQL = 1
 		BEGIN
-        	SET @syncSQL = 'INSERT #SyncRows (TableName, PKValue, SyncType)' + @lineEnd
+       	SET @syncSQL = 'INSERT #SyncRows (TableName, PKName, PKValue, SyncType)' + @lineEnd
 			+ 'SELECT * FROM' + @lineEnd
 			+ '(' + @lineEnd
-			+ 'SELECT ''' + @FQTableName + ''' AS TableName ' + ', ' + 'COALESCE(' + REPLACE(@PKFieldString, '<prefix>', 's') + ', '  + REPLACE(@PKFieldString, '<prefix>', 't') + ') AS PKValue' + ','  + @lineEnd
+			+ 'SELECT ''' + @FQTableName + ''' AS TableName ' + ', ''' + REPLACE(@PKFieldString, '<prefix>.', '') + ''' AS PKName' +
+			+ ', COALESCE(' + REPLACE(@PKFieldString, '<prefix>', 's') + ', '  + REPLACE(@PKFieldString, '<prefix>', 't') + ') AS PKValue' + ','  + @lineEnd
 			+ 'SyncType = case when t.' + @firstPKField + ' IS NULL THEN ''I'' when s.' + @firstPKField + ' IS NULL' + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted = 0' ELSE '' END + ' THEN ''D'''  + @lineEnd
 			+ CASE WHEN @checkUpdates=1 THEN ' WHEN ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then ''U'' END' ELSE ' END' END  + @lineEnd
 			+ ' FROM ' + @sourceDBName + '.' + @FQTableName +' s' + @lineEnd
@@ -319,11 +320,11 @@ BEGIN
 	DROP TABLE IF EXISTS #results
 
 	CREATE TABLE #dataCompare (TableName VARCHAR(100) NOT NULL, PKValue VARCHAR(255) NOT NULL, FieldDiffMask INT NOT NULL)
-	CREATE TABLE #results (TableName VARCHAR(100), FieldName sysname, PKValue VARCHAR(255) NOT NULL, SourceValue VARCHAR(255) NULL, TargetValue VARCHAR(255) NULL)
+	CREATE TABLE #results (TableName VARCHAR(100), PKName VARCHAR(255), PKValue VARCHAR(255) NOT NULL, FieldName sysname, SourceValue VARCHAR(255) NULL, TargetValue VARCHAR(255) NULL)
 
 	-- Insert Inserts and Deletes into #results
-	INSERT INTO #results (TableName, FieldName, PKValue, SourceValue, TargetValue)
-	SELECT TableName, 'N/A - ' + CASE WHEN SyncType = 'I' THEN 'Insert' WHEN SyncType = 'D' THEN 'Delete' ELSE '' END, PKValue, NULL, NULL
+	INSERT INTO #results (TableName, PKName, PKValue, FieldName, SourceValue, TargetValue)
+	SELECT TableName, PKName, 'N/A - ' + CASE WHEN SyncType = 'I' THEN 'Insert' WHEN SyncType = 'D' THEN 'Delete' ELSE '' END, PKValue, NULL, NULL
 	FROM #SyncRows
 	WHERE SyncType IN ('D', 'I')
 	AND (ISNULL(@parameterSchemaName, '')='' OR @parameterSchemaName+'.' + @parameterTableName = TableName)
@@ -424,8 +425,8 @@ BEGIN
 		-- Loop through all columns
 		WHILE @@FETCH_STATUS = 0  
 		BEGIN 
-			SET @sql = 'INSERT INTO #results (TableName, FieldName, PKValue, SourceValue, TargetValue)' + @lineEnd
-			+ 'SELECT ''' + @FQTableName + ''', ''' + @columnName + ''',''' + @PKValue + ''', s.' + @columnName + ', t.' + @columnName + @lineEnd
+			SET @sql = 'INSERT INTO #results (TableName, PKName, PKValue, FieldName, SourceValue, TargetValue)' + @lineEnd
+			+ 'SELECT ''' + @FQTableName + ''',''' + @PKFieldString + ''','''  + @PKValue + ''', ''' + @columnName + ''', s.' + @columnName + ', t.' + @columnName + @lineEnd
 			+ 'FROM ' + @sourceDBName +'.' + @FQTableName + ' s'+  + @lineEnd
 			+ 'LEFT JOIN ' + @targetDBName + '.' + @FQTableName + ' t ON ' + @joinClause +  + @lineEnd
 			+ 'WHERE ' + @PKFieldString + ' = ''' + @PKValue + ''''

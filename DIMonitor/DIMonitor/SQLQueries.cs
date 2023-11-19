@@ -134,6 +134,8 @@ namespace DIMonitor
         public const string SQL_LATEST_SSIS_MESSAGES = "select top 10 * from SSISDB.catalog.executable_statistics with (nolock) where execution_id=<RunID> order by start_time desc";
 
         public const string SQL_DATA_COMPARE = "";
+
+        public const string SQL_GET_AVAILABLE_DATABASES = "SELECT name FROM sys.databases";
         
         public const string SQL_WF_RUNNING =
             " SELECT Workflow_name Name," +

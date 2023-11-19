@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DIMonitor.exe" size="275968">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="DIMonitor.exe" size="276480">
       <assemblyIdentity name="DIMonitor" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>1nzew1OQoculW5879eMnAg4UJfsTYrj1u0HmtmYEVW4=</dsig:DigestValue>
+        <dsig:DigestValue>I+TxIidpFD+LiMudkxwu7m5fx4xsuxg/dx38WFnWlKQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -71,13 +71,13 @@
       <dsig:DigestValue>z9HR9N+YnyFvyP3pC8p/j1zRK8mSL86uUd327753OKc=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="SourceTargetComparison.sql" size="24611">
+  <file name="SourceTargetComparison.sql" size="24791">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>VZ824kNQj6Y9b1efgB5aiajOVTZFgzlwpMBQ1frUvXg=</dsig:DigestValue>
+      <dsig:DigestValue>1nVkrxkdopPJ2KLXJkr4GVnH02Qw+KxsLl3pXdrxhO0=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

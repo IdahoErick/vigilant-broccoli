@@ -40,6 +40,23 @@ namespace DIMonitor
             // Set end date to one month ago
             dtmpEndDate.Value = DateTime.Today.AddMonths(-1);
 
+            // Get available databases
+            string cs = Utility.GetConnectionString(_eNV, _bU, _period, false);
+            DataSet DSAvailableDatabases = _sqlDA.GetQueryDataSet(cs, SQLQueries.SQL_GET_AVAILABLE_DATABASES, false);
+
+            // Fill database comoboboxes
+            DataTable dtSourceDBs = DSAvailableDatabases.Tables[0].Copy();
+            DataTable dtTargetDBs = DSAvailableDatabases.Tables[0].Copy();
+
+            cbSourceDB.DataSource = dtSourceDBs;
+            cbSourceDB.DisplayMember = "Name";
+            cbSourceDB.ValueMember = "Name";
+            cbSourceDB.Refresh();
+            cbTargetDB.DataSource = dtTargetDBs;
+            cbTargetDB.DisplayMember = "Name";
+            cbTargetDB.ValueMember = "Name";
+            cbTargetDB.Refresh();
+
             _eNV = eNV;
             _period = period;
             _bU = bU;
@@ -67,8 +84,8 @@ namespace DIMonitor
                 parameters.Add(new BaseDBAccess.CommandParams("<RUN_SYNC_SQL>", cbShowDifferences.Checked ? "1" : "0"));
                 parameters.Add(new BaseDBAccess.CommandParams("<COMPARE_TABLE_SIZE_MAX>", tbMaxTableRows.Text));
                 parameters.Add(new BaseDBAccess.CommandParams("<SHOW_DIFF>", cbShowDifferences.Checked ? "1" : "0"));
-                parameters.Add(new BaseDBAccess.CommandParams("<SOURCE_DB>", tbSourceDB.Text));
-                parameters.Add(new BaseDBAccess.CommandParams("<TARGET_DB>", tbTargetDB.Text));
+                parameters.Add(new BaseDBAccess.CommandParams("<SOURCE_DB>", cbSourceDB.Text));
+                parameters.Add(new BaseDBAccess.CommandParams("<TARGET_DB>", cbTargetDB.Text));
 
                 Cursor.Current = Cursors.WaitCursor;
 

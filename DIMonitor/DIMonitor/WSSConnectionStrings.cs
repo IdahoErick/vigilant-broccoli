@@ -34,6 +34,6 @@ namespace DIMonitor
         public const string SQL_EDW_DEV = "Data Source=EDWOlap-rw.dev.mssql.db.backends.tech, 1433;Integrated Security = SSPI";
         public const string SQL_EDW_TEST = "Data Source=EDWOlap-rw.test.mssql.db.backends.tech, 1433;Integrated Security = SSPI";
         public const string SQL_EDW_ACC = "Data Source=w-mssqldw111.wd.clarkinc.io, 1433;Integrated Security = SSPI";
-        public const string SQL_EDW_PROD = "";
+        public const string SQL_EDW_PROD = "Data Source=EDWOlap-rw.prod.mssql.db.backends.tech, 1433;Integrated Security = SSPI";
     }
 }

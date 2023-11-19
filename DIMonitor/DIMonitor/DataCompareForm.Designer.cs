@@ -51,9 +51,9 @@ namespace DIMonitor
             this.lblRowLevelDataDifferences = new System.Windows.Forms.Label();
             this.dgvRowLevelDataDifferences = new System.Windows.Forms.DataGridView();
             this.label7 = new System.Windows.Forms.Label();
-            this.tbSourceDB = new System.Windows.Forms.TextBox();
-            this.tbTargetDB = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.cbSourceDB = new System.Windows.Forms.ComboBox();
+            this.cbTargetDB = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataCompareResultsSummary)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataCompareResultsPerTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRowLevelDataDifferences)).BeginInit();
@@ -66,7 +66,7 @@ namespace DIMonitor
             this.cbCheckInserts.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbCheckInserts.Location = new System.Drawing.Point(725, 48);
             this.cbCheckInserts.Name = "cbCheckInserts";
-            this.cbCheckInserts.Size = new System.Drawing.Size(94, 17);
+            this.cbCheckInserts.Size = new System.Drawing.Size(115, 21);
             this.cbCheckInserts.TabIndex = 2;
             this.cbCheckInserts.Text = "Check Inserts";
             this.cbCheckInserts.UseVisualStyleBackColor = true;
@@ -100,7 +100,7 @@ namespace DIMonitor
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(23, 97);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(121, 13);
+            this.label1.Size = new System.Drawing.Size(162, 17);
             this.label1.TabIndex = 5;
             this.label1.Text = "Data Compare Summary";
             // 
@@ -109,7 +109,7 @@ namespace DIMonitor
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(26, 223);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(161, 13);
+            this.label2.Size = new System.Drawing.Size(215, 17);
             this.label2.TabIndex = 7;
             this.label2.Text = "Data Compare Results per Table";
             // 
@@ -131,7 +131,7 @@ namespace DIMonitor
             this.lblSchemaName.AutoSize = true;
             this.lblSchemaName.Location = new System.Drawing.Point(20, 47);
             this.lblSchemaName.Name = "lblSchemaName";
-            this.lblSchemaName.Size = new System.Drawing.Size(77, 13);
+            this.lblSchemaName.Size = new System.Drawing.Size(100, 17);
             this.lblSchemaName.TabIndex = 8;
             this.lblSchemaName.Text = "Schema Name";
             // 
@@ -156,7 +156,7 @@ namespace DIMonitor
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(165, 48);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 13);
+            this.label3.Size = new System.Drawing.Size(85, 17);
             this.label3.TabIndex = 10;
             this.label3.Text = "Table Name";
             // 
@@ -174,7 +174,7 @@ namespace DIMonitor
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(311, 48);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(55, 13);
+            this.label4.Size = new System.Drawing.Size(72, 17);
             this.label4.TabIndex = 13;
             this.label4.Text = "Start Date";
             // 
@@ -183,7 +183,7 @@ namespace DIMonitor
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(434, 48);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(52, 13);
+            this.label5.Size = new System.Drawing.Size(67, 17);
             this.label5.TabIndex = 15;
             this.label5.Text = "End Date";
             // 
@@ -204,7 +204,7 @@ namespace DIMonitor
             this.cbCheckUpdates.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbCheckUpdates.Location = new System.Drawing.Point(725, 71);
             this.cbCheckUpdates.Name = "cbCheckUpdates";
-            this.cbCheckUpdates.Size = new System.Drawing.Size(103, 17);
+            this.cbCheckUpdates.Size = new System.Drawing.Size(126, 21);
             this.cbCheckUpdates.TabIndex = 16;
             this.cbCheckUpdates.Text = "Check Updates";
             this.cbCheckUpdates.UseVisualStyleBackColor = true;
@@ -216,7 +216,7 @@ namespace DIMonitor
             this.cbCheckDeletes.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbCheckDeletes.Location = new System.Drawing.Point(725, 93);
             this.cbCheckDeletes.Name = "cbCheckDeletes";
-            this.cbCheckDeletes.Size = new System.Drawing.Size(99, 17);
+            this.cbCheckDeletes.Size = new System.Drawing.Size(121, 21);
             this.cbCheckDeletes.TabIndex = 17;
             this.cbCheckDeletes.Text = "Check Deletes";
             this.cbCheckDeletes.UseVisualStyleBackColor = true;
@@ -234,7 +234,7 @@ namespace DIMonitor
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(561, 47);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(87, 13);
+            this.label6.Size = new System.Drawing.Size(111, 17);
             this.label6.TabIndex = 18;
             this.label6.Text = "Max Table Rows";
             // 
@@ -243,7 +243,7 @@ namespace DIMonitor
             this.cbShowDifferences.AutoSize = true;
             this.cbShowDifferences.Location = new System.Drawing.Point(725, 25);
             this.cbShowDifferences.Name = "cbShowDifferences";
-            this.cbShowDifferences.Size = new System.Drawing.Size(113, 17);
+            this.cbShowDifferences.Size = new System.Drawing.Size(140, 21);
             this.cbShowDifferences.TabIndex = 20;
             this.cbShowDifferences.Text = "Show Differences";
             this.cbShowDifferences.UseVisualStyleBackColor = true;
@@ -253,7 +253,7 @@ namespace DIMonitor
             this.lblRowLevelDataDifferences.AutoSize = true;
             this.lblRowLevelDataDifferences.Location = new System.Drawing.Point(23, 516);
             this.lblRowLevelDataDifferences.Name = "lblRowLevelDataDifferences";
-            this.lblRowLevelDataDifferences.Size = new System.Drawing.Size(162, 13);
+            this.lblRowLevelDataDifferences.Size = new System.Drawing.Size(217, 17);
             this.lblRowLevelDataDifferences.TabIndex = 22;
             this.lblRowLevelDataDifferences.Text = "Data Compare Results first Table";
             this.lblRowLevelDataDifferences.Visible = false;
@@ -277,42 +277,42 @@ namespace DIMonitor
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(23, 24);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(59, 13);
+            this.label7.Size = new System.Drawing.Size(76, 17);
             this.label7.TabIndex = 23;
             this.label7.Text = "Source DB";
             this.label7.Click += new System.EventHandler(this.label7_Click);
-            // 
-            // tbSourceDB
-            // 
-            this.tbSourceDB.Location = new System.Drawing.Point(88, 20);
-            this.tbSourceDB.Name = "tbSourceDB";
-            this.tbSourceDB.Size = new System.Drawing.Size(134, 22);
-            this.tbSourceDB.TabIndex = 24;
-            this.tbSourceDB.Text = "IDS_Qlik";
-            // 
-            // tbTargetDB
-            // 
-            this.tbTargetDB.Location = new System.Drawing.Point(318, 20);
-            this.tbTargetDB.Name = "tbTargetDB";
-            this.tbTargetDB.Size = new System.Drawing.Size(134, 22);
-            this.tbTargetDB.TabIndex = 26;
-            this.tbTargetDB.Text = "IDSConsolidated";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(253, 24);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(56, 13);
+            this.label8.Size = new System.Drawing.Size(73, 17);
             this.label8.TabIndex = 25;
             this.label8.Text = "Target DB";
+            // 
+            // cbSourceDB
+            // 
+            this.cbSourceDB.FormattingEnabled = true;
+            this.cbSourceDB.Location = new System.Drawing.Point(105, 20);
+            this.cbSourceDB.Name = "cbSourceDB";
+            this.cbSourceDB.Size = new System.Drawing.Size(121, 24);
+            this.cbSourceDB.TabIndex = 27;
+            // 
+            // cbTargetDB
+            // 
+            this.cbTargetDB.FormattingEnabled = true;
+            this.cbTargetDB.Location = new System.Drawing.Point(332, 21);
+            this.cbTargetDB.Name = "cbTargetDB";
+            this.cbTargetDB.Size = new System.Drawing.Size(121, 24);
+            this.cbTargetDB.TabIndex = 28;
             // 
             // DataCompareForm
             // 
             this.ClientSize = new System.Drawing.Size(854, 553);
-            this.Controls.Add(this.tbTargetDB);
+            this.Controls.Add(this.cbTargetDB);
+            this.Controls.Add(this.cbSourceDB);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.tbSourceDB);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.lblRowLevelDataDifferences);
             this.Controls.Add(this.dgvRowLevelDataDifferences);
@@ -368,8 +368,8 @@ namespace DIMonitor
         private System.Windows.Forms.Label lblRowLevelDataDifferences;
         private System.Windows.Forms.DataGridView dgvRowLevelDataDifferences;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox tbSourceDB;
-        private System.Windows.Forms.TextBox tbTargetDB;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox cbSourceDB;
+        private System.Windows.Forms.ComboBox cbTargetDB;
     }
 }
