@@ -37,6 +37,10 @@ namespace DIMonitor
         {
             InitializeComponent();
 
+            _eNV = eNV;
+            _period = period;
+            _bU = bU;
+
             // Set end date to one month ago
             dtmpEndDate.Value = DateTime.Today.AddMonths(-1);
 
@@ -44,22 +48,22 @@ namespace DIMonitor
             string cs = Utility.GetConnectionString(_eNV, _bU, _period, false);
             DataSet DSAvailableDatabases = _sqlDA.GetQueryDataSet(cs, SQLQueries.SQL_GET_AVAILABLE_DATABASES, false);
 
-            // Fill database comoboboxes
+                        // Fill database comoboboxes
             DataTable dtSourceDBs = DSAvailableDatabases.Tables[0].Copy();
             DataTable dtTargetDBs = DSAvailableDatabases.Tables[0].Copy();
 
             cbSourceDB.DataSource = dtSourceDBs;
             cbSourceDB.DisplayMember = "Name";
             cbSourceDB.ValueMember = "Name";
+            cbSourceDB.SelectedText = "IDS_Qlik";
             cbSourceDB.Refresh();
+
             cbTargetDB.DataSource = dtTargetDBs;
             cbTargetDB.DisplayMember = "Name";
             cbTargetDB.ValueMember = "Name";
+            cbTargetDB.SelectedText = "IDSConsolidated";
             cbTargetDB.Refresh();
 
-            _eNV = eNV;
-            _period = period;
-            _bU = bU;
         }
 
         private void RunDataCompare()

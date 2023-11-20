@@ -215,7 +215,7 @@ BEGIN
        	SET @syncSQL = 'INSERT #SyncRows (TableName, PKName, PKValue, SyncType)' + @lineEnd
 			+ 'SELECT * FROM' + @lineEnd
 			+ '(' + @lineEnd
-			+ 'SELECT ''' + @FQTableName + ''' AS TableName ' + ', ''' + REPLACE(@PKFieldString, '<prefix>.', '') + ''' AS PKName' +
+			+ 'SELECT ''' + @FQTableName + ''' AS TableName ' + ', ''' + REPLACE(REPLACE(@PKFieldString, '<prefix>.', ''), '''', '''''') + ''' AS PKName' +
 			+ ', COALESCE(' + REPLACE(@PKFieldString, '<prefix>', 's') + ', '  + REPLACE(@PKFieldString, '<prefix>', 't') + ') AS PKValue' + ','  + @lineEnd
 			+ 'SyncType = case when t.' + @firstPKField + ' IS NULL THEN ''I'' when s.' + @firstPKField + ' IS NULL' + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted = 0' ELSE '' END + ' THEN ''D'''  + @lineEnd
 			+ CASE WHEN @checkUpdates=1 THEN ' WHEN ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then ''U'' END' ELSE ' END' END  + @lineEnd
