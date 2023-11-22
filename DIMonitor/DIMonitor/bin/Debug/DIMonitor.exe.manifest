@@ -49,17 +49,17 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>H+g163AbuImls4xpGtlgv64XCUqnXAPYFvwtQLEj5Rw=</dsig:DigestValue>
+        <dsig:DigestValue>Gm6GZxHSBzjf4JB05gsDo373s0XZtTUzpsa3btRfXUU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="DIMonitor.exe.config" size="1332">
+  <file name="DIMonitor.exe.config" size="1328">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>2b7WhCNHYZwOUlcBdjTksGbcy4DEtPhXBzs9pgfMc/k=</dsig:DigestValue>
+      <dsig:DigestValue>lX2jUOUwSAWvyYnYARhv4B2ESN44lLTNDKDgaOWRq6c=</dsig:DigestValue>
     </hash>
   </file>
   <file name="NN.ico" size="10134">
