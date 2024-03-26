@@ -54,6 +54,7 @@ DECLARE @schemaName sysname = ''
 	, @tableNbr INT = 0
 	, @PKFieldString VARCHAR(250) =''
 	, @DateUpdatedExists BIT = 0
+	, @MaxCompareColumnCount TINYINT = 62
 
 IF @startDate IS NULL	
 	SET @startDate = '1900-01-01'
@@ -195,10 +196,11 @@ BEGIN
 				select
 				Inserts = case when t.' + @firstPKField + ' IS NULL THEN 1 ELSE 0 END'
 				+ ', Deletes = case when s.' + @firstPKField + ' IS NULL' + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted = 0' ELSE '' END + ' THEN 1 ELSE 0 END'
-				+ ', Updates = ' + CASE WHEN @checkUpdates=1 THEN 'CASE when ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then 1 else 0 end' ELSE '0' END
+				+ ', Updates = ' + CASE WHEN @checkUpdates=1 THEN 'CASE when ' + @joinClause + ' AND (CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ')' + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' OR t.DataLoadIsDeleted = 1)' ELSE ')' END + ' then 1 else 0 end' ELSE '0' END
+--				+ ', Updates = ' + CASE WHEN @checkUpdates=1 THEN 'CASE when ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then 1 else 0 end' ELSE '0' END
 				+ ', NbrRows = 1
 				FROM ' + @sourceDBName + '.' + @FQTableName +' s
-				FULL OUTER JOIN ' + @targetDBName +'.' + @FQTableName + ' t ON ' + @joinClause + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted=0' ELSE '' END
+				FULL OUTER JOIN ' + @targetDBName +'.' + @FQTableName + ' t ON ' + @joinClause --+ CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted=0' ELSE '' END
 				+ ' WHERE 1=1' + @lineEnd
 				+ CASE WHEN @checkInserts=0 THEN ' AND t.' + @firstPKField + ' IS NOT NULL' + @lineEnd ELSE '' END
 				+ CASE WHEN @checkUpdates=0 THEN ' AND (s.' + @firstPKField + ' IS NULL OR t.' + @firstPKField + ' IS NULL)'+ @lineEnd ELSE '' END
@@ -218,9 +220,10 @@ BEGIN
 			+ 'SELECT ''' + @FQTableName + ''' AS TableName ' + ', ''' + REPLACE(REPLACE(@PKFieldString, '<prefix>.', ''), '''', '''''') + ''' AS PKName' +
 			+ ', COALESCE(' + REPLACE(@PKFieldString, '<prefix>', 's') + ', '  + REPLACE(@PKFieldString, '<prefix>', 't') + ') AS PKValue' + ','  + @lineEnd
 			+ 'SyncType = case when t.' + @firstPKField + ' IS NULL THEN ''I'' when s.' + @firstPKField + ' IS NULL' + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted = 0' ELSE '' END + ' THEN ''D'''  + @lineEnd
-			+ CASE WHEN @checkUpdates=1 THEN ' WHEN ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then ''U'' END' ELSE ' END' END  + @lineEnd
+			+ CASE WHEN @checkUpdates=1 THEN ' WHEN ' + @joinClause + ' AND (CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ')' + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' OR t.DataLoadIsDeleted = 1)' ELSE ')' END + ' THEN ''U'' END' ELSE ' END' END  + @lineEnd
+--			+ CASE WHEN @checkUpdates=1 THEN ' WHEN ' + @joinClause + ' AND CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 's.') + ') <> CHECKSUM(' + REPLACE(@fieldList, '<prefix>', 't.') + ') then ''U'' END' ELSE ' END' END  + @lineEnd
 			+ ' FROM ' + @sourceDBName + '.' + @FQTableName +' s' + @lineEnd
-			+ ' FULL OUTER JOIN ' + @targetDBName + '.' + @FQTableName + ' t ON ' + @joinClause + CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted=0' ELSE '' END + @lineEnd
+			+ ' FULL OUTER JOIN ' + @targetDBName + '.' + @FQTableName + ' t ON ' + @joinClause --+ CASE WHEN @DataLoadIsDeletedExists=1 THEN ' AND t.DataLoadIsDeleted=0' ELSE '' END + @lineEnd
 			+ ' WHERE 1=1' + @lineEnd
 			+ CASE WHEN @UpdateDateFieldExists=1 THEN ' AND (t.DataLoadDateUpdated IS NULL OR t.DataLoadDateUpdated BETWEEN ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + ''')' ELSE '' END + @lineEnd
 			+ CASE WHEN @DateUpdatedExists=1 THEN ' AND (s.DateUpdated IS NULL OR s.DateUpdated between ''' + CAST(@startDate AS VARCHAR) + ''' AND ''' + CAST(@endDate AS VARCHAR) + ''')' + @lineEnd ELSE '' END
@@ -387,6 +390,7 @@ BEGIN
 		WHERE cc.table_name = @tn
 		AND cc.TABLE_SCHEMA = @sn
 		AND cc.COLUMN_NAME NOT IN (''ConcurrencyCheck'')
+		AND cc.ORDINAL_POSITION < ' + CAST(@MaxCompareColumnCount AS VARCHAR) + '
 		AND NOT EXISTS (
 			SELECT 1 FROM ' + @targetDBName + '.INFORMATION_SCHEMA.TABLE_CONSTRAINTS AS TC 
 			INNER JOIN ' + @targetDBName + '.INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KU ON TC.CONSTRAINT_TYPE = ''PRIMARY KEY'' AND TC.CONSTRAINT_NAME = KU.CONSTRAINT_NAME
@@ -413,7 +417,7 @@ BEGIN
 		SELECT c.COLUMN_NAME, dc.PKValue
 		FROM #DataCompare dc
 		INNER JOIN ' + @targetDBName + '.information_schema.columns c ON  c.TABLE_SCHEMA+''.''+ c.table_name=dc.TableName
-		WHERE dc.FieldDiffMask & POWER(2, c.ORDINAL_POSITION) > 0'
+		WHERE dc.FieldDiffMask & POWER(CAST(2 as BIGINT), CASE WHEN c.ORDINAL_POSITION > ' + CAST(@MaxCompareColumnCount AS VARCHAR) + ' THEN -1 ELSE c.ORDINAL_POSITION END) > 0'
 		EXEC sp_executesql @stmt = @SQL
 
 		DECLARE diffCursor CURSOR FOR

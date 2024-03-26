@@ -74,6 +74,8 @@
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.transferDataToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.makeCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tableStatsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label7 = new System.Windows.Forms.Label();
             this.ssStatusStrip = new System.Windows.Forms.StatusStrip();
             this.tssLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -87,7 +89,8 @@
             this.label11 = new System.Windows.Forms.Label();
             this.lblSSISRunID = new System.Windows.Forms.Label();
             this.cbHistoryVersion = new System.Windows.Forms.ComboBox();
-            this.dataCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
+            this.qlikSyncStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -442,20 +445,20 @@
             this.settingsToolStripMenuItem,
             this.setLocalAdminPasswordToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(39, 24);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(46, 24);
             this.toolStripMenuItem1.Text = "File";
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(227, 26);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // setLocalAdminPasswordToolStripMenuItem
             // 
             this.setLocalAdminPasswordToolStripMenuItem.Name = "setLocalAdminPasswordToolStripMenuItem";
-            this.setLocalAdminPasswordToolStripMenuItem.Size = new System.Drawing.Size(227, 26);
+            this.setLocalAdminPasswordToolStripMenuItem.Size = new System.Drawing.Size(265, 26);
             this.setLocalAdminPasswordToolStripMenuItem.Text = "Set Local Admin Password";
             this.setLocalAdminPasswordToolStripMenuItem.Click += new System.EventHandler(this.setLocalAdminPasswordToolStripMenuItem_Click);
             // 
@@ -466,34 +469,34 @@
             this.runDetailLogToolStripMenuItem1,
             this.sSISLogToolStripMenuItem});
             this.logsToolStripMenuItem.Name = "logsToolStripMenuItem";
-            this.logsToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
+            this.logsToolStripMenuItem.Size = new System.Drawing.Size(54, 24);
             this.logsToolStripMenuItem.Text = "Logs";
             // 
             // StagingLogboekMenuItem
             // 
             this.StagingLogboekMenuItem.Name = "StagingLogboekMenuItem";
-            this.StagingLogboekMenuItem.Size = new System.Drawing.Size(177, 26);
+            this.StagingLogboekMenuItem.Size = new System.Drawing.Size(205, 26);
             this.StagingLogboekMenuItem.Text = "Staging LogBoek";
             this.StagingLogboekMenuItem.Click += new System.EventHandler(this.logBoekToolStripMenuItem1_Click);
             // 
             // runDetailLogToolStripMenuItem1
             // 
             this.runDetailLogToolStripMenuItem1.Name = "runDetailLogToolStripMenuItem1";
-            this.runDetailLogToolStripMenuItem1.Size = new System.Drawing.Size(177, 26);
+            this.runDetailLogToolStripMenuItem1.Size = new System.Drawing.Size(205, 26);
             this.runDetailLogToolStripMenuItem1.Text = "Run Detail Log";
             this.runDetailLogToolStripMenuItem1.Click += new System.EventHandler(this.runDetailLogToolStripMenuItem1_Click);
             // 
             // sSISLogToolStripMenuItem
             // 
             this.sSISLogToolStripMenuItem.Name = "sSISLogToolStripMenuItem";
-            this.sSISLogToolStripMenuItem.Size = new System.Drawing.Size(177, 26);
+            this.sSISLogToolStripMenuItem.Size = new System.Drawing.Size(205, 26);
             this.sSISLogToolStripMenuItem.Text = "SSIS Log";
             this.sSISLogToolStripMenuItem.Click += new System.EventHandler(this.sSISLogToolStripMenuItem_Click);
             // 
             // dashboardToolStripMenuItem
             // 
             this.dashboardToolStripMenuItem.Name = "dashboardToolStripMenuItem";
-            this.dashboardToolStripMenuItem.Size = new System.Drawing.Size(78, 24);
+            this.dashboardToolStripMenuItem.Size = new System.Drawing.Size(96, 24);
             this.dashboardToolStripMenuItem.Text = "Dashboard";
             this.dashboardToolStripMenuItem.Click += new System.EventHandler(this.dashboardToolStripMenuItem_Click);
             // 
@@ -502,13 +505,13 @@
             this.filesWaitingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sourceFilesToolStripMenuItem});
             this.filesWaitingToolStripMenuItem.Name = "filesWaitingToolStripMenuItem";
-            this.filesWaitingToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
+            this.filesWaitingToolStripMenuItem.Size = new System.Drawing.Size(52, 24);
             this.filesWaitingToolStripMenuItem.Text = "Files";
             // 
             // sourceFilesToolStripMenuItem
             // 
             this.sourceFilesToolStripMenuItem.Name = "sourceFilesToolStripMenuItem";
-            this.sourceFilesToolStripMenuItem.Size = new System.Drawing.Size(150, 26);
+            this.sourceFilesToolStripMenuItem.Size = new System.Drawing.Size(170, 26);
             this.sourceFilesToolStripMenuItem.Text = "Source Files";
             this.sourceFilesToolStripMenuItem.Click += new System.EventHandler(this.sourceFilesToolStripMenuItem_Click);
             // 
@@ -517,9 +520,11 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.transferDataToolStripMenuItem1,
             this.makeCSVToolStripMenuItem,
-            this.dataCompareToolStripMenuItem});
+            this.dataCompareToolStripMenuItem,
+            this.tableStatsToolStripMenuItem,
+            this.qlikSyncStatusToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 24);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(58, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // transferDataToolStripMenuItem1
@@ -536,6 +541,20 @@
             this.makeCSVToolStripMenuItem.Text = "Make CSV";
             this.makeCSVToolStripMenuItem.Click += new System.EventHandler(this.makeCSVToolStripMenuItem_Click);
             // 
+            // dataCompareToolStripMenuItem
+            // 
+            this.dataCompareToolStripMenuItem.Name = "dataCompareToolStripMenuItem";
+            this.dataCompareToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.dataCompareToolStripMenuItem.Text = "Data Compare";
+            this.dataCompareToolStripMenuItem.Click += new System.EventHandler(this.dataCompareToolStripMenuItem_Click);
+            // 
+            // tableStatsToolStripMenuItem
+            // 
+            this.tableStatsToolStripMenuItem.Name = "tableStatsToolStripMenuItem";
+            this.tableStatsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.tableStatsToolStripMenuItem.Text = "Table Stats";
+            this.tableStatsToolStripMenuItem.Click += new System.EventHandler(this.tableStatsToolStripMenuItem_Click);
+            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -551,17 +570,17 @@
             this.ssStatusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.ssStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tssLabel});
-            this.ssStatusStrip.Location = new System.Drawing.Point(0, 889);
+            this.ssStatusStrip.Location = new System.Drawing.Point(0, 885);
             this.ssStatusStrip.Name = "ssStatusStrip";
             this.ssStatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 18, 0);
-            this.ssStatusStrip.Size = new System.Drawing.Size(583, 22);
+            this.ssStatusStrip.Size = new System.Drawing.Size(583, 26);
             this.ssStatusStrip.TabIndex = 35;
             this.ssStatusStrip.Text = "statusStrip1";
             // 
             // tssLabel
             // 
             this.tssLabel.Name = "tssLabel";
-            this.tssLabel.Size = new System.Drawing.Size(75, 16);
+            this.tssLabel.Size = new System.Drawing.Size(96, 20);
             this.tssLabel.Text = "Lekker Bezig!";
             // 
             // lblBronsysteem
@@ -696,12 +715,22 @@
             this.cbHistoryVersion.TabIndex = 44;
             this.cbHistoryVersion.SelectedIndexChanged += new System.EventHandler(this.cbHistoryVersion_SelectedIndexChanged);
             // 
-            // dataCompareToolStripMenuItem
+            // button1
             // 
-            this.dataCompareToolStripMenuItem.Name = "dataCompareToolStripMenuItem";
-            this.dataCompareToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.dataCompareToolStripMenuItem.Text = "Data Compare";
-            this.dataCompareToolStripMenuItem.Click += new System.EventHandler(this.dataCompareToolStripMenuItem_Click);
+            this.button1.Location = new System.Drawing.Point(439, 859);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 45;
+            this.button1.Text = "Test";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // qlikSyncStatusToolStripMenuItem
+            // 
+            this.qlikSyncStatusToolStripMenuItem.Name = "qlikSyncStatusToolStripMenuItem";
+            this.qlikSyncStatusToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.qlikSyncStatusToolStripMenuItem.Text = "Qlik Sync Status";
+            this.qlikSyncStatusToolStripMenuItem.Click += new System.EventHandler(this.qlikSyncStatusToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -709,6 +738,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(583, 911);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.cbHistoryVersion);
             this.Controls.Add(this.lblSSISRunID);
             this.Controls.Add(this.label11);
@@ -818,6 +848,9 @@
         private System.Windows.Forms.ToolStripMenuItem makeCSVToolStripMenuItem;
         private System.Windows.Forms.Button btnLastSSISMsg;
         private System.Windows.Forms.ToolStripMenuItem dataCompareToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tableStatsToolStripMenuItem;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ToolStripMenuItem qlikSyncStatusToolStripMenuItem;
     }
 }
 

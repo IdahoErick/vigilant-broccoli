@@ -541,5 +541,29 @@ namespace DIMonitor
             DataCompareForm dataCompareForm = new DataCompareForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex);
             dataCompareForm.Show();
         }
+
+        private void tableStatsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TableStatsForm tableStatsForm = new TableStatsForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex);
+            tableStatsForm.Show();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+//            TransformSPForm transformSPForm = new TransformSPForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, "general", "DimLocation");
+//            transformSPForm.Show();
+
+            DataCompareForm dataCompareForm = new DataCompareForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex);
+            dataCompareForm.SetQueryAScript("c:\\temp\\ScriptA.sql");
+            dataCompareForm.SetQueryBScript("c:\\temp\\ScriptB.sql");
+            dataCompareForm.Show();
+
+        }
+
+        private void qlikSyncStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReplicateStatusForm replicateStatusForm = new ReplicateStatusForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex);
+            replicateStatusForm.Show();
+        }
     }
 }

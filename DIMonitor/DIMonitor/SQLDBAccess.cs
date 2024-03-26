@@ -19,6 +19,31 @@ namespace DIMonitor
             // Execute the command
             return GetQueryDataSet(connectionString, sql, ignoreExceptions);
         }
+
+        public DataSet GetQueryDataSet(string connectionString, string sql, bool ignoreExceptions, int queryTimeout)
+        {
+            DataSet ds = new DataSet();
+            try
+            {
+                string queryString = sql;
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlDataAdapter da = new SqlDataAdapter(queryString, connection);
+                    da.SelectCommand.CommandTimeout = queryTimeout;
+                    da.Fill(ds);
+                }
+                //return ds;
+            }
+            catch (Exception)
+            {
+                // Ignore exceptions on request
+                if (!ignoreExceptions)
+                    throw;
+            }
+            return ds;
+        }
+
         public override DataSet GetQueryDataSet(string connectionString, string sql, bool ignoreExceptions)
         {
             DataSet ds = new DataSet();
@@ -29,6 +54,7 @@ namespace DIMonitor
                 {
                     connection.Open();
                     SqlDataAdapter da = new SqlDataAdapter(queryString, connection);
+                    da.SelectCommand.CommandTimeout = 100;
                     da.Fill(ds);
                 }
                 //return ds;
@@ -47,6 +73,16 @@ namespace DIMonitor
             {
                 connection.Open();
                 SqlCommand ac = new SqlCommand(commandText, connection);
+                return ac.ExecuteNonQuery();
+            }
+        }
+        public int ExecuteSQLCommand(string connectionString, string commandText, int commandTimeout)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlCommand ac = new SqlCommand(commandText, connection);
+                ac.CommandTimeout = commandTimeout;
                 return ac.ExecuteNonQuery();
             }
         }

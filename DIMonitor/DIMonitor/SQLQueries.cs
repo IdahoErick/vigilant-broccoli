@@ -136,7 +136,81 @@ namespace DIMonitor
         public const string SQL_DATA_COMPARE = "";
 
         public const string SQL_GET_AVAILABLE_DATABASES = "SELECT name FROM sys.databases";
-        
+
+        public const string SQL_GET_AVAILABLE_CONSOLIDATION_DATABASES = "SELECT name FROM sys.databases where name like '%Consolidated%'";
+
+        public const string SQL_GET_TABLE_DESCRIPTION = "SELECT p.value AS TableDescription FROM sys.tables AS tbl INNER JOIN sys.extended_properties AS p ON p.major_id= tbl.object_id AND p.minor_id= 0 AND p.class=1 WHERE tbl.name = '<tableName>' AND SCHEMA_NAME(tbl.schema_id) = '<schemaName>'";
+
+        public const string SQL_GET_DATABASE_SCHEMAS = "SELECT SCHEMA_NAME FROM information_schema.schemata WHERE SCHEMA_NAME not like 'db_%' AND SCHEMA_NAME NOT IN ('guest', 'INFORMATION_SCHEMA', 'executionAudit')";
+
+        public const string SQL_GET_DATABASE_TABLE_NAMES = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_SCHEMA = '<SCHEMA_NAME>' AND TABLE_TYPE = 'BASE TABLE' ORDER BY TABLE_NAME";
+
+        public const string SQL_GET_DATABASE_TABLES = "SELECT TOP 200 s.TABLE_SCHEMA, s.TABLE_NAME, ISNULL(c.COLUMN_NAME, '') AS DateColumnName" +
+                " FROM information_schema.tables s" +
+                " OUTER APPLY (" +
+                "    SELECT TOP 1 *" +
+                "    FROM" +
+                "    (" +
+                "        SELECT c.TABLE_SCHEMA, c.TABLE_NAME, c.COLUMN_NAME, c.DATA_TYPE, CASE WHEN c.COLUMN_NAME IN ('DateUpdated', 'DateCreated') THEN c.COLUMN_NAME ELSE '' END AS DateColumnName" +
+                "        FROM information_schema.columns c" +
+                "        WHERE c.TABLE_SCHEMA = s.TABLE_SCHEMA AND c.table_name = s.TABLE_NAME" +
+                "        AND c.DATA_TYPE IN ('datetime2', 'datetime', 'date')" +
+                "        AND c.COLUMN_NAME <> 'DataLoadDateUpdated'" +
+                "	) t" +
+                "    ORDER BY DateColumnName DESC" +
+                " ) c" +
+                " WHERE s.TABLE_TYPE = 'BASE TABLE'" +
+                " ORDER BY s.TABLE_SCHEMA, s.TABLE_NAME;";
+
+        public const string SQL_GET_TABLE_SCHEMA = "sp_help \"<FULL_TABLE_NAME>\"";
+
+        public const string SQL_GET_TABLE_ROW_COUNT = "SELECT NbrRows = SUM(PART.rows) FROM sys.tables TBL INNER JOIN sys.partitions PART ON TBL.object_id = PART.object_id INNER JOIN sys.indexes IDX ON PART.object_id = IDX.object_id AND PART.index_id = IDX.index_id INNER JOIN sys.schemas s ON tbl.schema_id= s.schema_id WHERE TBL.name = '<TABLE_NAME>' AND s.name = '<SCHEMA_NAME>' AND IDX.index_id< 2 GROUP BY TBL.object_id, TBL.name";
+
+        public const string SQL_ETL_MAPPING = 
+                "SELECT table_schema," +
+                "    table_name," +
+                "    column_name," +
+                "   (CASE" +
+                "        WHEN data_type IN( 'varchar', 'char', 'nvarchar' ) THEN" +
+                "           UPPER(data_type) + '(' + CAST(CHARACTER_MAXIMUM_LENGTH AS VARCHAR) + ')'" +
+                "        WHEN data_type IN( 'decimal', 'numeric') THEN" +
+                "           UPPER(data_type) + '(' + CAST(NUMERIC_PRECISION AS VARCHAR) + ',' + CAST(NUMERIC_SCALE AS VARCHAR) + ')'" +
+                "        WHEN data_type IN( 'datetime', 'datetime2' ) THEN" +
+                "           UPPER(data_type) + '(' + CAST(DATETIME_PRECISION AS VARCHAR) + ')'" +
+                "        ELSE" +
+                "            UPPER(data_type)" +
+                "    END" +
+                "   ) + (CASE" +
+                "            WHEN IS_NULLABLE = 'YES' THEN" +
+                "                ' NULL'" +
+                "            ELSE" +
+                "                ' NOT NULL'" +
+                "        END" +
+                "       ) AS data_type" +
+                "   , cd.ExtendedPropertyValue AS ColumnDescription" +
+                " FROM information_schema.columns c" +
+                " LEFT JOIN(" +
+                "     SELECT SCHEMA_NAME(tbl.schema_id) AS SchemaName, tbl.name AS TableName, clmns.name AS ColumnName, p.name AS ExtendedPropertyName, CAST(p.value AS sql_variant) AS ExtendedPropertyValue" +
+                "     FROM sys.columns AS clmns" +
+                "     INNER JOIN sys.all_objects AS tbl ON clmns.object_id = tbl.object_id" +
+                "     LEFT JOIN sys.extended_properties AS p ON p.major_id = clmns.object_id AND p.minor_id = clmns.column_id" +
+                " ) cd ON c.TABLE_SCHEMA = cd.SchemaName AND c.TABLE_NAME=cd.TableName AND c.COLUMN_NAME = cd.ColumnName" +
+                " WHERE c.table_schema = '<SCHEMA_NAME>'" +
+                "      AND c.table_name = '<TABLE_NAME>'" +
+                " ORDER BY c.ORDINAL_POSITION;";
+
+        public const string SQL_GET_EDW_TRANSFORM_SP =
+            "select * from sys.sql_modules where object_id=object_id('<SCHEMA_NAME>.Load<TABLE_NAME>')";
+
+        public const string SQL_GET_TABLE_STATS =
+            "IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='<SCHEMA_NAME>' AND table_name = '<TABLE_NAME>')" +
+            "   SELECT NbrRows = COUNT(1), MaxDateModified = ISNULL(MAX(<COLUMN_NAME>), '1900-01-01') FROM <SCHEMA_NAME>.<TABLE_NAME> WITH (NOLOCK)" +
+            " ELSE" +
+            "   SELECT NbrRows = -1, MaxDateModified = '1900-01-01'";
+
+        public const string SQL_GET_TABLE_STATS_CONSOLIDATED =
+            "SELECT NbrRows = COUNT(1), MaxDateModified = ISNULL(MAX(<COLUMN_NAME>), '1900-01-01') FROM <SCHEMA_NAME>.<TABLE_NAME> WITH (NOLOCK) WHERE <ISDELETED_COLUMN>=0";
+
         public const string SQL_WF_RUNNING =
             " SELECT Workflow_name Name," +
             " start_time StartTime," +
@@ -144,6 +218,32 @@ namespace DIMonitor
             " FROM opb_wflow_run" +
             " WHERE run_status_code = 6" +
             " ORDER BY start_time DESC";
+
+        public const string SQL_GET_FIELD_DATA_TYPE =
+            "SELECT table_schema," +
+            " table_name," +
+            " column_name," +
+            " (CASE" +
+            "      WHEN data_type IN( 'varchar', 'char', 'nvarchar' ) THEN" +
+            "         UPPER(data_type) + '(' + CAST(CHARACTER_MAXIMUM_LENGTH AS VARCHAR) + ')'" +
+            "      WHEN data_type IN( 'decimal', 'numeric') THEN" +
+            "         UPPER(data_type) + '(' + CAST(NUMERIC_PRECISION AS VARCHAR) + ',' + CAST(NUMERIC_SCALE AS VARCHAR) + ')'" +
+            "      WHEN data_type IN( 'datetime', 'datetime2' ) THEN" +
+            "         UPPER(data_type) + '(' + CAST(DATETIME_PRECISION AS VARCHAR) + ')'" +
+            "      ELSE" +
+            "          UPPER(data_type)" +
+            "  END" +
+            " ) + (CASE" +
+            "          WHEN IS_NULLABLE = 'YES' THEN" +
+            "              ' NULL'" +
+            "          ELSE" +
+            "              ' NOT NULL'" +
+            "      END" +
+            "     ) AS data_type" +
+            " FROM <DB_NAME>.information_schema.columns" +
+            " WHERE table_schema = '<SCHEMA_NAME>'" +
+            "       AND table_name = '<TABLE_NAME>'" +
+            "       AND column_name = '<FIELD_NAME>'";
 
         public const string SQL_WF_Scheduled =
             //" SELECT su.subj_name," +

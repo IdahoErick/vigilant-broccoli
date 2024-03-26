@@ -35,5 +35,16 @@ namespace DIMonitor
         public const string SQL_EDW_TEST = "Data Source=EDWOlap-rw.test.mssql.db.backends.tech, 1433;Integrated Security = SSPI";
         public const string SQL_EDW_ACC = "Data Source=w-mssqldw111.wd.clarkinc.io, 1433;Integrated Security = SSPI";
         public const string SQL_EDW_PROD = "Data Source=EDWOlap-rw.prod.mssql.db.backends.tech, 1433;Integrated Security = SSPI";
+        public const string SQL_IDSDWH_PROD = "Data Source=IDSDataWarehouse-rw.prod.mssql.db.backends.tech;Integrated Security = SSPI";
+        public const string SQL_IDSDWH_TEST = "Data Source=IDSDataWarehouse-rw.test.mssql.db.backends.tech;Integrated Security = SSPI";
+        public const string SQL_WSS_WP = "Data Source=w-mssql105.wp.clarkinc.io;Integrated Security = SSPI; Database=ClarkItBiz";
+        public const string SQL_WSS_WT = "Data Source=clarkitbiz-rw.test.mssql.db.backends.tech;Integrated Security = SSPI;";
+        public const string SQL_WSS_WD = "Data Source=clarkitbiz-rw.dev.mssql.db.backends.tech;Integrated Security = SSPI;";
+        public const string SQL_CC_WT = "Data Source=contentcatalog-rw.test.mssql.db.backends.tech;Integrated Security = SSPI;";
+        public const string SQL_CC_WP = "Data Source=contentcatalog-rw.prod.mssql.db.backends.tech;Integrated Security = SSPI;";
+        //public const string SQL_EDI_TEST = "Data Source=edi-rw.test.mssql.db.backends.tech;Integrated Security = SSPI;";
+        //public const string SQL_EDI_PROD = "Data Source=edi-rw.prod.mssql.db.backends.tech;Integrated Security = SSPI;";
+
+
     }
 }

@@ -29,11 +29,13 @@ namespace DIMonitor
             ILVV = 1
         };
 
-        public static string GetConnectionString(ENV env, BU bu, PERIOD period, bool useLocalIS=true)
+        public static string GetConnectionString(ENV env, BU bu, PERIOD period, bool useLocalIS=true, String databaseName="")
         {
             //string BUPart = bu == (int)BU.ILVB ? "ILH" : "ILSB";
             //string periodPart = period == (int)PERIOD.DAG ? "DAG" : "MAAND";
-            string databasePart = "; Database=SSISFramework";
+            if (databaseName == "")
+                databaseName = "SSISFramework";
+            string databasePart = "; Database=" + databaseName;
             string cs = "";
 
             switch ((int)env)
@@ -64,6 +66,66 @@ namespace DIMonitor
             }
             return cs;
         }
+
+        public static string GetWSSOLTPConnectionString(ENV env, String databaseName = "")
+        {
+            if (databaseName == "")
+                databaseName = "SSISFramework";
+            string databasePart = "; Database=" + databaseName;
+            string cs = "";
+
+            switch ((int)env)
+            {
+                case (int)ENV.LOCAL:
+                    cs = NNConnectionStrings.SQL_LOCALHOST_IS + databasePart;
+                    break;
+                case (int)ENV.DEV:
+                    if ((databaseName == "IDS") || (databaseName == "EDI"))
+                        cs = WSSConnectionStrings.SQL_IDSDWH_TEST + databasePart;
+                    else if (databaseName == "ContentCatalog")
+                        cs = WSSConnectionStrings.SQL_CC_WT + databasePart;
+                    else if (databaseName == "EmployeeReporting")
+                        cs = WSSConnectionStrings.SQL_EDW_DEV + databasePart;
+                    else
+                        cs = WSSConnectionStrings.SQL_WSS_WT + databasePart;
+                    break;
+                case (int)ENV.TEST:
+                    if ((databaseName == "IDS") || (databaseName == "EDI"))
+                        cs = WSSConnectionStrings.SQL_IDSDWH_TEST + databasePart;
+                    else if (databaseName == "ContentCatalog")
+                        cs = WSSConnectionStrings.SQL_CC_WT + databasePart;
+                    else if (databaseName == "EmployeeReporting")
+                        cs = WSSConnectionStrings.SQL_EDW_TEST + databasePart;
+                    else
+                        cs = WSSConnectionStrings.SQL_WSS_WT + databasePart;
+                    break;
+                case (int)ENV.ACC:
+                    if ((databaseName == "IDS") || (databaseName == "EDI"))
+                        cs = WSSConnectionStrings.SQL_IDSDWH_PROD + databasePart;
+                    else if (databaseName == "ContentCatalog")
+                        cs = WSSConnectionStrings.SQL_CC_WP + databasePart;
+                    else if (databaseName == "EmployeeReporting")
+                        cs = WSSConnectionStrings.SQL_EDW_ACC + databasePart;
+                    else
+                        cs = WSSConnectionStrings.SQL_WSS_WP + databasePart;
+                    break;
+                case (int)ENV.PROD:
+                    if ((databaseName == "IDS") || (databaseName == "EDI"))
+                        cs = WSSConnectionStrings.SQL_IDSDWH_PROD + databasePart;
+                    else if (databaseName == "ContentCatalog")
+                        cs = WSSConnectionStrings.SQL_CC_WP + databasePart;
+                    else if (databaseName == "EmployeeReporting")
+                        cs = WSSConnectionStrings.SQL_EDW_PROD + databasePart;
+                    else
+                        cs = WSSConnectionStrings.SQL_WSS_WP + databasePart;
+                    break;
+                default:
+                    cs = "";
+                    break;
+            }
+            return cs;
+        }
+
         public static string DecryptString(string encrString)
         {
             byte[] b;
