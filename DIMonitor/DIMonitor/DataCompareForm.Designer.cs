@@ -63,9 +63,13 @@ namespace DIMonitor
             this.label11 = new System.Windows.Forms.Label();
             this.tbFilterValue = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
+            this.cbUseLike = new System.Windows.Forms.CheckBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataCompareResultsSummary)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataCompareResultsPerTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRowLevelDataDifferences)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // cbCheckInserts
@@ -73,9 +77,9 @@ namespace DIMonitor
             this.cbCheckInserts.AutoSize = true;
             this.cbCheckInserts.Checked = true;
             this.cbCheckInserts.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbCheckInserts.Location = new System.Drawing.Point(859, 48);
+            this.cbCheckInserts.Location = new System.Drawing.Point(882, 46);
             this.cbCheckInserts.Name = "cbCheckInserts";
-            this.cbCheckInserts.Size = new System.Drawing.Size(115, 21);
+            this.cbCheckInserts.Size = new System.Drawing.Size(110, 20);
             this.cbCheckInserts.TabIndex = 2;
             this.cbCheckInserts.Text = "Check Inserts";
             this.cbCheckInserts.UseVisualStyleBackColor = true;
@@ -83,7 +87,7 @@ namespace DIMonitor
             // btnRunDataCompare
             // 
             this.btnRunDataCompare.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRunDataCompare.Location = new System.Drawing.Point(882, 507);
+            this.btnRunDataCompare.Location = new System.Drawing.Point(882, 502);
             this.btnRunDataCompare.Name = "btnRunDataCompare";
             this.btnRunDataCompare.Size = new System.Drawing.Size(117, 23);
             this.btnRunDataCompare.TabIndex = 3;
@@ -111,7 +115,7 @@ namespace DIMonitor
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(23, 122);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(162, 17);
+            this.label1.Size = new System.Drawing.Size(156, 16);
             this.label1.TabIndex = 5;
             this.label1.Text = "Data Compare Summary";
             // 
@@ -120,7 +124,7 @@ namespace DIMonitor
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(26, 223);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(215, 17);
+            this.label2.Size = new System.Drawing.Size(206, 16);
             this.label2.TabIndex = 7;
             this.label2.Text = "Data Compare Results per Table";
             // 
@@ -145,7 +149,7 @@ namespace DIMonitor
             this.lblSchemaName.AutoSize = true;
             this.lblSchemaName.Location = new System.Drawing.Point(20, 47);
             this.lblSchemaName.Name = "lblSchemaName";
-            this.lblSchemaName.Size = new System.Drawing.Size(100, 17);
+            this.lblSchemaName.Size = new System.Drawing.Size(98, 16);
             this.lblSchemaName.TabIndex = 8;
             this.lblSchemaName.Text = "Schema Name";
             // 
@@ -170,7 +174,7 @@ namespace DIMonitor
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(165, 48);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 17);
+            this.label3.Size = new System.Drawing.Size(84, 16);
             this.label3.TabIndex = 10;
             this.label3.Text = "Table Name";
             // 
@@ -188,7 +192,7 @@ namespace DIMonitor
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(311, 48);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 17);
+            this.label4.Size = new System.Drawing.Size(67, 16);
             this.label4.TabIndex = 13;
             this.label4.Text = "Start Date";
             // 
@@ -197,7 +201,7 @@ namespace DIMonitor
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(434, 48);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(67, 17);
+            this.label5.Size = new System.Drawing.Size(64, 16);
             this.label5.TabIndex = 15;
             this.label5.Text = "End Date";
             // 
@@ -216,9 +220,9 @@ namespace DIMonitor
             this.cbCheckUpdates.AutoSize = true;
             this.cbCheckUpdates.Checked = true;
             this.cbCheckUpdates.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbCheckUpdates.Location = new System.Drawing.Point(859, 71);
+            this.cbCheckUpdates.Location = new System.Drawing.Point(882, 69);
             this.cbCheckUpdates.Name = "cbCheckUpdates";
-            this.cbCheckUpdates.Size = new System.Drawing.Size(126, 21);
+            this.cbCheckUpdates.Size = new System.Drawing.Size(123, 20);
             this.cbCheckUpdates.TabIndex = 16;
             this.cbCheckUpdates.Text = "Check Updates";
             this.cbCheckUpdates.UseVisualStyleBackColor = true;
@@ -228,9 +232,9 @@ namespace DIMonitor
             this.cbCheckDeletes.AutoSize = true;
             this.cbCheckDeletes.Checked = true;
             this.cbCheckDeletes.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbCheckDeletes.Location = new System.Drawing.Point(859, 93);
+            this.cbCheckDeletes.Location = new System.Drawing.Point(882, 91);
             this.cbCheckDeletes.Name = "cbCheckDeletes";
-            this.cbCheckDeletes.Size = new System.Drawing.Size(121, 21);
+            this.cbCheckDeletes.Size = new System.Drawing.Size(118, 20);
             this.cbCheckDeletes.TabIndex = 17;
             this.cbCheckDeletes.Text = "Check Deletes";
             this.cbCheckDeletes.UseVisualStyleBackColor = true;
@@ -248,16 +252,16 @@ namespace DIMonitor
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(574, 29);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(111, 17);
+            this.label6.Size = new System.Drawing.Size(109, 16);
             this.label6.TabIndex = 18;
             this.label6.Text = "Max Table Rows";
             // 
             // cbShowDifferences
             // 
             this.cbShowDifferences.AutoSize = true;
-            this.cbShowDifferences.Location = new System.Drawing.Point(859, 25);
+            this.cbShowDifferences.Location = new System.Drawing.Point(882, 23);
             this.cbShowDifferences.Name = "cbShowDifferences";
-            this.cbShowDifferences.Size = new System.Drawing.Size(140, 21);
+            this.cbShowDifferences.Size = new System.Drawing.Size(134, 20);
             this.cbShowDifferences.TabIndex = 20;
             this.cbShowDifferences.Text = "Show Differences";
             this.cbShowDifferences.UseVisualStyleBackColor = true;
@@ -267,7 +271,7 @@ namespace DIMonitor
             this.lblRowLevelDataDifferences.AutoSize = true;
             this.lblRowLevelDataDifferences.Location = new System.Drawing.Point(23, 516);
             this.lblRowLevelDataDifferences.Name = "lblRowLevelDataDifferences";
-            this.lblRowLevelDataDifferences.Size = new System.Drawing.Size(217, 17);
+            this.lblRowLevelDataDifferences.Size = new System.Drawing.Size(206, 16);
             this.lblRowLevelDataDifferences.TabIndex = 22;
             this.lblRowLevelDataDifferences.Text = "Data Compare Results first Table";
             this.lblRowLevelDataDifferences.Visible = false;
@@ -291,7 +295,7 @@ namespace DIMonitor
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(23, 24);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(76, 17);
+            this.label7.Size = new System.Drawing.Size(73, 16);
             this.label7.TabIndex = 23;
             this.label7.Text = "Source DB";
             this.label7.Click += new System.EventHandler(this.label7_Click);
@@ -301,7 +305,7 @@ namespace DIMonitor
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(253, 24);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(73, 17);
+            this.label8.Size = new System.Drawing.Size(70, 16);
             this.label8.TabIndex = 25;
             this.label8.Text = "Target DB";
             // 
@@ -326,7 +330,7 @@ namespace DIMonitor
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(574, 46);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(159, 17);
+            this.label9.Size = new System.Drawing.Size(148, 16);
             this.label9.TabIndex = 29;
             this.label9.Text = "(only for multiple tables)";
             // 
@@ -334,7 +338,7 @@ namespace DIMonitor
             // 
             this.tbScriptAName.Location = new System.Drawing.Point(87, 94);
             this.tbScriptAName.Name = "tbScriptAName";
-            this.tbScriptAName.Size = new System.Drawing.Size(173, 22);
+            this.tbScriptAName.Size = new System.Drawing.Size(128, 22);
             this.tbScriptAName.TabIndex = 31;
             // 
             // lblScriptA
@@ -342,29 +346,29 @@ namespace DIMonitor
             this.lblScriptA.AutoSize = true;
             this.lblScriptA.Location = new System.Drawing.Point(26, 97);
             this.lblScriptA.Name = "lblScriptA";
-            this.lblScriptA.Size = new System.Drawing.Size(57, 17);
+            this.lblScriptA.Size = new System.Drawing.Size(54, 16);
             this.lblScriptA.TabIndex = 30;
             this.lblScriptA.Text = "Script A";
             // 
             // tbScriptBName
             // 
-            this.tbScriptBName.Location = new System.Drawing.Point(332, 94);
+            this.tbScriptBName.Location = new System.Drawing.Point(295, 95);
             this.tbScriptBName.Name = "tbScriptBName";
-            this.tbScriptBName.Size = new System.Drawing.Size(183, 22);
+            this.tbScriptBName.Size = new System.Drawing.Size(138, 22);
             this.tbScriptBName.TabIndex = 33;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(269, 97);
+            this.label10.Location = new System.Drawing.Point(232, 98);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(57, 17);
+            this.label10.Size = new System.Drawing.Size(54, 16);
             this.label10.TabIndex = 32;
             this.label10.Text = "Script B";
             // 
             // tbFilterField
             // 
-            this.tbFilterField.Location = new System.Drawing.Point(596, 96);
+            this.tbFilterField.Location = new System.Drawing.Point(524, 94);
             this.tbFilterField.Name = "tbFilterField";
             this.tbFilterField.Size = new System.Drawing.Size(73, 22);
             this.tbFilterField.TabIndex = 35;
@@ -372,15 +376,15 @@ namespace DIMonitor
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(521, 99);
+            this.label11.Location = new System.Drawing.Point(449, 97);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(69, 17);
+            this.label11.Size = new System.Drawing.Size(65, 16);
             this.label11.TabIndex = 34;
             this.label11.Text = "Filter field";
             // 
             // tbFilterValue
             // 
-            this.tbFilterValue.Location = new System.Drawing.Point(765, 98);
+            this.tbFilterValue.Location = new System.Drawing.Point(678, 94);
             this.tbFilterValue.Name = "tbFilterValue";
             this.tbFilterValue.Size = new System.Drawing.Size(63, 22);
             this.tbFilterValue.TabIndex = 37;
@@ -389,16 +393,44 @@ namespace DIMonitor
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(690, 101);
+            this.label12.Location = new System.Drawing.Point(603, 97);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(79, 17);
+            this.label12.Size = new System.Drawing.Size(75, 16);
             this.label12.TabIndex = 36;
             this.label12.Text = "Filter Value";
             this.label12.Click += new System.EventHandler(this.label12_Click);
             // 
+            // cbUseLike
+            // 
+            this.cbUseLike.AutoSize = true;
+            this.cbUseLike.Location = new System.Drawing.Point(760, 95);
+            this.cbUseLike.Name = "cbUseLike";
+            this.cbUseLike.Size = new System.Drawing.Size(83, 20);
+            this.cbUseLike.TabIndex = 38;
+            this.cbUseLike.Text = "Use Like";
+            this.cbUseLike.UseVisualStyleBackColor = true;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(22, 22);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 526);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1029, 22);
+            this.statusStrip1.TabIndex = 39;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(0, 15);
+            // 
             // DataCompareForm
             // 
-            this.ClientSize = new System.Drawing.Size(1029, 553);
+            this.ClientSize = new System.Drawing.Size(1029, 548);
+            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.cbUseLike);
             this.Controls.Add(this.tbFilterValue);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.tbFilterField);
@@ -438,6 +470,8 @@ namespace DIMonitor
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataCompareResultsSummary)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataCompareResultsPerTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRowLevelDataDifferences)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -478,5 +512,8 @@ namespace DIMonitor
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox tbFilterValue;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.CheckBox cbUseLike;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

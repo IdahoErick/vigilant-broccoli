@@ -565,5 +565,17 @@ namespace DIMonitor
             ReplicateStatusForm replicateStatusForm = new ReplicateStatusForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex);
             replicateStatusForm.Show();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            TransformSPForm transformSPForm = new TransformSPForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex, "general", "FactVendorRebate");
+            transformSPForm.Show();
+        }
+
+        private void runHistoryStatsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RunHistoryStatsForm runHistoryStatsForm = new RunHistoryStatsForm((Utility.ENV)cbEnvironment.SelectedIndex, (Utility.BU)cbBU.SelectedIndex, (Utility.PERIOD)cbPeriod.SelectedIndex);
+            runHistoryStatsForm.Show();
+        }
     }
 }

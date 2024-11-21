@@ -67,7 +67,7 @@ namespace DIMonitor
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(23, 97);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(119, 17);
+            this.label1.Size = new System.Drawing.Size(115, 16);
             this.label1.TabIndex = 5;
             this.label1.Text = "Table Description";
             // 
@@ -76,7 +76,7 @@ namespace DIMonitor
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(26, 223);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 17);
+            this.label2.Size = new System.Drawing.Size(97, 16);
             this.label2.TabIndex = 7;
             this.label2.Text = "Table Schema";
             // 
@@ -98,7 +98,7 @@ namespace DIMonitor
             this.lblSchemaName.AutoSize = true;
             this.lblSchemaName.Location = new System.Drawing.Point(20, 43);
             this.lblSchemaName.Name = "lblSchemaName";
-            this.lblSchemaName.Size = new System.Drawing.Size(100, 17);
+            this.lblSchemaName.Size = new System.Drawing.Size(98, 16);
             this.lblSchemaName.TabIndex = 8;
             this.lblSchemaName.Text = "Schema Name";
             // 
@@ -107,7 +107,7 @@ namespace DIMonitor
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(205, 47);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 17);
+            this.label3.Size = new System.Drawing.Size(84, 16);
             this.label3.TabIndex = 10;
             this.label3.Text = "Table Name";
             // 
@@ -116,7 +116,7 @@ namespace DIMonitor
             this.lblRowLevelDataDifferences.AutoSize = true;
             this.lblRowLevelDataDifferences.Location = new System.Drawing.Point(23, 512);
             this.lblRowLevelDataDifferences.Name = "lblRowLevelDataDifferences";
-            this.lblRowLevelDataDifferences.Size = new System.Drawing.Size(76, 17);
+            this.lblRowLevelDataDifferences.Size = new System.Drawing.Size(72, 16);
             this.lblRowLevelDataDifferences.TabIndex = 22;
             this.lblRowLevelDataDifferences.Text = "Row Count";
             // 
@@ -138,7 +138,7 @@ namespace DIMonitor
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(23, 24);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(31, 17);
+            this.label7.Size = new System.Drawing.Size(30, 16);
             this.label7.TabIndex = 23;
             this.label7.Text = "DB:";
             // 
@@ -156,7 +156,7 @@ namespace DIMonitor
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(23, 584);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(92, 17);
+            this.label4.Size = new System.Drawing.Size(89, 16);
             this.label4.TabIndex = 29;
             this.label4.Text = "ETL Mapping";
             // 
@@ -178,7 +178,7 @@ namespace DIMonitor
             this.lblTableDescription.AutoSize = true;
             this.lblTableDescription.Location = new System.Drawing.Point(26, 118);
             this.lblTableDescription.Name = "lblTableDescription";
-            this.lblTableDescription.Size = new System.Drawing.Size(0, 17);
+            this.lblTableDescription.Size = new System.Drawing.Size(0, 16);
             this.lblTableDescription.TabIndex = 30;
             // 
             // tbTableDescription
@@ -206,6 +206,9 @@ namespace DIMonitor
             this.cbTableName.Name = "cbTableName";
             this.cbTableName.Size = new System.Drawing.Size(307, 24);
             this.cbTableName.TabIndex = 33;
+            this.cbTableName.SelectedIndexChanged += new System.EventHandler(this.cbTableName_SelectedIndexChanged);
+            this.cbTableName.TextUpdate += new System.EventHandler(this.cbTableName_TextUpdate);
+            this.cbTableName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbTableName_KeyPress);
             // 
             // btnShowTransformSP
             // 

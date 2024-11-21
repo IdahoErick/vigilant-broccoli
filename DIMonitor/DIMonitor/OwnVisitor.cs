@@ -37,6 +37,91 @@ namespace DIMonitor
         public string TargetTable { get => _targetTable; set => _targetTable = value; }
         public string TargetSchema { get => _targetSchema; set => _targetSchema = value; }
 
+        public override void ExplicitVisit(UpdateStatement node)
+        {
+            // Only process update statements for Fact tables
+            if (_targetTable.StartsWith("Fact"))
+            {
+                // Set up mapping datatable if it does not exist yet
+                if (_dtMappingLines == null)
+                    _dtMappingLines = CreateMappingTable();
+
+                string sqlString = node.ToSqlString();
+                //string sourceTable = node.UpdateSpecification.FromClause.TableReferences[0].FirstTableReference.SchemaObject.BaseIdentifier?.Value;
+
+                //string sourceTable = namedTableReference.SchemaObject.BaseIdentifier.Value;
+                //((Microsoft.SqlServer.TransactSql.ScriptDom.NamedTableReference)((Microsoft.SqlServer.TransactSql.ScriptDom.JoinTableReference)node.UpdateSpecification.FromClause.TableReferences[0]).FirstTableReference).SchemaObject.BaseIdentifier.Value;
+
+                NamedTableReference namedTableReference;
+                if ((node?.UpdateSpecification?.FromClause != null) && (((Microsoft.SqlServer.TransactSql.ScriptDom.JoinTableReference)node.UpdateSpecification.FromClause.TableReferences[0]).FirstTableReference is NamedTableReference))
+                {
+                    namedTableReference = ((Microsoft.SqlServer.TransactSql.ScriptDom.NamedTableReference)((Microsoft.SqlServer.TransactSql.ScriptDom.JoinTableReference)node.UpdateSpecification.FromClause.TableReferences[0]).FirstTableReference);
+                    //namedTableReference = node?.UpdateSpecification?.FromClause?.TableReferences[0] as NamedTableReference;
+                }
+                else
+                {
+                    namedTableReference = node?.UpdateSpecification?.Target as NamedTableReference;
+                }
+                string table = namedTableReference?.SchemaObject.BaseIdentifier?.Value;
+                if (!string.IsNullOrWhiteSpace(table)) // && !table.StartsWith("#"))
+                {
+                    _sourceTable = namedTableReference?.SchemaObject.BaseIdentifier?.Value;
+                    _sourceSchema = namedTableReference?.SchemaObject.SchemaIdentifier?.Value;
+                    _sourceDB = namedTableReference?.SchemaObject.DatabaseIdentifier?.Value;
+
+                    var t = node?.UpdateSpecification.SetClauses[0];
+
+                    //var assignmentSetClauses = node?.UpdateSpecification).SetClauses;
+
+
+                    //TargetColumn: (new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.Identifier>(((Microsoft.SqlServer.TransactSql.ScriptDom.AssignmentSetClause)(new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.SetClause>((node?.UpdateSpecification).SetClauses).Items[0])).Column.MultiPartIdentifier.Identifiers).Items[0]).Value
+                    //SourceTable: ((Microsoft.SqlServer.TransactSql.ScriptDom.NamedTableReference)((Microsoft.SqlServer.TransactSql.ScriptDom.JoinTableReference)(new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.TableReference>((node?.UpdateSpecification).FromClause.TableReferences).Items[0])).SecondTableReference).SchemaObject.BaseIdentifier.Value
+                    //SourceSchema: ((Microsoft.SqlServer.TransactSql.ScriptDom.NamedTableReference)((Microsoft.SqlServer.TransactSql.ScriptDom.JoinTableReference)(new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.TableReference>((node?.UpdateSpecification).FromClause.TableReferences).Items[0])).SecondTableReference).SchemaObject.SchemaIdentifier.Value
+                    //SourceColumn: (new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.Identifier>(((Microsoft.SqlServer.TransactSql.ScriptDom.ColumnReferenceExpression)((Microsoft.SqlServer.TransactSql.ScriptDom.AssignmentSetClause)(new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.SetClause>((node?.UpdateSpecification).SetClauses).Items[0])).NewValue).MultiPartIdentifier.Identifiers).Items[1]).Value
+
+                    //_targetColumn = (Microsoft.SqlServer.TransactSql.ScriptDom.AssignmentSetClause)(new ((node?.UpdateSpecification).SetClauses).Items[0])).Column.MultiPartIdentifier.Identifiers).Items[0]).Value;
+                    //_targetColumn = node?.UpdateSpecification.SetClauses
+                    //).Items[0])).Column.MultiPartIdentifier.Identifiers).Items[0]).Value;
+                    //_targetColumn = ((node?.UpdateSpecification).SetClauses).Items[0])).Column.MultiPartIdentifier.Identifiers).Items[0]).Value;
+                    //SourceTable: ((Microsoft.SqlServer.TransactSql.ScriptDom.NamedTableReference)((Microsoft.SqlServer.TransactSql.ScriptDom.JoinTableReference)(new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.TableReference>((node?.UpdateSpecification).FromClause.TableReferences).Items[0])).SecondTableReference).SchemaObject.BaseIdentifier.Value
+                    //SourceSchema: ((Microsoft.SqlServer.TransactSql.ScriptDom.NamedTableReference)((Microsoft.SqlServer.TransactSql.ScriptDom.JoinTableReference)(new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.TableReference>((node?.UpdateSpecification).FromClause.TableReferences).Items[0])).SecondTableReference).SchemaObject.SchemaIdentifier.Value
+                    //_sourceColumn = (new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.Identifier>(((Microsoft.SqlServer.TransactSql.ScriptDom.ColumnReferenceExpression)((Microsoft.SqlServer.TransactSql.ScriptDom.AssignmentSetClause)(new System.Collections.Generic.Mscorlib_CollectionDebugView<Microsoft.SqlServer.TransactSql.ScriptDom.SetClause>((node?.UpdateSpecification).SetClauses).Items[0])).NewValue).MultiPartIdentifier.Identifiers).Items[1]).Value;
+
+                    //var columnExpression = expression as ColumnReferenceExpression;
+                    //var columnName = columnExpression.MultiPartIdentifier.Identifiers.First().Value;
+                    //var columnName = columnExpression.MultiPartIdentifier.Identifiers.Last().Value;
+                    // You can validate or process the extracted column name here
+                    //Console.WriteLine($"Column name: {columnName}");
+                    //_sourceColumn = columnName;
+
+                    //string serverIdentifier = namedTableReference?.SchemaObject.ServerIdentifier?.Value;
+                    //string alias = tableReferenceWithAlias.Alias?.Value;
+
+
+                    // Add row to mapping datatable if row is not a dummy fact ID row
+                    //string transformation = column.ToSqlString();
+                    //if ((_targetTable.Substring(0, 4).ToUpper() != "FACT") || (transformation.Substring(0, 5).ToUpper() != "0 AS ") || (transformation.Substring(transformation.Length - 2).ToUpper() != "ID"))
+                    //{
+                    DataRow mdr = _dtMappingLines.NewRow();
+                    mdr["LineText"] = sqlString;
+                    mdr["SourceDB"] = _sourceDB;
+                    mdr["SourceSchema"] = _sourceSchema;
+                    mdr["SourceTable"] = _sourceTable;
+                    mdr["SourceColumn"] = _sourceColumn;
+                    mdr["TargetTable"] = _targetTable;
+                    //mdr[4] = targetField.Trim().TrimEnd(']').TrimStart('[');
+                    mdr["Transformation"] = sqlString;
+                    mdr["SourceDataType"] = ""; // todo
+                    mdr["TargetSchema"] = _targetSchema; // todo
+                    mdr["TargetTable"] = _targetTable; // todo
+                    mdr["TargetColumn"] = _targetColumn;
+
+                    _dtMappingLines.Rows.Add(mdr);
+                    //}
+                }
+            }
+            base.ExplicitVisit(node);
+        }
 
         public override void ExplicitVisit(SelectStatement node)
         {
@@ -50,7 +135,7 @@ namespace DIMonitor
 
             string sqlString = node.ToSqlString();
 
-            if ((!sqlString.Contains("@UpdateDate")) && (!sqlString.Contains("@SourceCount")) && (!sqlString.Contains("@DestCount")) && (!sqlString.Contains("SELECT @LastUpdateDate")))
+            if ((!sqlString.Contains("@UpdateDate")) && (!sqlString.Contains("@SourceCount")) && (!sqlString.Contains("@DestCount")) && (!sqlString.Contains("SELECT @LastUpdateDate")) && (!sqlString.Contains("SELECT @TodayID")))
             {
                 FromClause fromClause = querySpecification.FromClause;
                 // There could be more than one TableReference!
@@ -61,7 +146,6 @@ namespace DIMonitor
                 JoinParenthesisTableReference joinParenthesisTableReference = fromClause.TableReferences[0] as JoinParenthesisTableReference;
                 JoinTableReference joinTableReference = fromClause.TableReferences[0] as JoinTableReference;
                 OdbcQualifiedJoinTableReference odbcQualifiedJoinTableReference = fromClause.TableReferences[0] as OdbcQualifiedJoinTableReference;
-
 
                 if ((namedTableReference != null) && (tableReferenceWithAlias != null))
                 {
@@ -167,9 +251,10 @@ namespace DIMonitor
                             string functionCall = column.ToSourceSqlString();
                             if (column.ToSqlString().ToUpper().IndexOf(" AS ") > 0)
                                 functionCall = column.ToSqlString().Substring(0, column.ToSqlString().IndexOf(" AS "));
+
                             string pattern = "";
-                            if (functionCall.Contains("."))
-                                pattern = @"(?i)(?<=COALESCE(?:\s*)\()(\w+)(?=\s*)(?:\.)?(\w+)";
+                            if (functionCall.Contains("COALESCE") && functionCall.Contains("RTRIM"))
+                                pattern = @"(?i)(?<=COALESCE(?:\s*)\(RTRIM(?:\s*)\()(\w+)(?=\s*)(?:\.)?(\w+)";
                             else
                                 pattern = @"(?i)(?<=COALESCE(?:\s*)\()(\w+)(?=\s*)(?:\.)?(\w+)";
 
@@ -178,7 +263,7 @@ namespace DIMonitor
                             {
                                 if (match.Groups.Count > 2)
                                 {
-                                    if (functionCall.Contains("."))
+                                    if (functionCall.Replace("0.0", "").Contains("."))
                                     {    // column name with alias
                                         var aliasName = match.Groups[1].Value;
                                         _sourceColumn = match.Groups[2].Value;
@@ -214,7 +299,9 @@ namespace DIMonitor
 
                     // Add row to mapping datatable if row is not a dummy fact ID row
                     string transformation = column.ToSqlString();
-                    if ((_targetTable.Substring(0, 4).ToUpper() != "FACT") || (transformation.Substring(0, 5).ToUpper() != "0 AS ") || (transformation.Substring(transformation.Length-2).ToUpper() != "ID"))
+                    if ((_targetTable.Substring(0, 4).ToUpper() != "FACT") 
+                           || ((transformation.Length > 5) && (transformation.Substring(0, 5).ToUpper() != "0 AS ")) 
+                           || ((transformation.Length > 2) && (transformation.Substring(transformation.Length-2).ToUpper() != "ID")))
                     {
                         mdr["LineText"] = column.ToSourceSqlString();
                         mdr["SourceDB"] = _sourceDB;

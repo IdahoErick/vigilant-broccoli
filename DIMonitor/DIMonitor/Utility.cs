@@ -82,7 +82,7 @@ namespace DIMonitor
                 case (int)ENV.DEV:
                     if ((databaseName == "IDS") || (databaseName == "EDI"))
                         cs = WSSConnectionStrings.SQL_IDSDWH_TEST + databasePart;
-                    else if (databaseName == "ContentCatalog")
+                    else if ((databaseName == "ContentCatalog") || (databaseName == "TimeClock"))
                         cs = WSSConnectionStrings.SQL_CC_WT + databasePart;
                     else if (databaseName == "EmployeeReporting")
                         cs = WSSConnectionStrings.SQL_EDW_DEV + databasePart;
@@ -92,7 +92,7 @@ namespace DIMonitor
                 case (int)ENV.TEST:
                     if ((databaseName == "IDS") || (databaseName == "EDI"))
                         cs = WSSConnectionStrings.SQL_IDSDWH_TEST + databasePart;
-                    else if (databaseName == "ContentCatalog")
+                    else if ((databaseName == "ContentCatalog") || (databaseName == "TimeClock"))
                         cs = WSSConnectionStrings.SQL_CC_WT + databasePart;
                     else if (databaseName == "EmployeeReporting")
                         cs = WSSConnectionStrings.SQL_EDW_TEST + databasePart;
@@ -102,17 +102,17 @@ namespace DIMonitor
                 case (int)ENV.ACC:
                     if ((databaseName == "IDS") || (databaseName == "EDI"))
                         cs = WSSConnectionStrings.SQL_IDSDWH_PROD + databasePart;
-                    else if (databaseName == "ContentCatalog")
+                    else if ((databaseName == "ContentCatalog") || (databaseName == "TimeClock"))
                         cs = WSSConnectionStrings.SQL_CC_WP + databasePart;
                     else if (databaseName == "EmployeeReporting")
-                        cs = WSSConnectionStrings.SQL_EDW_ACC + databasePart;
+                        cs = WSSConnectionStrings.SQL_EDW_PROD + databasePart;
                     else
                         cs = WSSConnectionStrings.SQL_WSS_WP + databasePart;
                     break;
                 case (int)ENV.PROD:
                     if ((databaseName == "IDS") || (databaseName == "EDI"))
                         cs = WSSConnectionStrings.SQL_IDSDWH_PROD + databasePart;
-                    else if (databaseName == "ContentCatalog")
+                    else if ((databaseName == "ContentCatalog") || (databaseName == "TimeClock"))
                         cs = WSSConnectionStrings.SQL_CC_WP + databasePart;
                     else if (databaseName == "EmployeeReporting")
                         cs = WSSConnectionStrings.SQL_EDW_PROD + databasePart;

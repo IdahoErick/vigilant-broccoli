@@ -31,7 +31,8 @@ namespace DIMonitor
         //public const string SQL_LOCALHOST = "Data Source=localhost;User Id=LocalAdmin;Password=<LocalAdminPassword>";
         //public const string SQL_LOCALHOST_IS = "Data Source=localhost;Integrated Security = SSPI";
         // EDW
-        public const string SQL_EDW_DEV = "Data Source=EDWOlap-rw.dev.mssql.db.backends.tech, 1433;Integrated Security = SSPI";
+        //public const string SQL_EDW_DEV = "Data Source=EDWOlap-rw.dev.mssql.db.backends.tech, 1433;Integrated Security = SSPI";
+        public const string SQL_EDW_DEV = "Data Source=w-mssqldw101.wd.clarkinc.io, 1433;Integrated Security = SSPI";
         public const string SQL_EDW_TEST = "Data Source=EDWOlap-rw.test.mssql.db.backends.tech, 1433;Integrated Security = SSPI";
         public const string SQL_EDW_ACC = "Data Source=w-mssqldw111.wd.clarkinc.io, 1433;Integrated Security = SSPI";
         public const string SQL_EDW_PROD = "Data Source=EDWOlap-rw.prod.mssql.db.backends.tech, 1433;Integrated Security = SSPI";

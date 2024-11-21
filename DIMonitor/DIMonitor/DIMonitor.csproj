@@ -316,6 +316,12 @@
     </Compile>
     <Compile Include="clsILProcess.cs" />
     <Compile Include="clsRunDetail.cs" />
+    <Compile Include="RunHistoryStatsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RunHistoryStatsForm.Designer.cs">
+      <DependentUpon>RunHistoryStatsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ReplicateStatusForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -442,6 +448,9 @@
     </Compile>
     <Compile Include="SQLDBAccess.cs" />
     <Compile Include="SQLQueries.cs" />
+    <EmbeddedResource Include="RunHistoryStatsForm.resx">
+      <DependentUpon>RunHistoryStatsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ReplicateStatusForm.resx">
       <DependentUpon>ReplicateStatusForm.cs</DependentUpon>
     </EmbeddedResource>

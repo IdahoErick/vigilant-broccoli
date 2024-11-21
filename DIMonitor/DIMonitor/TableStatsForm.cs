@@ -22,6 +22,7 @@ namespace DIMonitor
         private Utility.ENV _eNV;
         private Utility.PERIOD _period;
         private SQLDBAccess _sqlDA = new SQLDBAccess();
+        private bool _comboBoxesInitialized = false;
 
         public TableStatsForm()
         {
@@ -40,6 +41,9 @@ namespace DIMonitor
             _eNV = eNV;
             _period = period;
             _bU = bU;
+
+            // Set form title
+            this.Text = "Table Statistics - " + _eNV.ToString();
 
             // Get available databases
             string cs = Utility.GetConnectionString(_eNV, _bU, _period, false);
@@ -93,7 +97,8 @@ namespace DIMonitor
             }
             catch (Exception e)
             {
-                throw e;
+                //throw e;
+                MessageBox.Show(e.Message);
             }
 
             /* Get Row count */
@@ -163,12 +168,32 @@ namespace DIMonitor
             cbTableName.ValueMember = "TABLE_NAME";
             //cbTableName.SelectedIndex = cbTableName.FindString("DimOrganization");
             cbTableName.Refresh();
+            _comboBoxesInitialized = true;
         }
 
         private void btnShowTransformSP_Click(object sender, EventArgs e)
         {
             TransformSPForm transformSPForm = new TransformSPForm(_eNV, _bU, _period, cbSchemaNames.Text, cbTableName.Text);
             transformSPForm.Show();
+        }
+
+        private void cbTableName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_comboBoxesInitialized == true)
+                GetTableStatistics();
+        }
+
+        private void cbTableName_TextUpdate(object sender, EventArgs e)
+        {
+         }
+
+        private void cbTableName_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                if (_comboBoxesInitialized == true)
+                    GetTableStatistics();
+            }
         }
     }
 }

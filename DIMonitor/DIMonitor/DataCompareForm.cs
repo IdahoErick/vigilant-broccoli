@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Linq;
 using FastMember;
+using System.Threading.Tasks;
 
 namespace DIMonitor
 {
@@ -30,12 +31,15 @@ namespace DIMonitor
             InitializeComponent();
         }
 
-        private void btnRunDataCompare_Click(object sender, EventArgs e)
+        private async void btnRunDataCompare_Click(object sender, EventArgs e)
         {
+            Task<bool> result;
             if ((tbScriptAName.Text != "") && (tbScriptBName.Text != ""))
-                RunDataCompareFromScriptFiles();
+                result = RunDataCompareFromScriptFiles();
             else  // Run data compare in DB
-                RunDataCompareInDB();
+                result = RunDataCompareInDB();
+
+            await Task.WhenAll(result);
         }
 
         public DataCompareForm(Utility.ENV eNV, Utility.BU bU, Utility.PERIOD period)
@@ -45,6 +49,9 @@ namespace DIMonitor
             _eNV = eNV;
             _period = period;
             _bU = bU;
+
+            // Set form title
+            this.Text += " - " + _eNV.ToString();
 
             // Set end date to one month ago
             dtmpEndDate.Value = DateTime.Today.AddMonths(-1);
@@ -73,7 +80,7 @@ namespace DIMonitor
 
         }
 
-        private void RunDataCompareInDB()
+        private async Task<bool> RunDataCompareInDB()
         {
             string cs = Utility.GetConnectionString(_eNV, _bU, _period, false);
             //string runDetailStatus = cbErrors.Checked == true ? "'Invalid Count or Sum'" : "[Status]";
@@ -97,6 +104,8 @@ namespace DIMonitor
                 parameters.Add(new BaseDBAccess.CommandParams("<SHOW_DIFF>", cbShowDifferences.Checked ? "1" : "0"));
                 parameters.Add(new BaseDBAccess.CommandParams("<SOURCE_DB>", cbSourceDB.Text));
                 parameters.Add(new BaseDBAccess.CommandParams("<TARGET_DB>", cbTargetDB.Text));
+
+                toolStripStatusLabel1.Text = "Starting data compare...";
 
                 Cursor.Current = Cursors.WaitCursor;
 
@@ -127,72 +136,128 @@ namespace DIMonitor
                     this.Height = 600;
                 }
                 Cursor.Current = Cursors.Default;
+                toolStripStatusLabel1.Text = "Data Compare Complete";
             }
             catch (Exception e)
             {
                 throw e;
             }
-            
+            return true;
         }
 
-        private void RunDataCompareFromScriptFiles()
+        private async Task<bool> RunDataCompareFromScriptFiles()
         {
             string cs = Utility.GetConnectionString(_eNV, _bU, _period, false);
 
-            string queryA = File.ReadAllText(tbScriptAName.Text);
-            string queryB = File.ReadAllText(tbScriptBName.Text);
+            string fileAPath = $"{tbScriptAName.Text}";
+            string fileBPath = $"{tbScriptBName.Text}";
 
-            try
+            string queryA = File.ReadAllText(fileAPath);
+            string queryB = File.ReadAllText(fileBPath);
+
+            if (queryA == "")
+                MessageBox.Show("Could not retrieve the source query from file: " + tbScriptAName.Text);
+            else if (queryB == "")
+                MessageBox.Show("Could not retrieve the target query from file: " + tbScriptBName.Text);
+            else
             {
-                Cursor.Current = Cursors.WaitCursor;
-
-                // Get results from query A and B
-                DataSet dsDataQueryA = _sqlDA.GetQueryDataSet(cs, queryA, false);
-                DataSet dsDataQueryB = _sqlDA.GetQueryDataSet(cs, queryB, false);
-
-                // Compare result sets
-                DataTable dtResults = new DataTable();
-                if ((dsDataQueryA.Tables.Count > 0) && (dsDataQueryB.Tables.Count > 0))
+                try
                 {
-                    var differences = dsDataQueryA.Tables[0].AsEnumerable().Except(dsDataQueryB.Tables[0].AsEnumerable(), DataRowComparer.Default);
+                    toolStripStatusLabel1.Text = "Starting data compare...";
 
-                    if (differences.Count() > 0)
+                    Cursor.Current = Cursors.WaitCursor;
+
+                    // Get results from query A and B
+                    toolStripStatusLabel1.Text = "Retrieving source data set ...";
+                    statusStrip1.Refresh();
+
+                    DateTime startDTM = DateTime.Now;
+                    Task<DataSet> tdsDataQueryA = GetCompareResults(5000, _sqlDA, cs, queryA);
+                    await Task.WhenAll(tdsDataQueryA);
+
+                    //DataSet dsDataQueryA = _sqlDA.GetQueryDataSet(cs, queryA, false, 5000);
+                    TimeSpan queryADuration = DateTime.Now.Subtract(startDTM);
+
+                    toolStripStatusLabel1.Text = "Retrieving target data set ...";
+                    statusStrip1.Refresh();
+                    startDTM = DateTime.Now;
+
+                    Task<DataSet> tdsDataQueryB = GetCompareResults(5000, _sqlDA, cs, queryB);
+                    await Task.WhenAll(tdsDataQueryB);
+
+                    //DataSet dsDataQueryB = _sqlDA.GetQueryDataSet(cs, queryB, false, 5000);
+                    TimeSpan queryBDuration = DateTime.Now.Subtract(startDTM);
+
+                    // Compare result sets
+                    toolStripStatusLabel1.Text = "Comparing results ...";
+                    statusStrip1.Refresh();
+                    DataTable dtResults = new DataTable();
+                    int nbrDifferences = 0;
+                    if ((tdsDataQueryA.Result.Tables.Count > 0) && (tdsDataQueryB.Result.Tables.Count > 0))
                     {
-                        dtResults = differences.CopyToDataTable();
+                        // Find all rows in set A that are not in set B or are different
+                        var differences = tdsDataQueryA.Result.Tables[0].AsEnumerable().Except(tdsDataQueryB.Result.Tables[0].AsEnumerable(), DataRowComparer.Default);
+                        nbrDifferences = differences.Count();
+
+                        if (nbrDifferences > 0)
+                        {
+                            dtResults = differences.CopyToDataTable();
+                        }
+
+                        // Find all rows in set B that are not in set A or are different
+                        differences = tdsDataQueryB.Result.Tables[0].AsEnumerable().Except(tdsDataQueryA.Result.Tables[0].AsEnumerable(), DataRowComparer.Default);
+                        nbrDifferences = differences.Count();
+
+                        if (nbrDifferences > 0)
+                        {
+                            dtResults.Merge(differences.CopyToDataTable());
+                        }
+
+                        // Copy results into data table
+                        //using (var reader = ObjectReader.Create(differences))
+                        //{
+                        //    dtResults.Load(reader);
+                        //}
+                    }
+                    else
+                        MessageBox.Show("Returned dataset is empty");
+
+                    // Show summary results
+                    dgvDataCompareResultsSummary.DataSource = dtResults;
+                    dgvDataCompareResultsSummary.Refresh();
+
+                    /* Show all data */
+                    // Add Source column and set appropriately
+                    AddSourceField(tdsDataQueryA.Result.Tables[0], "S");
+                    AddSourceField(tdsDataQueryB.Result.Tables[0], "E");
+
+                    DataTable dtCombined = tdsDataQueryA.Result.Tables[0].Copy();
+                    dtCombined.Merge(tdsDataQueryB.Result.Tables[0]);
+                    if ((tbFilterField.Text != "") && (tbFilterValue.Text != ""))
+                    {
+                        toolStripStatusLabel1.Text = "Filtering result set ...";
+
+                        if (cbUseLike.Checked)
+                            dtCombined.DefaultView.RowFilter = $"[{tbFilterField.Text}] LIKE '%{tbFilterValue.Text}%'";
+                        else
+                            dtCombined.DefaultView.RowFilter = $"[{tbFilterField.Text}] = {tbFilterValue.Text}";
                     }
 
-                    // Copy results into data table
-                    //using (var reader = ObjectReader.Create(differences))
-                    //{
-                    //    dtResults.Load(reader);
-                    //}
+                    dgvDataCompareResultsPerTable.DataSource = dtCombined;
+
+                    Cursor.Current = Cursors.Default;
+
+                    toolStripStatusLabel1.Text = $"Data Compare complete; Source row count: {tdsDataQueryA.Result.Tables[0].Rows.Count} - Target row count {tdsDataQueryB.Result.Tables[0].Rows.Count}; Rows different: {nbrDifferences}; Source query duration: {queryADuration.ToString()}; Target query duration: {queryBDuration.ToString()}";
+                    statusStrip1.Refresh();
+
                 }
-                else
-                    MessageBox.Show("Returned dataset is empty");
-
-                // Show summary results
-                dgvDataCompareResultsSummary.DataSource = dtResults;
-                dgvDataCompareResultsSummary.Refresh();
-
-                /* Show all data */
-                // Add Source column and set appropriately
-                AddSourceField(dsDataQueryA.Tables[0], "S");
-                AddSourceField(dsDataQueryB.Tables[0], "E");
-
-                DataTable dtCombined = dsDataQueryA.Tables[0].Copy();
-                dtCombined.Merge(dsDataQueryB.Tables[0]);
-                if ((tbFilterField.Text != "") && (tbFilterValue.Text != ""))
-                    dtCombined.DefaultView.RowFilter = $"[{tbFilterField.Text}] LIKE '%{tbFilterValue.Text}%'";
-
-                dgvDataCompareResultsPerTable.DataSource = dtCombined;
-
-                Cursor.Current = Cursors.Default;
+                catch (Exception e)
+                {
+                    //throw e;
+                    MessageBox.Show(e.Message);
+                }
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
+            return true;
         }
 
         private void AddSourceField(DataTable dt, string value)
@@ -273,5 +338,15 @@ namespace DIMonitor
             }
                 */
         }
+        public static async Task<DataSet> GetCompareResults(int queryTimeout, SQLDBAccess sqlDA, string cs, string sqlQuery)
+        {
+            return await Task.Run(async () =>
+            {
+                await Task.Delay(1);
+                DataSet dsTableStats = sqlDA.GetQueryDataSet(cs, sqlQuery, false, queryTimeout);
+                return dsTableStats;
+            });
+        }
+
     }
 }

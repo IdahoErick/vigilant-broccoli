@@ -16,7 +16,8 @@ namespace DIMonitor
 		    SELECT TOP(1) TableGroupName, SchemaName + '.' + Executable AS StepName , Start, CycleLogDetailId
 		    FROM ssis.CycleLogDetails
 		    WHERE CycleLogID=cl.CycleLogId
-    		ORDER BY COALESCE([END], Start) DESC
+            AND Executable IS NOT null
+    		    ORDER BY COALESCE([END], '9999-12-31') DESC
 	    ) cld
 	    OUTER APPLY (
 		    SELECT TOP 1 ErrorDescription 
@@ -135,17 +136,18 @@ namespace DIMonitor
 
         public const string SQL_DATA_COMPARE = "";
 
-        public const string SQL_GET_AVAILABLE_DATABASES = "SELECT name FROM sys.databases";
+        public const string SQL_GET_AVAILABLE_DATABASES = "SELECT name FROM sys.databases where state_desc not in ('OFFLINE') order by name";
 
-        public const string SQL_GET_AVAILABLE_CONSOLIDATION_DATABASES = "SELECT name FROM sys.databases where name like '%Consolidated%'";
+        public const string SQL_GET_AVAILABLE_CONSOLIDATION_DATABASES = "SELECT name FROM sys.databases where name like '%Consolidated%' and name not in ('Five9Consolidated','Five9ConsolidatedStaging', 'ReportServerConsolidated')";
 
         public const string SQL_GET_TABLE_DESCRIPTION = "SELECT p.value AS TableDescription FROM sys.tables AS tbl INNER JOIN sys.extended_properties AS p ON p.major_id= tbl.object_id AND p.minor_id= 0 AND p.class=1 WHERE tbl.name = '<tableName>' AND SCHEMA_NAME(tbl.schema_id) = '<schemaName>'";
 
-        public const string SQL_GET_DATABASE_SCHEMAS = "SELECT SCHEMA_NAME FROM information_schema.schemata WHERE SCHEMA_NAME not like 'db_%' AND SCHEMA_NAME NOT IN ('guest', 'INFORMATION_SCHEMA', 'executionAudit')";
+        //public const string SQL_GET_DATABASE_SCHEMAS = "SELECT SCHEMA_NAME FROM information_schema.schemata WHERE SCHEMA_NAME not like 'db_%' AND SCHEMA_NAME NOT IN ('guest', 'INFORMATION_SCHEMA', 'executionAudit')";
+        public const string SQL_GET_DATABASE_SCHEMAS = "SELECT SCHEMA_NAME FROM information_schema.schemata WHERE SCHEMA_NAME NOT IN ('guest', 'INFORMATION_SCHEMA', 'executionAudit', 'sys') and SCHEMA_NAME NOT LIKE 'db[_]%'";
 
         public const string SQL_GET_DATABASE_TABLE_NAMES = "SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_SCHEMA = '<SCHEMA_NAME>' AND TABLE_TYPE = 'BASE TABLE' ORDER BY TABLE_NAME";
 
-        public const string SQL_GET_DATABASE_TABLES = "SELECT TOP 200 s.TABLE_SCHEMA, s.TABLE_NAME, ISNULL(c.COLUMN_NAME, '') AS DateColumnName" +
+        public const string SQL_GET_DATABASE_TABLES = "SELECT s.TABLE_SCHEMA, s.TABLE_NAME, ISNULL(c.COLUMN_NAME, '') AS DateColumnName" +
                 " FROM information_schema.tables s" +
                 " OUTER APPLY (" +
                 "    SELECT TOP 1 *" +
@@ -207,6 +209,27 @@ namespace DIMonitor
             "   SELECT NbrRows = COUNT(1), MaxDateModified = ISNULL(MAX(<COLUMN_NAME>), '1900-01-01') FROM <SCHEMA_NAME>.<TABLE_NAME> WITH (NOLOCK)" +
             " ELSE" +
             "   SELECT NbrRows = -1, MaxDateModified = '1900-01-01'";
+
+        public const string SQL_GET_RUN_HISTORY_STATS =
+            @" SELECT[Date], [DayOfWeek], RunDurationInMin, TotalTaskDurationInMin
+                 , RunDurationPercIncrease = CAST(100.00 * (RunDurationInMin - LAG(RunDurationInMin, 1) OVER(ORDER BY CycleLogId ASC)) / RunDurationInMin AS decimal (12,3))
+                	, TotalTaskDurationPercIncrease = CAST(100.00*(TotalTaskDurationInMin - LAG(TotalTaskDurationInMin, 1) OVER(ORDER BY CycleLogId ASC))/TotalTaskDurationInMin AS decimal (12,3))
+                	, TotalNbrSourceRowsPercIncrease = CAST(100.00*(TotalNbrSourceRows - LAG(TotalNbrSourceRows, 1) OVER(ORDER BY CycleLogId ASC))/TotalNbrSourceRows AS decimal (12,3))
+                	, TotalNbrTargetRowsPercIncrease = CAST(100.00*(TotalNbrTargetRows - LAG(TotalNbrTargetRows, 1) OVER(ORDER BY CycleLogId ASC))/TotalNbrTargetRows AS decimal (12,3))
+                FROM (
+                 SELECT[Date] = MAX(CAST(cl.START AS DATE)), cl.CycleLogId, COUNT(1) AS NumberOfTasks
+                    , [DayOfWeek] = MAX(DATENAME(WEEKDAY, cl.Start))
+                    , RunDurationInMin = DATEDIFF(MINUTE, MIN(cl.Start), MAX(cl.[END]))
+                    , TotalTaskDurationInMin = SUM(DATEDIFF(MINUTE, cld.Start, cld.[End]))
+                    , TotalNbrSourceRows = SUM(cld.SourceCount)
+                    , TotalNbrTargetRows = SUM(cld.DestCount)
+                 FROM ssis.CycleLogDetails cld
+                 INNER JOIN SSIS.CycleLog cl ON cld.CycleLogId= cl.CycleLogId
+                 WHERE cl.ScheduleName = 'EDW Main Load'
+                 GROUP BY cl.CycleLogId
+                ) t
+				WHERE RunDurationInMin > 0 AND TotalTaskDurationInMin > 0 AND TotalNbrSourceRows > 0 AND TotalNbrTargetRows > 0
+            ORDER BY CycleLogId desc";
 
         public const string SQL_GET_TABLE_STATS_CONSOLIDATED =
             "SELECT NbrRows = COUNT(1), MaxDateModified = ISNULL(MAX(<COLUMN_NAME>), '1900-01-01') FROM <SCHEMA_NAME>.<TABLE_NAME> WITH (NOLOCK) WHERE <ISDELETED_COLUMN>=0";
